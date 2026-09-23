@@ -1,0 +1,107 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-azul-primario: #0066A1;
+    --color-azul-oscuro: #004B78;
+    --color-verde-principal: #78BE20;
+    --color-verde-oscuro: #4F8F16;
+    --color-blanco: #FFFFFF;
+    --color-gris-claro: #F5F7F8;
+    --color-gris-oscuro: #263238;
+  }
+
+  body {
+    @apply bg-gris-claro text-gris-oscuro font-sans antialiased m-0 p-0;
+  }
+
+  /* Accessibility Text Scaling */
+  html.text-scale-normal {
+    font-size: 16px;
+  }
+  html.text-scale-large {
+    font-size: 18px;
+  }
+  html.text-scale-xlarge {
+    font-size: 20px;
+  }
+
+  /* High Contrast Mode (WCAG 2.1 AA) */
+  html.high-contrast {
+    filter: contrast(125%);
+  }
+  html.high-contrast body {
+    @apply bg-black text-white;
+  }
+  html.high-contrast .bg-white {
+    @apply bg-zinc-900 text-white border-zinc-700;
+  }
+  html.high-contrast .bg-gris-claro {
+    @apply bg-zinc-950 text-white;
+  }
+  html.high-contrast .text-gris-oscuro {
+    @apply text-zinc-100;
+  }
+}
+
+@layer components {
+  /* Button System specified in Anexo 4 */
+  .btn-primario {
+    @apply bg-azul-primario text-white font-semibold px-4 py-2.5 rounded-lg shadow-sm transition-all duration-200 hover:bg-azul-oscuro focus:outline-none focus:ring-2 focus:ring-azul-primario focus:ring-offset-2 active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2;
+  }
+
+  .btn-secundario {
+    @apply bg-verde-principal text-white font-semibold px-4 py-2.5 rounded-lg shadow-sm transition-all duration-200 hover:bg-verde-oscuro focus:outline-none focus:ring-2 focus:ring-verde-principal focus:ring-offset-2 active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2;
+  }
+
+  .btn-neutro {
+    @apply bg-white text-azul-primario border border-gray-200 font-semibold px-4 py-2.5 rounded-lg shadow-sm transition-all duration-200 hover:bg-gray-50 hover:border-azul-primario focus:outline-none focus:ring-2 focus:ring-azul-primario focus:ring-offset-2 active:scale-[0.99] inline-flex items-center justify-center gap-2;
+  }
+
+  .btn-deshabilitado {
+    @apply bg-[#F5F7F8] text-gray-400 border border-dashed border-gray-300 font-medium px-4 py-2.5 rounded-lg cursor-not-allowed inline-flex items-center justify-center gap-2;
+  }
+
+  .btn-alerta {
+    @apply bg-[#FBEAEA] text-[#C0392B] border border-red-200 font-semibold px-4 py-2.5 rounded-lg transition-all duration-200 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-red-400 inline-flex items-center justify-center gap-2;
+  }
+
+  /* Badge System */
+  .badge-verde {
+    @apply bg-emerald-100 text-emerald-800 text-xs font-semibold px-2.5 py-1 rounded-full border border-emerald-200 inline-flex items-center gap-1.5;
+  }
+
+  .badge-azul {
+    @apply bg-sky-100 text-azul-oscuro text-xs font-semibold px-2.5 py-1 rounded-full border border-sky-200 inline-flex items-center gap-1.5;
+  }
+
+  .badge-amarillo {
+    @apply bg-amber-100 text-amber-800 text-xs font-semibold px-2.5 py-1 rounded-full border border-amber-200 inline-flex items-center gap-1.5;
+  }
+
+  .badge-rojo {
+    @apply bg-rose-100 text-rose-800 text-xs font-semibold px-2.5 py-1 rounded-full border border-rose-200 inline-flex items-center gap-1.5;
+  }
+
+  .badge-gris {
+    @apply bg-gray-100 text-gray-700 text-xs font-semibold px-2.5 py-1 rounded-full border border-gray-200 inline-flex items-center gap-1.5;
+  }
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #F1F5F9;
+}
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+}
