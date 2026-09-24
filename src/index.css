@@ -17,15 +17,67 @@
     @apply bg-gris-claro text-gris-oscuro font-sans antialiased m-0 p-0;
   }
 
-  /* Accessibility Text Scaling */
+  /* Accessibility Text Scaling (WCAG 2.1 - 1.4.4 Resize Text without breaking layout) */
   html.text-scale-normal {
     font-size: 16px;
   }
   html.text-scale-large {
-    font-size: 18px;
+    font-size: 19px;
   }
   html.text-scale-xlarge {
-    font-size: 20px;
+    font-size: 22px;
+  }
+
+  /* Layout preservation when text is enlarged: prevent clipping, truncation and overflow */
+  html.text-scale-large body,
+  html.text-scale-xlarge body {
+    line-height: 1.6;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  html.text-scale-large header,
+  html.text-scale-xlarge header,
+  html.text-scale-large nav,
+  html.text-scale-xlarge nav {
+    height: auto !important;
+    min-height: 5rem;
+  }
+
+  html.text-scale-large .truncate,
+  html.text-scale-xlarge .truncate,
+  html.text-scale-large [class*="line-clamp"],
+  html.text-scale-xlarge [class*="line-clamp"] {
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: unset !important;
+    -webkit-line-clamp: unset !important;
+    display: block !important;
+  }
+
+  html.text-scale-large .btn-primario,
+  html.text-scale-large .btn-secundario,
+  html.text-scale-large .btn-neutro,
+  html.text-scale-xlarge .btn-primario,
+  html.text-scale-xlarge .btn-secundario,
+  html.text-scale-xlarge .btn-neutro {
+    white-space: normal !important;
+    height: auto !important;
+    min-height: 2.75rem !important;
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+  }
+
+  html.text-scale-large input,
+  html.text-scale-xlarge input,
+  html.text-scale-large select,
+  html.text-scale-xlarge select,
+  html.text-scale-large textarea,
+  html.text-scale-xlarge textarea {
+    height: auto !important;
+    min-height: 2.75rem !important;
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
   }
 
   /* High Contrast Mode (WCAG 2.1 AAA - Extreme Contrast) */

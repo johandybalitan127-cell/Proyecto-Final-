@@ -191,6 +191,11 @@ export const AccessibilityProvider = ({ children }) => {
         e.preventDefault();
         cycleColorblindMode();
       }
+      // Alt + T: Cycle Text Size (Normal -> Grande -> Extra Grande)
+      else if (e.altKey && (e.key === 't' || e.key === 'T')) {
+        e.preventDefault();
+        cycleTextScale();
+      }
     };
 
     window.addEventListener('keydown', handleKeyDown);

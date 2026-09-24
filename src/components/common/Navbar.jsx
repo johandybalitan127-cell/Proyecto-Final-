@@ -12,6 +12,8 @@ export const Navbar = () => {
     setIsModalOpen, 
     highContrast, 
     colorblindMode, 
+    textScale,
+    setTextScale,
     isSpeaking, 
     stopSpeaking, 
     readCurrentPage 
@@ -35,7 +37,7 @@ export const Navbar = () => {
   return (
     <header className="sticky top-0 z-40 bg-white border-b border-gray-100 shadow-sm transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-between min-h-[5rem] py-2 flex-wrap gap-y-2">
           
           {/* Logo & Subtitle */}
           <Link to="/" className="flex items-center gap-3.5 group focus:outline-none">
@@ -86,6 +88,54 @@ export const Navbar = () => {
                 <span className="hidden sm:inline">Pausar Voz</span>
               </button>
             )}
+
+            {/* Quick Font Size Adjuster (A / A+ / A++) */}
+            <div 
+              className="hidden sm:inline-flex items-center bg-gray-100 rounded-lg p-0.5 border border-gray-200" 
+              role="group"
+              aria-label="Ajuste rápido de tamaño de texto"
+              title="Ajuste rápido de tamaño de texto (Atajo Alt + T)"
+            >
+              <button 
+                onClick={() => setTextScale('normal')} 
+                className={`px-2 py-1 rounded text-xs font-bold transition ${
+                  textScale === 'normal' 
+                    ? 'bg-white text-azul-primario shadow-2xs' 
+                    : 'text-gray-600 hover:text-azul-primario'
+                }`}
+                aria-pressed={textScale === 'normal'}
+                aria-label="Tamaño de texto normal 100%"
+                title="Texto Normal (100%)"
+              >
+                A
+              </button>
+              <button 
+                onClick={() => setTextScale('large')} 
+                className={`px-2 py-1 rounded text-xs font-bold transition ${
+                  textScale === 'large' 
+                    ? 'bg-white text-azul-primario shadow-2xs' 
+                    : 'text-gray-600 hover:text-azul-primario'
+                }`}
+                aria-pressed={textScale === 'large'}
+                aria-label="Tamaño de texto grande 120%"
+                title="Texto Grande (120%)"
+              >
+                A+
+              </button>
+              <button 
+                onClick={() => setTextScale('xlarge')} 
+                className={`px-2 py-1 rounded text-xs font-bold transition ${
+                  textScale === 'xlarge' 
+                    ? 'bg-white text-azul-primario shadow-2xs' 
+                    : 'text-gray-600 hover:text-azul-primario'
+                }`}
+                aria-pressed={textScale === 'xlarge'}
+                aria-label="Tamaño de texto extra grande 140%"
+                title="Texto Extra Grande (140%)"
+              >
+                A++
+              </button>
+            </div>
 
             {/* Accessibility Button */}
             <button
