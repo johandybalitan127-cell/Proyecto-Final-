@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
   Package, Search, Printer, Bell, ShieldCheck, MapPin, Clock, 
-  Download, CheckCircle2, AlertCircle, FileText, Share2
+  Download, CheckCircle2, AlertCircle, FileText, Share2, Workflow,
+  Check, Truck, AlertTriangle, Building, RefreshCw
 } from 'lucide-react';
 import { enviosService } from '../../services/enviosService';
 import { StepperTracking } from '../../components/common/StepperTracking';
 import { StatusBadge } from '../../components/common/StatusBadge';
+import { generateTrackingStages, GUIAS_DEMO, ESTADOS_RASTREO } from '../../utils/trackingUtils';
 
 export const RastreoPage = () => {
   const { trackingNumber } = useParams();
@@ -26,10 +28,10 @@ export const RastreoPage = () => {
       return;
     }
 
-    // Regex check (CP123456789CR or CR098421734CR)
+    // Regex check (UPU standard 8-10 digits e.g. CR098421734CR or CR03927360CR)
     const isValidFormat = enviosService.validateTrackingNumber(clean);
     if (!isValidFormat) {
-      setErrorMsg('Formato de guía no estándar. El código postal oficial debe iniciar con CR o CP seguido de 9 dígitos y terminar en CR (ej. CR098421734CR).');
+      setErrorMsg('Formato de guía no estándar. El código postal oficial debe iniciar con CR o CP seguido de 8 a 10 dígitos y terminar en CR (ej. CR098421734CR o CR03927360CR).');
     } else {
       setErrorMsg('');
     }
@@ -39,17 +41,49 @@ export const RastreoPage = () => {
     setLoading(false);
 
     if (found) {
-      setCurrentEnvio(found);
+      // Ensure stages are populated and aligned with current state
+      const etapas = (found.etapas && found.etapas.length > 0)
+        ? found.etapas
+        : generateTrackingStages(found);
+
+      setCurrentEnvio({
+        ...found,
+        etapas
+      });
       setErrorMsg('');
     } else {
-      // If not found in DB, fallback to demo shipment with this guide for preview
-      const fallbackDemo = await enviosService.getByIdOrGuia('CR098421734CR');
-      setCurrentEnvio({
-        ...fallbackDemo,
+      // If not in DB, create dynamic shipment with realistic stages
+      const isAduana = clean.includes('874') || clean.includes('ADU');
+      const isEntregado = clean.includes('039') || clean.includes('109');
+      const isSucursal = clean.includes('554');
+      const isProcesando = clean.includes('321');
+
+      const initialEstado = isAduana 
+        ? 'En aduana'
+        : isEntregado
+        ? 'Entregado'
+        : isSucursal
+        ? 'Disponible en sucursal'
+        : isProcesando
+        ? 'Procesando'
+        : 'En tránsito';
+
+      const simulatedEnvio = {
+        id: `DEMO-${clean}`,
         guia: clean,
-        remitente: 'Remitente Autorizado',
-        destinatario: 'Destinatario Registrado'
-      });
+        remitente: 'Ventanilla Central San José',
+        destinatario: 'Destinatario Registrado',
+        servicio: clean.startsWith('CP') ? 'Paquete Postal Regular' : 'EMS Courier Nacional',
+        origen: isAduana ? 'Gateway Internacional Miami' : 'San José Central',
+        destino: 'Alajuela / GAM Costa Rica',
+        estado: initialEstado,
+        fecha: new Date().toISOString().split('T')[0],
+        ruta: 'Centro Zapote → Hub Distribución Regional',
+        repartidorId: 'REP-102'
+      };
+
+      simulatedEnvio.etapas = generateTrackingStages(simulatedEnvio);
+      setCurrentEnvio(simulatedEnvio);
     }
   };
 
@@ -70,6 +104,17 @@ export const RastreoPage = () => {
     }
   };
 
+  // Live state switcher for immediate testing and demonstration
+  const handleChangeStatus = (newEstado) => {
+    if (!currentEnvio) return;
+    const updated = {
+      ...currentEnvio,
+      estado: newEstado
+    };
+    updated.etapas = generateTrackingStages(updated);
+    setCurrentEnvio(updated);
+  };
+
   const handleSubscribeAlerts = (e) => {
     e.preventDefault();
     if (emailAlert) {
@@ -77,8 +122,12 @@ export const RastreoPage = () => {
     }
   };
 
+  const displayEtapas = currentEnvio?.etapas && currentEnvio.etapas.length > 0
+    ? currentEnvio.etapas
+    : generateTrackingStages(currentEnvio);
+
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-10">
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
       
       {/* Title */}
       <div className="text-center space-y-2">
@@ -93,8 +142,8 @@ export const RastreoPage = () => {
         </p>
       </div>
 
-      {/* Search Bar */}
-      <div className="bg-white p-6 rounded-3xl border border-gray-200 shadow-md">
+      {/* Search Bar + Quick Demos */}
+      <div className="bg-white p-6 rounded-3xl border border-gray-200 shadow-md space-y-4">
         <form onSubmit={handleFormSubmit} className="flex flex-col sm:flex-row gap-3">
           <div className="relative flex-1">
             <Search className="w-5 h-5 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />
@@ -102,7 +151,7 @@ export const RastreoPage = () => {
               type="text"
               value={inputGuia}
               onChange={(e) => setInputGuia(e.target.value)}
-              placeholder="Número de guía oficial (ej. CR098421734CR)"
+              placeholder="Número de guía oficial (ej. CR098421734CR o CR03927360CR)"
               className="w-full pl-12 pr-4 py-3.5 rounded-xl border border-gray-300 bg-gray-50 text-sm font-semibold text-gris-oscuro focus:bg-white focus:outline-none focus:ring-2 focus:ring-azul-primario font-mono uppercase"
             />
           </div>
@@ -116,11 +165,42 @@ export const RastreoPage = () => {
         </form>
 
         {errorMsg && (
-          <div className="mt-3 p-3 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-800 flex items-start gap-2">
+          <div className="p-3 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-800 flex items-start gap-2">
             <AlertCircle className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
             <span>{errorMsg}</span>
           </div>
         )}
+
+        {/* Quick Demo Guides by State */}
+        <div className="pt-3 border-t border-gray-100 space-y-2">
+          <span className="text-[11px] font-bold text-gray-500 uppercase tracking-wider block">
+            Guías de demostración con diferentes estados reales:
+          </span>
+          <div className="flex flex-wrap gap-2">
+            {GUIAS_DEMO.map((demo) => {
+              const isActive = currentEnvio?.guia === demo.guia;
+              return (
+                <button
+                  key={demo.guia}
+                  type="button"
+                  onClick={() => {
+                    setInputGuia(demo.guia);
+                    navigate(`/rastreo/${demo.guia}`);
+                  }}
+                  className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs transition shadow-2xs ${
+                    isActive
+                      ? 'border-azul-primario bg-sky-50 text-azul-oscuro font-bold ring-2 ring-sky-200'
+                      : 'border-gray-200 bg-gray-50 hover:bg-white hover:border-gray-300 text-gray-700'
+                  }`}
+                  title={demo.descripcion}
+                >
+                  <StatusBadge status={demo.estado} size="xs" />
+                  <span className="font-mono font-bold text-[11px]">#{demo.guia}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
       </div>
 
       {/* Tracking Result Card */}
@@ -160,6 +240,41 @@ export const RastreoPage = () => {
             </div>
           </div>
 
+          {/* Interactive Live State Simulator Toolbar */}
+          <div className="bg-sky-50/70 border border-sky-200 p-3 sm:p-4 rounded-2xl space-y-2.5 print:hidden">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <div className="flex items-center gap-2">
+                <Workflow className="w-4 h-4 text-azul-primario" />
+                <span className="text-xs font-bold text-azul-oscuro">
+                  Probar diferentes estados de seguimiento para esta guía:
+                </span>
+              </div>
+              <span className="text-[11px] text-gray-500">
+                Cambia el estado en vivo para verificar Stepper, Ícono y Tiempos
+              </span>
+            </div>
+
+            <div className="flex flex-wrap gap-1.5 sm:gap-2">
+              {ESTADOS_RASTREO.map((est) => {
+                const isSelected = currentEnvio.estado === est.id;
+                return (
+                  <button
+                    key={est.id}
+                    type="button"
+                    onClick={() => handleChangeStatus(est.id)}
+                    className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 border ${
+                      isSelected
+                        ? 'bg-azul-primario text-white border-azul-primario shadow-sm ring-2 ring-sky-200'
+                        : 'bg-white text-gray-700 border-gray-200 hover:bg-sky-100/50 hover:border-azul-primario'
+                    }`}
+                  >
+                    <span>{est.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
           {/* Stepper Horizontal */}
           <div className="bg-gray-50/70 p-5 rounded-2xl border border-gray-200">
             <StepperTracking envio={currentEnvio} />
@@ -194,25 +309,44 @@ export const RastreoPage = () => {
               Historial Cronológico de Movimientos
             </h3>
             <div className="divide-y divide-gray-100 border border-gray-200 rounded-2xl overflow-hidden">
-              {(currentEnvio.etapas || []).map((etapa, idx) => (
-                <div key={idx} className="p-4 bg-white flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
-                  <div className="flex items-center gap-3">
-                    <div className={`w-3 h-3 rounded-full ${etapa.completado ? 'bg-verde-principal' : 'bg-gray-300'}`}></div>
-                    <div>
-                      <p className="font-bold text-gris-oscuro">{etapa.nombre}</p>
-                      <p className="text-gray-500">{etapa.ubicacion}</p>
+              {displayEtapas.map((etapa, idx) => {
+                const isAduanaAlert = etapa.alerta || (etapa.actual && currentEnvio.estado === 'En aduana');
+                return (
+                  <div key={idx} className="p-4 bg-white flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+                    <div className="flex items-center gap-3">
+                      <div className={`w-3.5 h-3.5 rounded-full flex items-center justify-center ${
+                        isAduanaAlert
+                          ? 'bg-amber-500 ring-2 ring-amber-200 animate-pulse'
+                          : etapa.completado
+                          ? 'bg-emerald-600'
+                          : 'bg-gray-300'
+                      }`}>
+                        {etapa.completado && !isAduanaAlert ? (
+                          <Check className="w-2.5 h-2.5 text-white stroke-[3]" />
+                        ) : isAduanaAlert ? (
+                          <AlertTriangle className="w-2.5 h-2.5 text-white" />
+                        ) : null}
+                      </div>
+                      <div>
+                        <p className={`font-bold ${isAduanaAlert ? 'text-amber-800' : 'text-gris-oscuro'}`}>
+                          {etapa.nombre}
+                        </p>
+                        <p className="text-gray-500">{etapa.ubicacion}</p>
+                      </div>
+                    </div>
+                    <div className="text-left sm:text-right">
+                      <span className={`font-semibold ${isAduanaAlert ? 'text-amber-700 font-bold' : 'text-gray-700'}`}>
+                        {etapa.hora}
+                      </span>
+                      <span className="block text-[10px] text-gray-400">Verificado por terminal</span>
                     </div>
                   </div>
-                  <div className="text-right sm:text-right">
-                    <span className="font-semibold text-gray-700">{etapa.hora}</span>
-                    <span className="block text-[10px] text-gray-400">Verificado por terminal</span>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
 
-          {/* Subscriptions & Alerts Panel (Print hidden) */}
+          {/* Subscriptions & Alerts Panel */}
           <div className="pt-6 border-t border-gray-100 print:hidden bg-sky-50/60 p-6 rounded-2xl border border-sky-100 space-y-4">
             <div className="flex items-center gap-2">
               <Bell className="w-5 h-5 text-azul-primario" />
@@ -239,8 +373,8 @@ export const RastreoPage = () => {
                   onChange={(e) => setEmailAlert(e.target.value)}
                   className="flex-1 px-4 py-2.5 rounded-xl border border-gray-300 bg-white text-xs focus:outline-none focus:ring-2 focus:ring-azul-primario"
                 />
-                <button type="submit" className="btn-primario text-xs py-2.5 px-5">
-                  Activar Notificaciones
+                <button type="submit" className="btn-primario text-xs py-2.5 px-5 font-bold">
+                  Suscribirme a Alertas
                 </button>
               </form>
             )}

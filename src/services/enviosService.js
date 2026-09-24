@@ -9,11 +9,11 @@ export const enviosService = {
   update: (id, updates) => updateItem(COLLECTION, id, updates),
   delete: (id) => deleteItem(COLLECTION, id),
 
-  // Search by tracking guide regex check
+  // Search by tracking guide regex check (UPU standard 8-10 digits)
   validateTrackingNumber: (guia) => {
     if (!guia) return false;
     const clean = guia.trim().toUpperCase();
-    const regex = /^(CR|CP)\d{9}CR$/;
+    const regex = /^(CR|CP)\d{8,10}CR$/;
     return regex.test(clean);
   }
 };

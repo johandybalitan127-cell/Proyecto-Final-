@@ -260,15 +260,16 @@
         },
         {
           "paso": 3,
-          "nombre": "En Tránsito",
+          "nombre": "En Aduana (Aforo Fiscal)",
           "ubicacion": "Aduana Santamaría (Aforo Fiscal)",
           "hora": "May 13",
           "completado": true,
-          "actual": true
+          "actual": true,
+          "alerta": true
         },
         {
           "paso": 4,
-          "nombre": "Entregado",
+          "nombre": "Entrega Final",
           "ubicacion": "Pendiente liberación",
           "hora": "--",
           "completado": false
@@ -566,18 +567,107 @@
         },
         {
           "paso": 3,
-          "nombre": "En Tránsito",
+          "nombre": "En Aduana (Aforo Fiscal)",
           "ubicacion": "Aduana Postal Zapote",
           "hora": "May 13",
           "completado": true,
-          "actual": true
+          "actual": true,
+          "alerta": true
         },
         {
           "paso": 4,
-          "nombre": "Entregado",
+          "nombre": "Entrega Final",
           "ubicacion": "Pendiente impuestos",
           "hora": "--",
           "completado": false
+        }
+      ]
+    },
+    {
+      "id": "ENV-011",
+      "guia": "CR03927360CR",
+      "remitente": "Tienda Virtual San José",
+      "destinatario": "Alejandro Morales Rivera",
+      "servicio": "EMS Courier Nacional",
+      "origen": "San José Central",
+      "destino": "Heredia Centro",
+      "estado": "Entregado",
+      "fecha": "2026-09-24",
+      "repartidorId": "REP-204",
+      "ruta": "San José → Hub Zapote → Reparto Heredia",
+      "etapas": [
+        {
+          "paso": 1,
+          "nombre": "Admisión / Recibida",
+          "ubicacion": "Sucursal San José Central",
+          "hora": "08:30 a.m.",
+          "completado": true
+        },
+        {
+          "paso": 2,
+          "nombre": "Procesado en Hub",
+          "ubicacion": "Centro Postal Zapote",
+          "hora": "11:15 a.m.",
+          "completado": true
+        },
+        {
+          "paso": 3,
+          "nombre": "En Ruta de Entrega",
+          "ubicacion": "Unidad Reparto Heredia",
+          "hora": "02:00 p.m.",
+          "completado": true
+        },
+        {
+          "paso": 4,
+          "nombre": "Entregado con Éxito",
+          "ubicacion": "Destino Final Heredia",
+          "hora": "04:45 p.m. (Firma: A. Morales)",
+          "completado": true,
+          "actual": true
+        }
+      ]
+    },
+    {
+      "id": "ENV-012",
+      "guia": "CR554129873CR",
+      "remitente": "Farmacia La Bomba",
+      "destinatario": "Lucía Salazar Cordero",
+      "servicio": "Pymexpress",
+      "origen": "Cartago Centro",
+      "destino": "San Pedro Montes de Oca",
+      "estado": "Disponible en sucursal",
+      "fecha": "2026-09-24",
+      "repartidorId": "REP-108",
+      "ruta": "Cartago → Hub Zapote → Sucursal San Pedro",
+      "etapas": [
+        {
+          "paso": 1,
+          "nombre": "Admisión / Recibida",
+          "ubicacion": "Sucursal Cartago",
+          "hora": "08:00 a.m.",
+          "completado": true
+        },
+        {
+          "paso": 2,
+          "nombre": "Procesado en Hub",
+          "ubicacion": "Centro Postal Zapote",
+          "hora": "10:30 a.m.",
+          "completado": true
+        },
+        {
+          "paso": 3,
+          "nombre": "Arribo a Sucursal",
+          "ubicacion": "Sucursal San Pedro",
+          "hora": "01:15 p.m.",
+          "completado": true
+        },
+        {
+          "paso": 4,
+          "nombre": "Disponible para Retiro",
+          "ubicacion": "Ventanilla Sucursal San Pedro",
+          "hora": "Listo para retiro con documento",
+          "completado": true,
+          "actual": true
         }
       ]
     }
