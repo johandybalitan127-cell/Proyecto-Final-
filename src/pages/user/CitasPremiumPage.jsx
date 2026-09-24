@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, Clock, CreditCard, Zap, CheckCircle2, AlertCircle, Package } from 'lucide-react';
-import { enviosService } from '../../services/enviosService';
+import { Calendar, Clock, CreditCard, Zap, CheckCircle2, Building2, FileText, ShieldCheck } from 'lucide-react';
+import { sucursalesService } from '../../services/sucursalesService';
 import { useAuth } from '../../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
-import toast from 'react-hot-toast'; // Using the newly installed react-hot-toast
+import toast from 'react-hot-toast';
 
 export const CitasPremiumPage = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   
-  const [envios, setEnvios] = useState([]);
-  const [selectedEnvio, setSelectedEnvio] = useState('');
+  const [sucursales, setSucursales] = useState([]);
+  const [selectedSucursal, setSelectedSucursal] = useState('');
+  const [tramite, setTramite] = useState('');
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
   const [cardNumber, setCardNumber] = useState('');
@@ -18,34 +19,30 @@ export const CitasPremiumPage = () => {
   const [success, setSuccess] = useState(false);
 
   useEffect(() => {
-    const fetchEnvios = async () => {
-      const allEnvios = await enviosService.getAll();
-      // Filtrar envíos que no estén entregados para poder acelerarlos
-      const pendingEnvios = allEnvios.filter(e => e.estado !== 'Entregado' && (user?.rol === 'admin' || e.usuarioId === user?.id));
-      setEnvios(pendingEnvios);
+    const fetchSucursales = async () => {
+      const all = await sucursalesService.getAll();
+      setSucursales(all);
     };
-    fetchEnvios();
-  }, [user]);
+    fetchSucursales();
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!selectedEnvio || !date || !time || !cardNumber) {
+    if (!selectedSucursal || !tramite || !date || !time || !cardNumber) {
       toast.error('Por favor, completa todos los campos.');
       return;
     }
 
     setProcessing(true);
-    // Simulate payment processing
     setTimeout(() => {
       setProcessing(false);
       setSuccess(true);
-      toast.success('¡Cita Premium programada con éxito! Tu paquete será priorizado.');
+      toast.success('¡Cita VIP programada con éxito! Tendrás prioridad absoluta.');
       
-      // Redirect after a short delay
       setTimeout(() => {
-        navigate('/cuenta/historial');
-      }, 3000);
-    }, 2000);
+        navigate('/cuenta/perfil');
+      }, 4000);
+    }, 2500);
   };
 
   if (success) {
@@ -56,14 +53,14 @@ export const CitasPremiumPage = () => {
         </div>
         <h2 className="text-3xl font-extrabold text-gray-800 mb-4">¡Pago Exitoso!</h2>
         <p className="text-gray-600 mb-8">
-          Tu cita premium ha sido confirmada para el <strong>{date}</strong> a las <strong>{time}</strong>. 
-          El paquete será clasificado como <strong>Prioridad Alta (Premium)</strong>.
+          Tu espacio exclusivo ha sido confirmado para el <strong>{date}</strong> a las <strong>{time}</strong> en la sucursal seleccionada. 
+          Al llegar, indica que tienes un <strong>Trámite VIP (Fila Cero)</strong>.
         </p>
         <button 
-          onClick={() => navigate('/cuenta/historial')}
+          onClick={() => navigate('/cuenta/perfil')}
           className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-xl transition"
         >
-          Volver a mis paquetes
+          Ir a Mi Perfil
         </button>
       </div>
     );
@@ -76,9 +73,9 @@ export const CitasPremiumPage = () => {
           <Zap className="w-4 h-4" />
           Servicio Exclusivo
         </span>
-        <h1 className="text-4xl font-extrabold text-gray-900 mb-4">Citas Premium & Entrega Express</h1>
+        <h1 className="text-4xl font-extrabold text-gray-900 mb-4">Trámite VIP / Fila Cero</h1>
         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          Paga por una atención prioritaria en sucursal o acelera la entrega de tu paquete saltando la fila de procesamiento estándar.
+          Paga por una atención prioritaria garantizada en sucursal. Evita las filas y optimiza tu tiempo con nuestro servicio empresarial.
         </p>
       </div>
 
@@ -115,31 +112,46 @@ export const CitasPremiumPage = () => {
         {/* Form Column */}
         <div className="md:col-span-2">
           <form onSubmit={handleSubmit} className="bg-white rounded-3xl shadow-md border border-gray-100 p-6 sm:p-8 space-y-6">
-            
-            {/* Paquete Selection */}
+            {/* Sucursal Selection */}
             <div className="space-y-2">
               <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
-                <Package className="w-4 h-4 text-blue-600" />
-                Selecciona el paquete a acelerar
+                <Building2 className="w-4 h-4 text-blue-600" />
+                Selecciona la sucursal
               </label>
               <select 
-                value={selectedEnvio}
-                onChange={(e) => setSelectedEnvio(e.target.value)}
+                value={selectedSucursal}
+                onChange={(e) => setSelectedSucursal(e.target.value)}
                 className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-50 outline-none transition"
                 required
               >
-                <option value="">-- Elige un envío en tránsito --</option>
-                {envios.map(envio => (
-                  <option key={envio.id} value={envio.id}>
-                    {envio.guia} - {envio.servicio} ({envio.estado})
+                <option value="">-- Elige una sucursal --</option>
+                {sucursales.map(s => (
+                  <option key={s.id} value={s.nombre}>
+                    {s.nombre} - {s.provincia}
                   </option>
                 ))}
               </select>
-              {envios.length === 0 && (
-                <p className="text-xs text-red-500 flex items-center gap-1 mt-1">
-                  <AlertCircle className="w-3 h-3" /> No tienes envíos elegibles.
-                </p>
-              )}
+            </div>
+
+            {/* Trámite Selection */}
+            <div className="space-y-2">
+              <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                <FileText className="w-4 h-4 text-blue-600" />
+                Tipo de Trámite
+              </label>
+              <select 
+                value={tramite}
+                onChange={(e) => setTramite(e.target.value)}
+                className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-50 outline-none transition"
+                required
+              >
+                <option value="">-- ¿Qué trámite realizarás? --</option>
+                <option value="retiro">Retiro de Paquetería</option>
+                <option value="envio">Envío de Paquetería</option>
+                <option value="pasaporte">Trámite de Pasaporte VES</option>
+                <option value="certificacion">Certificaciones del Registro</option>
+                <option value="apartado">Apertura/Renovación de Apartado</option>
+              </select>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
