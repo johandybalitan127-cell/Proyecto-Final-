@@ -1,8 +1,9 @@
 import React from 'react';
 import { NavLink, Link, useNavigate } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   LayoutDashboard, Package, Users, MapPin, Tag, MessageSquare, 
-  Bot, BarChart3, Settings, LogOut, Package2, X
+  Bot, BarChart3, Settings, LogOut, Package2, X, Zap
 } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 
@@ -22,6 +23,7 @@ export const AdminSidebar = ({ isOpen = false, onClose = () => {} }) => {
     { name: 'Oficinas y Sucursales', path: '/admin/sucursales', icon: MapPin },
     { name: 'Servicios y Tarifas', path: '/admin/servicios-tarifas', icon: Tag },
     { name: 'Consultas y Peticiones', path: '/admin/consultas', icon: MessageSquare, badge: '14' },
+    { name: 'Citas Premium', path: '/admin/citas-premium', icon: Zap, badge: 'NUEVO' },
     { name: 'Asistente IA (Logs & NLP)', path: '/admin/asistente-ia', icon: Bot, badge: '94%' },
     { name: 'Reportes y Estadísticas', path: '/admin/reportes', icon: BarChart3 },
     { name: 'Configuración del Sistema', path: '/admin/configuracion', icon: Settings },
@@ -39,25 +41,30 @@ export const AdminSidebar = ({ isOpen = false, onClose = () => {} }) => {
       )}
 
       {/* Sidebar Element */}
-      <aside
-        className={`w-[236px] bg-[#08203A] text-white flex-shrink-0 flex flex-col justify-between h-screen fixed lg:sticky top-0 left-0 border-r border-[#0B2A4A] z-50 select-none transition-transform duration-300 ease-in-out ${
-          isOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full lg:translate-x-0'
+      <motion.aside
+        initial={{ x: -280 }}
+        animate={{ x: isOpen ? 0 : 0 }}
+        className={`w-[280px] bg-white border-r border-gray-100 flex-shrink-0 flex flex-col justify-between h-screen fixed lg:sticky top-0 left-0 z-50 select-none shadow-[20px_0_40px_rgba(0,0,0,0.02)] transition-transform duration-300 ease-out ${
+          isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         }`}
       >
         {/* Top Section */}
-        <div className="flex flex-col flex-1 overflow-y-auto">
+        <div className="flex flex-col flex-1 overflow-hidden">
           {/* Brand header */}
-          <div className="p-4 sm:p-5 border-b border-white/10 flex items-center justify-between">
-            <Link to="/" onClick={onClose} className="flex items-center gap-2.5 sm:gap-3 group">
-              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-azul-primario flex items-center justify-center text-white shadow">
-                <Package2 className="w-4 h-4 sm:w-5 sm:h-5" />
-              </div>
+          <div className="px-6 py-6 border-b border-gray-100/50 flex items-center justify-between">
+            <Link to="/" onClick={onClose} className="flex items-center gap-3 group">
+              <motion.div 
+                whileHover={{ rotate: 10, scale: 1.05 }}
+                className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center text-white shadow-lg shadow-blue-500/30"
+              >
+                <Package2 className="w-5 h-5" />
+              </motion.div>
               <div>
-                <h1 className="font-extrabold text-sm sm:text-base tracking-tight leading-none text-white font-sans">
-                  Correos <span className="text-sky-400">CR</span>
+                <h1 className="font-extrabold text-base tracking-tight leading-none text-slate-800 font-sans">
+                  Correos <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">CR</span>
                 </h1>
-                <span className="text-[8px] sm:text-[9px] font-bold text-gray-400 uppercase tracking-widest mt-1 block">
-                  PANEL ADMINISTRATIVO
+                <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1.5 block">
+                  Dashboard Premium
                 </span>
               </div>
             </Link>
@@ -65,22 +72,21 @@ export const AdminSidebar = ({ isOpen = false, onClose = () => {} }) => {
             {/* Close button on mobile/tablet */}
             <button
               onClick={onClose}
-              className="lg:hidden p-1.5 text-gray-400 hover:text-white rounded-lg hover:bg-white/10"
-              aria-label="Cerrar menú lateral"
+              className="lg:hidden p-2 text-slate-400 hover:text-slate-700 rounded-xl hover:bg-slate-100 transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
           </div>
 
           {/* Section title */}
-          <div className="px-5 pt-4 pb-2">
-            <span className="text-[10px] font-bold tracking-widest text-[#B9C8D6]/60 uppercase">
-              GESTIÓN
+          <div className="px-6 pt-6 pb-2">
+            <span className="text-[10px] font-bold tracking-widest text-slate-400 uppercase">
+              Principal
             </span>
           </div>
 
           {/* Nav list */}
-          <nav className="px-3 space-y-1">
+          <nav className="px-4 space-y-1.5 overflow-y-auto pb-6 scrollbar-hide">
             {navItems.map((item) => (
               <NavLink
                 key={item.path}
@@ -88,21 +94,43 @@ export const AdminSidebar = ({ isOpen = false, onClose = () => {} }) => {
                 end={item.exact}
                 onClick={onClose}
                 className={({ isActive }) =>
-                  `flex items-center justify-between px-3 py-2 sm:py-2.5 rounded-lg text-xs font-medium transition-colors ${
+                  `relative flex items-center justify-between px-3 py-3 rounded-xl text-[13px] font-semibold transition-all duration-300 group overflow-hidden ${
                     isActive
-                      ? 'bg-azul-primario text-white shadow-sm font-semibold'
-                      : 'text-[#B9C8D6] hover:bg-white/5 hover:text-white'
+                      ? 'text-white'
+                      : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'
                   }`
                 }
               >
-                <div className="flex items-center gap-3">
-                  <item.icon className="w-4 h-4 flex-shrink-0" />
-                  <span className="truncate">{item.name}</span>
-                </div>
-                {item.badge && (
-                  <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-white/15 text-white">
-                    {item.badge}
-                  </span>
+                {({ isActive }) => (
+                  <>
+                    {/* Active Background Animation */}
+                    {isActive && (
+                      <motion.div
+                        layoutId="active-nav"
+                        className="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl shadow-md shadow-blue-500/20"
+                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                      />
+                    )}
+
+                    <div className="relative flex items-center gap-3 z-10">
+                      <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
+                        <item.icon className={`w-4 h-4 flex-shrink-0 transition-colors ${isActive ? 'text-white' : 'text-slate-400 group-hover:text-blue-600'}`} />
+                      </motion.div>
+                      <span className="truncate">{item.name}</span>
+                    </div>
+
+                    {item.badge && (
+                      <span className={`relative z-10 text-[10px] font-bold px-2 py-0.5 rounded-full transition-colors ${
+                        isActive 
+                          ? 'bg-white/20 text-white' 
+                          : item.badge === 'NUEVO' 
+                            ? 'bg-amber-100 text-amber-700' 
+                            : 'bg-slate-100 text-slate-500'
+                      }`}>
+                        {item.badge}
+                      </span>
+                    )}
+                  </>
                 )}
               </NavLink>
             ))}
@@ -110,42 +138,44 @@ export const AdminSidebar = ({ isOpen = false, onClose = () => {} }) => {
         </div>
 
         {/* Bottom User Card */}
-        <div className="p-3 border-t border-white/10 bg-[#06172B]">
-          <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 flex items-center justify-between">
-            <div className="flex items-center gap-2.5 min-w-0">
-              <div className="w-8 h-8 rounded-full bg-verde-principal text-white text-xs font-bold flex items-center justify-center flex-shrink-0">
-                {user?.avatar || 'CM'}
+        <div className="p-4 bg-slate-50 border-t border-gray-100">
+          <div className="p-3 rounded-2xl bg-white border border-gray-100/80 shadow-sm flex items-center justify-between hover:shadow-md transition-shadow">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="relative">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 text-white text-sm font-bold flex items-center justify-center flex-shrink-0 shadow-inner">
+                  {user?.avatar || 'AD'}
+                </div>
+                <div className="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-green-500 border-2 border-white rounded-full"></div>
               </div>
               <div className="min-w-0">
-                <p className="text-xs font-bold text-white truncate leading-tight">
-                  {user?.nombre || 'Carlos Mora'}
+                <p className="text-sm font-bold text-slate-800 truncate leading-tight">
+                  {user?.nombre || 'Administrador'}
                 </p>
-                <p className="text-[10px] text-gray-400 truncate leading-tight">
-                  {user?.sucursal || 'Operador Zapote'}
+                <p className="text-[10px] font-semibold text-slate-500 truncate leading-tight mt-0.5">
+                  {user?.rol || 'Super Admin'}
                 </p>
-                <span className="text-[9px] text-emerald-400 font-mono">
-                  {user?.codigoOperador || 'OP-8821'}
-                </span>
               </div>
             </div>
 
-            <button
+            <motion.button
+              whileHover={{ scale: 1.1, rotate: 10 }}
+              whileTap={{ scale: 0.9 }}
               onClick={handleLogout}
-              className="p-1.5 text-gray-400 hover:text-red-400 hover:bg-white/5 rounded-lg transition"
+              className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-colors"
               title="Cerrar sesión"
             >
               <LogOut className="w-4 h-4" />
-            </button>
+            </motion.button>
           </div>
 
-          <div className="mt-2 text-center">
-            <Link to="/" className="text-[10px] text-[#B9C8D6] hover:text-white underline">
-              ← Volver a la Vista Ciudadana
+          <div className="mt-4 text-center">
+            <Link to="/" className="text-[11px] font-medium text-slate-400 hover:text-blue-600 transition-colors">
+              ← Volver al Portal Ciudadano
             </Link>
           </div>
         </div>
 
-      </aside>
+      </motion.aside>
     </>
   );
 };
