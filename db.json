@@ -1296,6 +1296,15 @@
       "resultado": "Resuelto",
       "hora": "10:40:21 a. m.",
       "id": "B6jZTAYoJZ4"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "dameme a citas premium",
+      "intencion": "cita_ves",
+      "confianza": 98.5,
+      "resultado": "Resuelto",
+      "hora": "01:36:44 p. m.",
+      "id": "rnR4CqsV9_s"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

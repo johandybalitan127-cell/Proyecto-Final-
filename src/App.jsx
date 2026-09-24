@@ -26,7 +26,6 @@ import { ConfiguracionUsuarioPage } from './pages/user/ConfiguracionUsuarioPage'
 import { RastreoInternoPage } from './pages/user/RastreoInternoPage';
 import { CitasPremiumPage } from './pages/user/CitasPremiumPage';
 
-// Admin Pages
 import { AdminDashboardPage } from './pages/admin/AdminDashboardPage';
 import { AdminEnviosPage } from './pages/admin/AdminEnviosPage';
 import { AdminUsuariosPage } from './pages/admin/AdminUsuariosPage';
@@ -36,6 +35,7 @@ import { AdminConsultasPage } from './pages/admin/AdminConsultasPage';
 import { AdminAsistenteIAPage } from './pages/admin/AdminAsistenteIAPage';
 import { AdminReportesPage } from './pages/admin/AdminReportesPage';
 import { AdminConfiguracionPage } from './pages/admin/AdminConfiguracionPage';
+import { AdminCitasPremiumPage } from './pages/admin/AdminCitasPremiumPage';
 
 function App() {
   return (
@@ -129,6 +129,7 @@ function App() {
                 <Route path="sucursales" element={<AdminSucursalesPage />} />
                 <Route path="servicios-tarifas" element={<AdminServiciosTarifasPage />} />
                 <Route path="consultas" element={<AdminConsultasPage />} />
+                <Route path="citas-premium" element={<AdminCitasPremiumPage />} />
                 <Route path="asistente-ia" element={<AdminAsistenteIAPage />} />
                 <Route path="reportes" element={<AdminReportesPage />} />
                 <Route path="configuracion" element={<AdminConfiguracionPage />} />
