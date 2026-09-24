@@ -56,10 +56,16 @@ export const LoginPage = () => {
         
         {/* Brand */}
         <div className="text-center space-y-2">
-          <div className="w-12 h-12 rounded-2xl bg-azul-primario text-white flex items-center justify-center mx-auto shadow-md">
-            <Package className="w-7 h-7" />
-          </div>
-          <h1 className="text-2xl font-bold text-azul-oscuro">Sucursal Virtual</h1>
+          <img
+            src="/correos-logo.png"
+            alt="Correos de Costa Rica"
+            className="h-12 w-auto mx-auto object-contain"
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = 'https://www.stickercr.com/wp-content/uploads/2024/08/Logo-version-b-1.png';
+            }}
+          />
+          <h1 className="text-2xl font-bold text-azul-oscuro mt-2">Sucursal Virtual</h1>
           <p className="text-xs text-gray-500">Ingreso a la Plataforma Digital Ciudadana</p>
         </div>
 

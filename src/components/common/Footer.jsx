@@ -11,17 +11,15 @@ export const Footer = () => {
           {/* Column 1: Correos de CR & Propuesta Académica */}
           <div className="space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-azul-primario text-white flex items-center justify-center">
-                <Package className="w-6 h-6" />
-              </div>
-              <div className="flex flex-col">
-                <span className="font-bold text-lg text-azul-primario leading-tight">
-                  Correos <span className="text-azul-oscuro">de Costa Rica</span>
-                </span>
-                <span className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider">
-                  Plataforma Digital Ciudadana
-                </span>
-              </div>
+              <img
+                src="/correos-logo.png"
+                alt="Correos de Costa Rica"
+                className="h-10 w-auto object-contain"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = 'https://www.stickercr.com/wp-content/uploads/2024/08/Logo-version-b-1.png';
+                }}
+              />
             </div>
             
             <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
