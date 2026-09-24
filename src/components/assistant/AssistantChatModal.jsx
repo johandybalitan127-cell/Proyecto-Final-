@@ -7,6 +7,7 @@ import {
 import { enviosService } from '../../services/enviosService';
 import { iaLogsService } from '../../services/iaLogsService';
 import { TrackingCardBubble } from './TrackingCardBubble';
+import initialDb from '../../data/initialDb.json';
 
 export const AssistantChatModal = ({ onClose, isFloating = false }) => {
   const [messages, setMessages] = useState([
@@ -51,111 +52,478 @@ export const AssistantChatModal = ({ onClose, isFloating = false }) => {
     setInputValue('');
     setIsTyping(true);
 
-    // Natural Language Processing Simulator
+    // Natural Language Processing Engine
     setTimeout(async () => {
-      let botResponse = {};
-      const lower = query.toLowerCase();
+      try {
+        let botResponse = {};
+        const lower = query.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
-      // Tracking guide extraction
-      const guideMatch = query.match(/CR\d{9}CR/i) || query.match(/CP\d{9}CR/i);
+        // 1. Tracking guide extraction
+        const guideMatch = query.match(/CR\d{9}CR/i) || query.match(/CP\d{9}CR/i);
 
-      if (guideMatch || lower.includes('rastrear') || lower.includes('donde esta mi paquete') || lower.includes('guia')) {
-        const targetGuide = guideMatch ? guideMatch[0].toUpperCase() : 'CR098421734CR';
-        const foundEnvio = await enviosService.getByIdOrGuia(targetGuide);
+        if (guideMatch || (lower.includes('rastrear') && (guideMatch || query.match(/\d{4,}/)))) {
+          const targetGuide = guideMatch ? guideMatch[0].toUpperCase() : 'CR098421734CR';
+          let foundEnvio = null;
+          try {
+            foundEnvio = await enviosService.getByIdOrGuia(targetGuide);
+          } catch (e) {
+            console.warn('Could not fetch envio:', e);
+          }
 
-        if (foundEnvio) {
+          if (foundEnvio) {
+            botResponse = {
+              id: Date.now() + 1,
+              sender: 'bot',
+              text: `He localizado tu envío en el Sistema Integral Postal. Se encuentra actualmente en estado: "${foundEnvio.estado}". Aquí tienes el detalle en tiempo real:`,
+              envio: foundEnvio,
+              time: new Date().toLocaleTimeString('es-CR', { hour: '2-digit', minute: '2-digit' }),
+              quickSuggestions: ['Horario de entrega', 'Desviar a casillero', 'Hablar con un asesor']
+            };
+          } else {
+            botResponse = {
+              id: Date.now() + 1,
+              sender: 'bot',
+              text: `No encontré registro exacto para la guía "${targetGuide}". Por favor verifica que el código tenga 13 caracteres (ejemplo: CR098421734CR). Puedes probar con la guía de demostración: CR098421734CR.`,
+              time: new Date().toLocaleTimeString('es-CR', { hour: '2-digit', minute: '2-digit' }),
+              quickSuggestions: ['Rastrear CR098421734CR', 'Hablar con un asesor']
+            };
+          }
+
+          iaLogsService.createLog({
+            usuario: 'Ciudadano Web',
+            consulta: query,
+            intencion: 'rastreo_envio',
+            confianza: 99.2,
+            resultado: foundEnvio ? 'Resuelto' : 'No encontrado'
+          }).catch(() => {});
+
+        // 2. Asesor en vivo / Atención humana / Contacto / Teléfono / WhatsApp
+        } else if (
+          lower.includes('asesor') || 
+          lower.includes('humano') || 
+          lower.includes('en vivo') || 
+          lower.includes('operador') || 
+          lower.includes('agente') || 
+          lower.includes('persona') ||
+          lower.includes('chatear con alguien') ||
+          lower.includes('telefono') ||
+          lower.includes('whatsapp') ||
+          lower.includes('llamar') ||
+          lower.includes('contacto') ||
+          lower.includes('atencion al cliente')
+        ) {
           botResponse = {
             id: Date.now() + 1,
             sender: 'bot',
-            text: `He localizado tu envío en el Sistema Integral Postal. Se encuentra actualmente en estado: "${foundEnvio.estado}". Aquí tienes el detalle en tiempo real:`,
-            envio: foundEnvio,
-            time: new Date().toLocaleTimeString('es-CR', { hour: '2-digit', minute: '2-digit' })
+            text: `¡Con gusto te comunico con nuestro equipo de atención humana! 🎧\n\n• Canal Digital en Vivo: Te hemos conectado a la cola prioritaria con el Asesor Carlos Mora (Zapote). Tiempo estimado de respuesta: menos de 1 minuto.\n• Central Telefónica Institucional: (+506) 2202-2900 (Lunes a Viernes de 8:00 a.m. a 5:00 p.m.).\n• WhatsApp Oficial: (+506) 8821-4321.\n• Centro de Operaciones Postal: Zapote, costado Oeste de Casa Presidencial.`,
+            actionLink: '/oficinas',
+            actionText: 'Ver Sedes y Líneas de Atención',
+            time: new Date().toLocaleTimeString('es-CR', { hour: '2-digit', minute: '2-digit' }),
+            quickSuggestions: ['Horario de Zapote', 'Abrir un reclamo formal', 'Rastrear un paquete']
           };
+
+          iaLogsService.createLog({
+            usuario: 'Ciudadano Web',
+            consulta: query,
+            intencion: 'transferencia_asesor',
+            confianza: 98.9,
+            resultado: 'Resuelto'
+          }).catch(() => {});
+
+        // 3. Reclamos / Incidentes / PQRS / Paquete Dañado o Extraviado
+        } else if (
+          lower.includes('reclamo') || 
+          lower.includes('queja') || 
+          lower.includes('denuncia') || 
+          lower.includes('incidente') || 
+          lower.includes('dano') || 
+          lower.includes('danado') || 
+          lower.includes('roto') || 
+          lower.includes('extraviado') || 
+          lower.includes('perdido') || 
+          lower.includes('pqrs') ||
+          lower.includes('necesito mas ayuda') ||
+          lower.includes('no llega')
+        ) {
+          botResponse = {
+            id: Date.now() + 1,
+            sender: 'bot',
+            text: `Lamentamos el inconveniente con tu envío. Para abrir un reporte o reclamo formal (PQRS):\n\n1. Formulario Digital Oficial: Ingresa a nuestra sección de Ayuda y elige la categoría "Reclamo" o "Incidente".\n2. Requisitos: Ten a mano tu número de guía oficial (ej. CR098421734CR), fotografías del empaque o contenido y tu cédula de identidad.\n3. Resolución: Se te asignará un ticket institucional (ej. PQ-2026-0145) con un plazo máximo de respuesta de 24 a 48 horas hábiles.`,
+            actionLink: '/ayuda',
+            actionText: 'Radicar Reclamo Formal en Ayuda',
+            time: new Date().toLocaleTimeString('es-CR', { hour: '2-digit', minute: '2-digit' }),
+            quickSuggestions: ['Hablar con un asesor en vivo', 'Rastrear CR098421734CR', 'Preguntas frecuentes']
+          };
+
+          iaLogsService.createLog({
+            usuario: 'Ciudadano Web',
+            consulta: query,
+            intencion: 'reclamo_pqrs',
+            confianza: 97.8,
+            resultado: 'Escalado'
+          }).catch(() => {});
+
+        // 4. Desvío de envíos / Casillero / Cambio de entrega
+        } else if (
+          lower.includes('desviar') || 
+          lower.includes('desvio') || 
+          lower.includes('cambiar direccion') || 
+          lower.includes('cambio de entrega') || 
+          lower.includes('retener en sucursal') || 
+          lower.includes('cambiar sucursal') ||
+          lower.includes('desviar a casillero')
+        ) {
+          botResponse = {
+            id: Date.now() + 1,
+            sender: 'bot',
+            text: `Puedes solicitar el desvío o retención de tu paquete hacia cualquiera de nuestras 110 sucursales o casilleros inteligentes:\n\n• Requisito: El paquete debe estar en estado "Recibido" o "En Centro de Clasificación" antes de su salida a ruta final de entrega.\n• Procedimiento: Puedes solicitar el cambio en línea desde el detalle de tu paquete o indicárselo a un asesor en ventanilla virtual con tu número de guía y documento de identidad.`,
+            actionLink: '/oficinas',
+            actionText: 'Ver 110 Sucursales Disponibles',
+            time: new Date().toLocaleTimeString('es-CR', { hour: '2-digit', minute: '2-digit' }),
+            quickSuggestions: ['Hablar con un asesor en vivo', 'Rastrear CR098421734CR', 'Horario de Zapote']
+          };
+
+          iaLogsService.createLog({
+            usuario: 'Ciudadano Web',
+            consulta: query,
+            intencion: 'desvio_envio',
+            confianza: 96.5,
+            resultado: 'Resuelto'
+          }).catch(() => {});
+
+        // 5. Códigos Postales
+        } else if (
+          lower.includes('codigo postal') || 
+          lower.includes('codigos postales') || 
+          lower.includes('cp ') || 
+          lower.includes('zip')
+        ) {
+          botResponse = {
+            id: Date.now() + 1,
+            sender: 'bot',
+            text: `El Código Postal oficial en Costa Rica consta de 5 dígitos (1° dígito: Provincia, 2° y 3°: Cantón, 4° y 5°: Distrito):\n\n• San José Centro: 10101 | Zapote: 10105 | San Pedro: 11501 | Escazú: 10201\n• Alajuela Centro: 20101 | San Ramón: 20201\n• Cartago Centro: 30101 | Paraíso: 30201\n• Heredia Centro: 40101 | Flores: 40801\n• Liberia: 50101 | Puntarenas: 60101 | Limón: 70101\n\nPuedes consultar el buscador y mapa de distritos en nuestra plataforma.`,
+            actionLink: '/ayuda',
+            actionText: 'Consultar Directorio Postal',
+            time: new Date().toLocaleTimeString('es-CR', { hour: '2-digit', minute: '2-digit' }),
+            quickSuggestions: ['Horario de Zapote', 'Sucursales San José', 'Tarifas EMS']
+          };
+
+          iaLogsService.createLog({
+            usuario: 'Ciudadano Web',
+            consulta: query,
+            intencion: 'codigo_postal',
+            confianza: 98.4,
+            resultado: 'Resuelto'
+          }).catch(() => {});
+
+        // 6. Consultas de Sucursal específica por nombre (Zapote, San Pedro, Alajuela, Cartago, etc.)
+        } else if (
+          initialDb.sucursales && initialDb.sucursales.some(s => {
+            const cleanName = s.nombre.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            const cleanProv = s.provincia.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            return cleanName.split(' ').some(w => w.length > 4 && lower.includes(w)) || lower.includes(cleanProv);
+          })
+        ) {
+          const matchedSuc = initialDb.sucursales.find(s => {
+            const cleanName = s.nombre.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            const cleanProv = s.provincia.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            return cleanName.split(' ').some(w => w.length > 4 && lower.includes(w)) || lower.includes(cleanProv);
+          }) || initialDb.sucursales[0];
+
+          botResponse = {
+            id: Date.now() + 1,
+            sender: 'bot',
+            text: `📍 ${matchedSuc.nombre} (${matchedSuc.provincia}):\n\n• Dirección: ${matchedSuc.direccion}\n• Horario de atención: ${matchedSuc.horario}\n• Teléfono directo: ${matchedSuc.telefono}\n• Servicios especiales: ${matchedSuc.serviciosEspeciales ? matchedSuc.serviciosEspeciales.join(', ') : 'Ventanilla General, Pasaportes VES'}\n• Estado actual: ${matchedSuc.estado}`,
+            actionLink: '/oficinas',
+            actionText: 'Ver Sucursal en el Mapa Nacional',
+            time: new Date().toLocaleTimeString('es-CR', { hour: '2-digit', minute: '2-digit' }),
+            quickSuggestions: ['Cita de Pasaporte VES', 'Tarifas Pymexpress', 'Hablar con un asesor']
+          };
+
+          iaLogsService.createLog({
+            usuario: 'Ciudadano Web',
+            consulta: query,
+            intencion: 'consulta_sucursal_especifica',
+            confianza: 98.0,
+            resultado: 'Resuelto'
+          }).catch(() => {});
+
+        // 7. Horarios y Sucursales en general
+        } else if (
+          lower.includes('horario') || 
+          lower.includes('hora') || 
+          lower.includes('sucursal') || 
+          lower.includes('sucursales') || 
+          lower.includes('oficina') || 
+          lower.includes('oficinas') || 
+          lower.includes('abren') || 
+          lower.includes('cierran')
+        ) {
+          botResponse = {
+            id: Date.now() + 1,
+            sender: 'bot',
+            text: `Nuestra red cuenta con 110 sucursales en todo el país:\n\n• Horario General: Lunes a Viernes de 8:00 a.m. a 5:00 p.m. de forma continua.\n• Sucursales Principales (Zapote Central, San Pedro, Alajuela, Heredia): Abiertas también Sábados de 8:00 a.m. a 12:00 m.d. con ventanillas activas de Pasaportes VES y Apartados Box.\n• Sede Principal Zapote: Costado Oeste de Casa Presidencial, San José.`,
+            actionLink: '/oficinas',
+            actionText: 'Ver Horarios de las 110 Sucursales',
+            time: new Date().toLocaleTimeString('es-CR', { hour: '2-digit', minute: '2-digit' }),
+            quickSuggestions: ['Horario de Zapote', 'Sucursal San Pedro', 'Cita de Pasaporte VES']
+          };
+
+          iaLogsService.createLog({
+            usuario: 'Ciudadano Web',
+            consulta: query,
+            intencion: 'consulta_horario_general',
+            confianza: 97.4,
+            resultado: 'Resuelto'
+          }).catch(() => {});
+
+        // 8. Pasaporte, Cédula de Residencia y Citas VES
+        } else if (
+          lower.includes('pasaporte') || 
+          lower.includes('cedula') || 
+          lower.includes('ves') || 
+          lower.includes('cita') || 
+          lower.includes('citas') || 
+          lower.includes('migracion') || 
+          lower.includes('sidge')
+        ) {
+          botResponse = {
+            id: Date.now() + 1,
+            sender: 'bot',
+            text: `Para citas oficiales de Pasaporte o Cédula de Residencia mediante la Ventanilla Electrónica de Servicios (VES - SIDGE):\n\n1. Pago oficial: Cancela el arancel oficial en el Banco de Costa Rica (BCR) a nombre de la Dirección General de Migración y Extranjería.\n2. Requisitos: Presentar comprobante de pago bancario, cédula vigente y en buen estado (en caso de menores de edad, deben presentarse ambos padres con certificación de nacimiento).\n3. Agendar Cita: Elige la sucursal autorizada más conveniente entre las 110 sedes del país para la toma de datos biométricos.`,
+            actionLink: '/oficinas',
+            actionText: 'Agendar Cita en Sucursales VES',
+            time: new Date().toLocaleTimeString('es-CR', { hour: '2-digit', minute: '2-digit' }),
+            quickSuggestions: ['Horarios de atención', 'Sucursal Central Zapote', 'Hablar con un asesor']
+          };
+
+          iaLogsService.createLog({
+            usuario: 'Ciudadano Web',
+            consulta: query,
+            intencion: 'cita_ves',
+            confianza: 98.5,
+            resultado: 'Resuelto'
+          }).catch(() => {});
+
+        // 9. Tarifas, Precios y Pymexpress
+        } else if (
+          lower.includes('tarifa') || 
+          lower.includes('costo') || 
+          lower.includes('precio') || 
+          lower.includes('cuanto cuesta') || 
+          lower.includes('cotizar') || 
+          lower.includes('cotizacion') || 
+          lower.includes('kilo') || 
+          lower.includes('peso') || 
+          lower.includes('pymexpress')
+        ) {
+          botResponse = {
+            id: Date.now() + 1,
+            sender: 'bot',
+            text: `Tarifas oficiales vigentes para paquetería:\n\n• EMS Courier Nacional (Entrega 24-48h con trazabilidad):\n  - 0 a 1 kg: ₡2,350\n  - 1 a 2 kg: ₡3,400\n  - 2 a 5 kg: ₡5,200\n• Pymexpress (Tarifa preferencial MiPyme con recolección en GAM):\n  - 0 a 1 kg: ₡1,950\n  - 1 a 2 kg: ₡2,750\n• Paquete Postal Regular: Desde ₡1,400 (48-72h)\n• EMS Internacional: Desde ₡14,500 hacia más de 190 países.`,
+            actionLink: '/servicios',
+            actionText: 'Abrir Calculadora de Tarifas en Línea',
+            time: new Date().toLocaleTimeString('es-CR', { hour: '2-digit', minute: '2-digit' }),
+            quickSuggestions: ['Rastrear CR098421734CR', 'Afiliación Pymexpress', 'Box Correos Miami']
+          };
+
+          iaLogsService.createLog({
+            usuario: 'Ciudadano Web',
+            consulta: query,
+            intencion: 'cotizar_tarifa',
+            confianza: 98.1,
+            resultado: 'Resuelto'
+          }).catch(() => {});
+
+        // 10. Box Correos Miami / Casillero / Compras por Internet
+        } else if (
+          lower.includes('box') || 
+          lower.includes('miami') || 
+          lower.includes('casillero') || 
+          lower.includes('compras por internet') || 
+          lower.includes('amazon') || 
+          lower.includes('shein')
+        ) {
+          botResponse = {
+            id: Date.now() + 1,
+            sender: 'bot',
+            text: `Box Correos es nuestro casillero internacional oficial en Miami, Estados Unidos:\n\n• Tarifa: Desde $4.50 por libra más aranceles aduaneros.\n• Afiliación: 100% gratuita y te asigna dirección física en Miami al instante.\n• Tiempos: De 4 a 6 días hábiles una vez recibido en nuestra bodega de Miami.\n• Entrega: Directo a tu domicilio o para retiro en cualquiera de las 110 sucursales del país.`,
+            actionLink: '/servicios',
+            actionText: 'Conocer más de Box Correos Miami',
+            time: new Date().toLocaleTimeString('es-CR', { hour: '2-digit', minute: '2-digit' }),
+            quickSuggestions: ['Tarifas de envío', 'Rastrear un paquete', 'Hablar con un asesor']
+          };
+
+          iaLogsService.createLog({
+            usuario: 'Ciudadano Web',
+            consulta: query,
+            intencion: 'box_correos',
+            confianza: 97.2,
+            resultado: 'Resuelto'
+          }).catch(() => {});
+
+        // 11. Aduanas / Impuestos / Paquete Retenido
+        } else if (
+          lower.includes('aduana') || 
+          lower.includes('aduanas') || 
+          lower.includes('impuesto') || 
+          lower.includes('impuestos') || 
+          lower.includes('retenido') || 
+          lower.includes('aforo') || 
+          lower.includes('factura comercial')
+        ) {
+          botResponse = {
+            id: Date.now() + 1,
+            sender: 'bot',
+            text: `Información sobre paquetes en trámite o aforo aduanal:\n\n• Si tu envío internacional está en revisión aduanal, se requiere remitir factura comercial con detalle de artículos y comprobante bancario de pago.\n• Correos de Costa Rica actúa como intermediario oficial ante la Dirección General de Aduanas (DGA).\n• Una vez cancelados los tributos correspondientes, el paquete se libera para distribución nacional en 24 a 48 horas.`,
+            actionLink: '/ayuda',
+            actionText: 'Gestión de Trámites Aduaneros',
+            time: new Date().toLocaleTimeString('es-CR', { hour: '2-digit', minute: '2-digit' }),
+            quickSuggestions: ['Hablar con un asesor en vivo', 'Rastrear CR098421734CR']
+          };
+
+          iaLogsService.createLog({
+            usuario: 'Ciudadano Web',
+            consulta: query,
+            intencion: 'aduanas_tramite',
+            confianza: 96.8,
+            resultado: 'Resuelto'
+          }).catch(() => {});
+
+        // 12. Tiempos de entrega / Plazos
+        } else if (
+          lower.includes('tiempo') || 
+          lower.includes('tarda') || 
+          lower.includes('demora') || 
+          lower.includes('plazo') || 
+          lower.includes('cuando llega')
+        ) {
+          botResponse = {
+            id: Date.now() + 1,
+            sender: 'bot',
+            text: `Tiempos de entrega oficiales de Correos de Costa Rica:\n\n• EMS Courier Nacional (GAM): 24 horas hábiles.\n• EMS Courier Nacional (Rural): 24 a 48 horas hábiles.\n• Paquete Postal Regular: 48 a 72 horas hábiles.\n• Box Correos Miami: 4 a 6 días hábiles tras recibirlo en bodega Miami.\n• EMS Internacional al exterior: 3 a 7 días hábiles según el país de destino.`,
+            actionLink: '/rastreo',
+            actionText: 'Rastrear mi paquete ahora',
+            time: new Date().toLocaleTimeString('es-CR', { hour: '2-digit', minute: '2-digit' }),
+            quickSuggestions: ['Rastrear CR098421734CR', 'Tarifas EMS', 'Hablar con un asesor']
+          };
+
+          iaLogsService.createLog({
+            usuario: 'Ciudadano Web',
+            consulta: query,
+            intencion: 'tiempos_entrega',
+            confianza: 97.5,
+            resultado: 'Resuelto'
+          }).catch(() => {});
+
+        // 13. Saludos
+        } else if (
+          lower.includes('hola') || 
+          lower.includes('buenos dias') || 
+          lower.includes('buenas tardes') || 
+          lower.includes('buenas noches') || 
+          lower.includes('saludos') || 
+          lower === 'buenas' || 
+          lower === 'hey'
+        ) {
+          botResponse = {
+            id: Date.now() + 1,
+            sender: 'bot',
+            text: `¡Hola! Con mucho gusto te asisto. 👋 Soy el Asistente Postal Oficial de Correos de Costa Rica. Estoy en línea 24/7 para ayudarte con trámites postales.\n\n¿En qué te puedo colaborar hoy? Puedes consultarme sobre el rastreo de un paquete, horarios de sucursales, citas de pasaporte VES, cotización de tarifas o solicitar hablar con un asesor en vivo.`,
+            time: new Date().toLocaleTimeString('es-CR', { hour: '2-digit', minute: '2-digit' }),
+            quickSuggestions: ['Rastrear CR098421734CR', 'Horario de Zapote', 'Cita de Pasaporte VES', 'Quiero hablar con un asesor en vivo']
+          };
+
+          iaLogsService.createLog({
+            usuario: 'Ciudadano Web',
+            consulta: query,
+            intencion: 'saludo',
+            confianza: 99.5,
+            resultado: 'Resuelto'
+          }).catch(() => {});
+
+        // 14. Agradecimientos / Pura vida
+        } else if (
+          lower.includes('gracias') || 
+          lower.includes('pura vida') || 
+          lower.includes('excelente') || 
+          lower.includes('muchas gracias') || 
+          lower.includes('perfecto')
+        ) {
+          botResponse = {
+            id: Date.now() + 1,
+            sender: 'bot',
+            text: `¡Con muchísimo gusto! En Correos de Costa Rica estamos para servirte y conectar a todo el país. Si tienes otra consulta o necesitas ayuda con algún trámite, cuenta conmigo. ¡Pura vida! 🇨🇷`,
+            time: new Date().toLocaleTimeString('es-CR', { hour: '2-digit', minute: '2-digit' }),
+            quickSuggestions: ['Rastrear otro paquete', 'Horarios de sucursales', 'Tarifas']
+          };
+
+          iaLogsService.createLog({
+            usuario: 'Ciudadano Web',
+            consulta: query,
+            intencion: 'agradecimiento',
+            confianza: 99.0,
+            resultado: 'Resuelto'
+          }).catch(() => {});
+
+        // 15. Búsqueda inteligente en base de datos de preguntas frecuentes (FAQ)
         } else {
-          botResponse = {
-            id: Date.now() + 1,
-            sender: 'bot',
-            text: `No encontré registro exacto para la guía "${targetGuide}". Por favor verifica que tenga el formato oficial (ej. CR098421734CR). También puedes probar con la guía de prueba CR098421734CR.`,
-            time: new Date().toLocaleTimeString('es-CR', { hour: '2-digit', minute: '2-digit' })
-          };
+          const matchingFaq = initialDb.faq && initialDb.faq.find(f => {
+            const fPregunta = f.pregunta.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            const keywords = lower.split(' ').filter(w => w.length > 3);
+            return keywords.some(k => fPregunta.includes(k));
+          });
+
+          if (matchingFaq) {
+            botResponse = {
+              id: Date.now() + 1,
+              sender: 'bot',
+              text: `Sobre tu consulta (${matchingFaq.categoria}):\n\n${matchingFaq.respuesta}`,
+              time: new Date().toLocaleTimeString('es-CR', { hour: '2-digit', minute: '2-digit' }),
+              quickSuggestions: ['Hablar con un asesor en vivo', 'Ver sucursales', 'Rastrear un paquete']
+            };
+
+            iaLogsService.createLog({
+              usuario: 'Ciudadano Web',
+              consulta: query,
+              intencion: 'faq_match',
+              confianza: 94.5,
+              resultado: 'Resuelto'
+            }).catch(() => {});
+          } else {
+            botResponse = {
+              id: Date.now() + 1,
+              sender: 'bot',
+              text: `He recibido tu consulta sobre: "${query}".\n\nPara brindarte la atención exacta que necesitas, puedes elegir una de las opciones rápidas aquí abajo o comunicarte con un asesor humano en vivo:`,
+              time: new Date().toLocaleTimeString('es-CR', { hour: '2-digit', minute: '2-digit' }),
+              quickSuggestions: ['Quiero hablar con un asesor en vivo', 'Rastrear CR098421734CR', 'Horario de Zapote', 'Tarifas Pymexpress', 'Cita Pasaporte VES']
+            };
+
+            iaLogsService.createLog({
+              usuario: 'Ciudadano Web',
+              consulta: query,
+              intencion: 'consulta_general',
+              confianza: 88.0,
+              resultado: 'Orientado'
+            }).catch(() => {});
+          }
         }
 
-        // Register in NLP logs
-        iaLogsService.createLog({
-          usuario: 'Ciudadano Web',
-          consulta: query,
-          intencion: 'rastreo_envio',
-          confianza: 98.6,
-          resultado: 'Resuelto'
-        });
-
-      } else if (lower.includes('horario') || lower.includes('zapote') || lower.includes('sucursal')) {
-        botResponse = {
-          id: Date.now() + 1,
-          sender: 'bot',
-          text: 'La Sucursal Central de Zapote (Ventanilla Principal) atiende de Lunes a Viernes de 8:00 a.m. a 5:00 p.m. y Sábados de 8:00 a.m. a 12:00 m.d. Cuenta con ventanilla activa de Pasaportes VES y Casilleros Box.',
-          time: new Date().toLocaleTimeString('es-CR', { hour: '2-digit', minute: '2-digit' })
-        };
-        iaLogsService.createLog({
-          usuario: 'Ciudadano Web',
-          consulta: query,
-          intencion: 'consulta_horario',
-          confianza: 97.4,
-          resultado: 'Resuelto'
-        });
-
-      } else if (lower.includes('pasaporte') || lower.includes('cedula') || lower.includes('ves') || lower.includes('cita')) {
-        botResponse = {
-          id: Date.now() + 1,
-          sender: 'bot',
-          text: 'Para citas oficiales de Pasaporte y Cédula de Residencia (Convenio VES - SIDGE), puedes agendar tu espacio en cualquiera de nuestras 110 sucursales autorizadas. Requieres tu comprobante de pago bancario y cédula vigente.',
-          actionLink: '/oficinas',
-          actionText: 'Agendar Cita en Sucursales Autorizadas',
-          time: new Date().toLocaleTimeString('es-CR', { hour: '2-digit', minute: '2-digit' })
-        };
-        iaLogsService.createLog({
-          usuario: 'Ciudadano Web',
-          consulta: query,
-          intencion: 'cita_ves',
-          confianza: 98.1,
-          resultado: 'Resuelto'
-        });
-
-      } else if (lower.includes('tarifa') || lower.includes('costo') || lower.includes('pymexpress') || lower.includes('precio')) {
-        botResponse = {
-          id: Date.now() + 1,
-          sender: 'bot',
-          text: 'Las tarifas de EMS Courier Nacional inician en ₡2,350 para paquetes de 0 a 1 kg. Para emprendedores inscritos en Pymexpress, la tarifa preferencial es de ₡1,950 con recolección incluida en la GAM.',
-          actionLink: '/servicios',
-          actionText: 'Ver Calculadora de Tarifas',
-          time: new Date().toLocaleTimeString('es-CR', { hour: '2-digit', minute: '2-digit' })
-        };
-        iaLogsService.createLog({
-          usuario: 'Ciudadano Web',
-          consulta: query,
-          intencion: 'cotizar_tarifa',
-          confianza: 96.2,
-          resultado: 'Resuelto'
-        });
-
-      } else {
-        botResponse = {
-          id: Date.now() + 1,
-          sender: 'bot',
-          text: `Entiendo tu consulta sobre "${query}". Puedes rastrear cualquier paquete introduciendo el número de guía (ej. CR098421734CR), cotizar envíos o solicitar la derivación con un asesor humano en ventanilla.`,
-          time: new Date().toLocaleTimeString('es-CR', { hour: '2-digit', minute: '2-digit' })
-        };
-        iaLogsService.createLog({
-          usuario: 'Ciudadano Web',
-          consulta: query,
-          intencion: 'informacion_general',
-          confianza: 92.0,
-          resultado: 'Resuelto'
-        });
+        setMessages((prev) => [...prev, botResponse]);
+      } catch (err) {
+        console.error('Error generating assistant response:', err);
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: Date.now() + 1,
+            sender: 'bot',
+            text: 'Disculpa, ocurrió una intermitencia al procesar tu solicitud. Por favor intenta de nuevo.',
+            time: new Date().toLocaleTimeString('es-CR', { hour: '2-digit', minute: '2-digit' })
+          }
+        ]);
+      } finally {
+        setIsTyping(false);
       }
-
-      setMessages((prev) => [...prev, botResponse]);
-      setIsTyping(false);
     }, 600);
   };
 
@@ -290,7 +658,7 @@ export const AssistantChatModal = ({ onClose, isFloating = false }) => {
                       : 'bg-white text-gris-oscuro rounded-tl-none border border-gray-200'
                   }`}
                 >
-                  <p>{msg.text}</p>
+                  <p className="whitespace-pre-line">{msg.text}</p>
 
                   {/* Embedded Tracking Card if available */}
                   {msg.envio && (

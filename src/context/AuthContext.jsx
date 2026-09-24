@@ -1,7 +1,14 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { usuariosService } from '../services/usuariosService';
 
-const AuthContext = createContext();
+export const AuthContext = createContext({
+  user: null,
+  isAuthenticated: false,
+  isAdmin: false,
+  login: async () => ({ success: false }),
+  loginAsDemo: () => {},
+  logout: () => {},
+});
 
 const DEFAULT_ADMIN = {
   id: 'USR-001',
