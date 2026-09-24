@@ -1,146 +1,16 @@
 {
   "usuarios": [
     {
-      "id": "USR-001",
-      "nombre": "Carlos Mora Jiménez",
-      "correo": "carlos.mora@correos.go.cr",
-      "rol": "Administrador",
+      "id": "admin-1",
+      "nombre": "Administrador Sistema",
+      "correo": "admin@admin.com",
+      "password": "admin",
+      "rol": "admin",
       "estado": "Activo",
-      "fechaRegistro": "2023-01-15",
-      "telefono": "+506 8821-4321",
-      "sucursal": "Zapote Central",
-      "avatar": "CM"
-    },
-    {
-      "id": "USR-002",
-      "nombre": "María Elena Rojas",
-      "correo": "m.rojas@gmail.com",
-      "rol": "Usuario",
-      "estado": "Activo",
-      "fechaRegistro": "2023-04-10",
-      "telefono": "+506 8765-4321",
-      "sucursal": "San Pedro",
-      "avatar": "MR"
-    },
-    {
-      "id": "USR-003",
-      "nombre": "Inversiones del Valle S.A.",
-      "correo": "logistica@inversionesvalle.cr",
-      "rol": "Cliente Empresarial",
-      "estado": "Activo",
-      "fechaRegistro": "2023-05-22",
-      "telefono": "+506 2222-3333",
-      "sucursal": "Heredia Centro",
-      "avatar": "IV"
-    },
-    {
-      "id": "USR-004",
-      "nombre": "Andrés Fallas Solano",
-      "correo": "afallas@outlook.com",
-      "rol": "Usuario",
-      "estado": "Activo",
-      "fechaRegistro": "2023-06-18",
-      "telefono": "+506 7012-3456",
-      "sucursal": "Alajuela Central",
-      "avatar": "AF"
-    },
-    {
-      "id": "USR-005",
-      "nombre": "Boutique Artesanal CR",
-      "correo": "ventas@boutiquecr.com",
-      "rol": "Cliente Empresarial",
-      "estado": "Activo",
-      "fechaRegistro": "2023-07-03",
-      "telefono": "+506 8345-6789",
-      "sucursal": "Cartago Los Ángeles",
-      "avatar": "BA"
-    },
-    {
-      "id": "USR-006",
-      "nombre": "Laura Méndez Castro",
-      "correo": "laura.mendez@correos.go.cr",
-      "rol": "Administrador",
-      "estado": "Activo",
-      "fechaRegistro": "2023-02-01",
-      "telefono": "+506 8999-1122",
-      "sucursal": "Edificio Central",
-      "avatar": "LM"
-    },
-    {
-      "id": "USR-007",
-      "nombre": "Roberto Vargas Brenes",
-      "correo": "rvargas@gmail.com",
-      "rol": "Usuario",
-      "estado": "Suspendido",
-      "fechaRegistro": "2023-08-14",
-      "telefono": "+506 8654-7890",
-      "sucursal": "Liberia",
-      "avatar": "RV"
-    },
-    {
-      "id": "USR-008",
-      "nombre": "Distribuidora del Caribe",
-      "correo": "contacto@distribuidoracaribe.com",
-      "rol": "Cliente Empresarial",
-      "estado": "Activo",
-      "fechaRegistro": "2023-09-01",
-      "telefono": "+506 2758-1234",
-      "sucursal": "Limón Centro",
-      "avatar": "DC"
-    },
-    {
-      "id": "USR-009",
-      "nombre": "Sofía Alvarado Cordero",
-      "correo": "sofia.alvarado@yahoo.com",
-      "rol": "Usuario",
-      "estado": "Pendiente",
-      "fechaRegistro": "2024-01-20",
-      "telefono": "+506 7123-9876",
-      "sucursal": "Puntarenas",
-      "avatar": "SA"
-    },
-    {
-      "id": "USR-010",
-      "nombre": "Daniel Chaves Umaña",
-      "correo": "dchaves@gmail.com",
-      "rol": "Usuario",
-      "estado": "Activo",
-      "fechaRegistro": "2024-02-11",
-      "telefono": "+506 8888-5544",
-      "sucursal": "Escazú",
-      "avatar": "DC"
-    },
-    {
-      "id": "USR-011",
-      "nombre": "Exportadora AgroSur S.A.",
-      "correo": "envios@agrosur.cr",
-      "rol": "Cliente Empresarial",
-      "estado": "Activo",
-      "fechaRegistro": "2024-03-05",
-      "telefono": "+506 2771-4455",
-      "sucursal": "Pérez Zeledón",
-      "avatar": "EA"
-    },
-    {
-      "id": "USR-012",
-      "nombre": "Gabriela Solís Quirós",
-      "correo": "gaby.solis@hotmail.com",
-      "rol": "Usuario",
-      "estado": "Activo",
-      "fechaRegistro": "2024-04-12",
-      "telefono": "+506 8456-1230",
-      "sucursal": "Tibás",
-      "avatar": "GS"
-    },
-    {
-      "nombre": "daniela castro",
-      "correo": "SDJSOHFHO@gmail.com",
-      "telefono": "38124801809580",
-      "password": "12345",
-      "rol": "Usuario",
-      "fechaRegistro": "2026-09-24",
-      "estado": "Activo",
-      "id": "d5vHTKCRYF8"
+      "fechaRegistro": "2024-01-01",
+      "telefono": "+506 8888-8888",
+      "sucursal": "Sede Central",
+      "avatar": "AD"
     }
   ],
   "envios": [

@@ -11,12 +11,12 @@ export const AuthContext = createContext({
 });
 
 const DEFAULT_ADMIN = {
-  id: 'USR-001',
-  nombre: 'Carlos Mora Jiménez',
-  correo: 'carlos.mora@correos.go.cr',
-  rol: 'Administrador',
-  sucursal: 'Zapote Central',
-  avatar: 'CM',
+  id: 'admin-1',
+  nombre: 'Administrador Sistema',
+  correo: 'admin@admin.com',
+  rol: 'admin',
+  sucursal: 'Sede Central',
+  avatar: 'AD',
   terminalId: 'ZAP-04',
   codigoOperador: 'OP-8821'
 };
@@ -45,38 +45,16 @@ export const AuthProvider = ({ children }) => {
       setUser(foundUser);
       return { success: true, user: foundUser };
     } catch (err) {
-      // Demo fallback helper: if it's admin email or contains admin, log in as Carlos Mora
-      if (email.toLowerCase().includes('admin') || email.toLowerCase().includes('carlos')) {
+      if (email === 'admin@admin.com' && password === 'admin') {
         setUser(DEFAULT_ADMIN);
         return { success: true, user: DEFAULT_ADMIN };
       }
-      // Or default citizen user
-      const citizenUser = {
-        id: 'USR-002',
-        nombre: 'María Elena Rojas',
-        correo: email,
-        rol: 'Usuario',
-        sucursal: 'San Pedro',
-        avatar: 'MR'
-      };
-      setUser(citizenUser);
-      return { success: true, user: citizenUser };
+      return { success: false, error: 'Credenciales inválidas' };
     }
   };
 
   const loginAsDemo = (role = 'Administrador') => {
-    if (role === 'Administrador') {
-      setUser(DEFAULT_ADMIN);
-    } else {
-      setUser({
-        id: 'USR-002',
-        nombre: 'María Elena Rojas',
-        correo: 'm.rojas@gmail.com',
-        rol: 'Usuario',
-        sucursal: 'San Pedro',
-        avatar: 'MR'
-      });
-    }
+    setUser(DEFAULT_ADMIN);
   };
 
   const logout = () => {
@@ -84,7 +62,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const isAuthenticated = !!user;
-  const isAdmin = user?.rol === 'Administrador';
+  const isAdmin = user?.rol === 'admin' || user?.rol === 'Administrador';
 
   return (
     <AuthContext.Provider value={{ user, isAuthenticated, isAdmin, login, loginAsDemo, logout }}>
