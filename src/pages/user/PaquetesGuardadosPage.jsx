@@ -44,13 +44,18 @@ export const PaquetesGuardadosPage = () => {
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
       
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
+        <div className="flex-1">
           <h1 className="text-2xl font-bold text-azul-oscuro flex items-center gap-2">
             <Bookmark className="w-6 h-6 text-azul-primario" />
             <span>Paquetes Guardados</span>
           </h1>
-          <p className="text-xs text-gray-500">Acceso directo a tus envíos prioritarios con monitoreo activo</p>
+          <p className="text-xs text-gray-500 mb-4 sm:mb-0">Acceso directo a tus envíos prioritarios con monitoreo activo</p>
         </div>
+        
+        <Link to="/cuenta/citas-premium" className="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-amber-950 px-4 py-2 rounded-xl text-sm font-bold shadow-md shadow-amber-500/20 flex items-center gap-2 transition transform hover:-translate-y-0.5">
+          <span className="w-4 h-4 text-amber-950">⚡</span>
+          Acelerar Entrega (Premium)
+        </Link>
 
         <form onSubmit={handleAddGuide} className="flex items-center gap-2">
           <input

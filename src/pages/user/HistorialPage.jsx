@@ -27,10 +27,15 @@ export const HistorialPage = () => {
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
       
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
+        <div className="flex-1">
           <h1 className="text-2xl font-bold text-azul-oscuro">Historial de Envíos</h1>
-          <p className="text-xs text-gray-500">Consulta tus trámites de paquetería recientes y comprobantes</p>
+          <p className="text-xs text-gray-500 mb-4 sm:mb-0">Consulta tus trámites de paquetería recientes y comprobantes</p>
         </div>
+        
+        <Link to="/cuenta/citas-premium" className="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-amber-950 px-4 py-2 rounded-xl text-sm font-bold shadow-md shadow-amber-500/20 flex items-center gap-2 transition transform hover:-translate-y-0.5">
+          <span className="w-4 h-4 text-amber-950">⚡</span>
+          Acelerar Entrega
+        </Link>
 
         <div className="relative">
           <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />

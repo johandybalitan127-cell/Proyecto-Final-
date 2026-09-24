@@ -24,6 +24,7 @@ import { HistorialPage } from './pages/user/HistorialPage';
 import { PaquetesGuardadosPage } from './pages/user/PaquetesGuardadosPage';
 import { ConfiguracionUsuarioPage } from './pages/user/ConfiguracionUsuarioPage';
 import { RastreoInternoPage } from './pages/user/RastreoInternoPage';
+import { CitasPremiumPage } from './pages/user/CitasPremiumPage';
 
 // Admin Pages
 import { AdminDashboardPage } from './pages/admin/AdminDashboardPage';
@@ -60,6 +61,14 @@ function App() {
                   element={
                     <ProtectedRoute>
                       <PerfilPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/cuenta/citas-premium"
+                  element={
+                    <ProtectedRoute>
+                      <CitasPremiumPage />
                     </ProtectedRoute>
                   }
                 />
