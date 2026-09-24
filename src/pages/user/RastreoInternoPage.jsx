@@ -3,35 +3,50 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { 
   Package, Search, Printer, Bell, ShieldCheck, MapPin, Clock, 
   Download, CheckCircle2, AlertCircle, FileText, Share2, Workflow,
-  Check, Truck, AlertTriangle, Building, RefreshCw
+  Check, Truck, AlertTriangle, Building, RefreshCw, Lock
 } from 'lucide-react';
 import { enviosService } from '../../services/enviosService';
 import { StepperTracking } from '../../components/common/StepperTracking';
 import { StatusBadge } from '../../components/common/StatusBadge';
 import { generateTrackingStages, GUIAS_DEMO, ESTADOS_RASTREO } from '../../utils/trackingUtils';
+import { useAuth } from '../../hooks/useAuth';
+import { decryptId, encryptId } from '../../utils/cryptoUtils';
 
-export const RastreoPage = () => {
-  const { trackingNumber } = useParams();
+export const RastreoInternoPage = () => {
+  const { trackingNumber } = useParams(); // This will be the encrypted ID
   const navigate = useNavigate();
+  const { user } = useAuth();
 
-  const [inputGuia, setInputGuia] = useState(trackingNumber || 'CR098421734CR');
+  const [inputGuia, setInputGuia] = useState('');
   const [currentEnvio, setCurrentEnvio] = useState(null);
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [alertSubscribed, setAlertSubscribed] = useState(false);
   const [emailAlert, setEmailAlert] = useState('');
 
-  const searchTracking = async (guiaToSearch) => {
-    const clean = (guiaToSearch || inputGuia).trim().toUpperCase();
+  const searchTracking = async (guiaToSearch, isEncrypted = false) => {
+    let clean = (guiaToSearch || inputGuia).trim();
     if (!clean) {
-      setErrorMsg('Por favor ingresa un número de guía');
+      setErrorMsg('Por favor ingresa un número de guía válido');
       return;
+    }
+
+    if (isEncrypted) {
+      const decrypted = decryptId(clean);
+      if (!decrypted) {
+        setErrorMsg('El enlace de rastreo seguro es inválido o está corrupto.');
+        return;
+      }
+      clean = decrypted.toUpperCase();
+      setInputGuia(clean);
+    } else {
+      clean = clean.toUpperCase();
     }
 
     // Regex check (UPU standard 8-10 digits e.g. CR098421734CR or CR03927360CR)
     const isValidFormat = enviosService.validateTrackingNumber(clean);
     if (!isValidFormat) {
-      setErrorMsg('Formato de guía no estándar. El código postal oficial debe iniciar con CR o CP seguido de 8 a 10 dígitos y terminar en CR (ej. CR098421734CR o CR03927360CR).');
+      setErrorMsg('Formato de guía no estándar. El código debe iniciar con CR o CP seguido de 8 a 10 dígitos y terminar en CR.');
     } else {
       setErrorMsg('');
     }
@@ -41,6 +56,13 @@ export const RastreoPage = () => {
     setLoading(false);
 
     if (found) {
+      // Internal dashboard check: Ownership
+      if (found.usuarioId !== user?.id && user?.rol !== 'admin') {
+        setErrorMsg('🔒 Acceso denegado. Este paquete pertenece a otra cuenta.');
+        setCurrentEnvio(null);
+        return;
+      }
+
       // Ensure stages are populated and aligned with current state
       const etapas = (found.etapas && found.etapas.length > 0)
         ? found.etapas
@@ -52,47 +74,15 @@ export const RastreoPage = () => {
       });
       setErrorMsg('');
     } else {
+      setErrorMsg('El paquete no existe en el sistema interno.');
+      setCurrentEnvio(null);
       // If not in DB, create dynamic shipment with realistic stages
-      const isAduana = clean.includes('874') || clean.includes('ADU');
-      const isEntregado = clean.includes('039') || clean.includes('109');
-      const isSucursal = clean.includes('554');
-      const isProcesando = clean.includes('321');
-
-      const initialEstado = isAduana 
-        ? 'En aduana'
-        : isEntregado
-        ? 'Entregado'
-        : isSucursal
-        ? 'Disponible en sucursal'
-        : isProcesando
-        ? 'Procesando'
-        : 'En tránsito';
-
-      const simulatedEnvio = {
-        id: `DEMO-${clean}`,
-        guia: clean,
-        remitente: 'Ventanilla Central San José',
-        destinatario: 'Destinatario Registrado',
-        servicio: clean.startsWith('CP') ? 'Paquete Postal Regular' : 'EMS Courier Nacional',
-        origen: isAduana ? 'Gateway Internacional Miami' : 'San José Central',
-        destino: 'Alajuela / GAM Costa Rica',
-        estado: initialEstado,
-        fecha: new Date().toISOString().split('T')[0],
-        ruta: 'Centro Zapote → Hub Distribución Regional',
-        repartidorId: 'REP-102'
-      };
-
-      simulatedEnvio.etapas = generateTrackingStages(simulatedEnvio);
-      setCurrentEnvio(simulatedEnvio);
     }
   };
 
   useEffect(() => {
     if (trackingNumber) {
-      setInputGuia(trackingNumber);
-      searchTracking(trackingNumber);
-    } else {
-      searchTracking('CR098421734CR');
+      searchTracking(trackingNumber, true);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trackingNumber]);
@@ -100,7 +90,8 @@ export const RastreoPage = () => {
   const handleFormSubmit = (e) => {
     e.preventDefault();
     if (inputGuia.trim()) {
-      navigate(`/rastreo/${inputGuia.trim().toUpperCase()}`);
+      const encryptedUrl = encryptId(inputGuia.trim().toUpperCase());
+      navigate(`/cuenta/rastreo/${encryptedUrl}`);
     }
   };
 
@@ -131,14 +122,15 @@ export const RastreoPage = () => {
       
       {/* Title */}
       <div className="text-center space-y-2">
-        <span className="text-xs font-bold text-azul-primario uppercase tracking-wider">
-          Sistema de Trazabilidad UPU
+        <span className="text-xs font-bold text-blue-600 uppercase tracking-wider flex items-center justify-center gap-2">
+          <Lock className="w-4 h-4" /> 
+          Rastreo Interno Seguro
         </span>
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-azul-oscuro font-sans">
-          Rastreo de Envíos y Paquetería
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-800 font-sans">
+          Mis Envíos
         </h1>
-        <p className="text-xs sm:text-sm text-gray-600 max-w-xl mx-auto">
-          Monitoreo satelital y certificación de entregas para mensajería nacional EMS, Box Correos y envíos internacionales.
+        <p className="text-xs sm:text-sm text-slate-600 max-w-xl mx-auto">
+          Consulta el estado de tus envíos de manera privada. Los datos están cifrados y solo son accesibles para el propietario de la cuenta.
         </p>
       </div>
 
@@ -185,7 +177,7 @@ export const RastreoPage = () => {
                   type="button"
                   onClick={() => {
                     setInputGuia(demo.guia);
-                    navigate(`/rastreo/${demo.guia}`);
+                    navigate(`/cuenta/rastreo/${encryptId(demo.guia)}`);
                   }}
                   className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs transition shadow-2xs ${
                     isActive

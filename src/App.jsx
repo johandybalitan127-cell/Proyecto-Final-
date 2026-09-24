@@ -12,7 +12,6 @@ import { ProtectedRoute } from './components/common/ProtectedRoute';
 // Public Pages
 import { HomePage } from './pages/public/HomePage';
 import { ServiciosPage } from './pages/public/ServiciosPage';
-import { RastreoPage } from './pages/public/RastreoPage';
 import { OficinasPage } from './pages/public/OficinasPage';
 import { AsistenteIAPage } from './pages/public/AsistenteIAPage';
 import { AyudaPage } from './pages/public/AyudaPage';
@@ -24,6 +23,7 @@ import { PerfilPage } from './pages/user/PerfilPage';
 import { HistorialPage } from './pages/user/HistorialPage';
 import { PaquetesGuardadosPage } from './pages/user/PaquetesGuardadosPage';
 import { ConfiguracionUsuarioPage } from './pages/user/ConfiguracionUsuarioPage';
+import { RastreoInternoPage } from './pages/user/RastreoInternoPage';
 
 // Admin Pages
 import { AdminDashboardPage } from './pages/admin/AdminDashboardPage';
@@ -48,8 +48,6 @@ function App() {
               <Route element={<PublicLayout />}>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/servicios" element={<ServiciosPage />} />
-                <Route path="/rastreo" element={<RastreoPage />} />
-                <Route path="/rastreo/:trackingNumber" element={<RastreoPage />} />
                 <Route path="/oficinas" element={<OficinasPage />} />
                 <Route path="/asistente-ia" element={<AsistenteIAPage />} />
                 <Route path="/ayuda" element={<AyudaPage />} />
@@ -78,6 +76,22 @@ function App() {
                   element={
                     <ProtectedRoute>
                       <PaquetesGuardadosPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/cuenta/rastreo"
+                  element={
+                    <ProtectedRoute>
+                      <RastreoInternoPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/cuenta/rastreo/:trackingNumber"
+                  element={
+                    <ProtectedRoute>
+                      <RastreoInternoPage />
                     </ProtectedRoute>
                   }
                 />

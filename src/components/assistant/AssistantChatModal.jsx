@@ -402,7 +402,7 @@ export const AssistantChatModal = ({ onClose, isFloating = false }) => {
             id: Date.now() + 1,
             sender: 'bot',
             text: `Tiempos de entrega oficiales de Correos de Costa Rica:\n\n• EMS Courier Nacional (GAM): 24 horas hábiles.\n• EMS Courier Nacional (Rural): 24 a 48 horas hábiles.\n• Paquete Postal Regular: 48 a 72 horas hábiles.\n• Box Correos Miami: 4 a 6 días hábiles tras recibirlo en bodega Miami.\n• EMS Internacional al exterior: 3 a 7 días hábiles según el país de destino.`,
-            actionLink: '/rastreo',
+            actionLink: '/cuenta/rastreo',
             actionText: 'Rastrear mi paquete ahora',
             time: new Date().toLocaleTimeString('es-CR', { hour: '2-digit', minute: '2-digit' }),
             quickSuggestions: ['Rastrear CR098421734CR', 'Tarifas EMS', 'Hablar con un asesor']

@@ -5,7 +5,7 @@ import { Home, Package, FileText, MapPin, User } from 'lucide-react';
 export const MobileBottomBar = () => {
   const tabs = [
     { name: 'Inicio', path: '/', icon: Home },
-    { name: 'Rastreo', path: '/rastreo', icon: Package },
+    { name: 'Rastreo', path: '/cuenta/rastreo', icon: Package },
     { name: 'Trámites', path: '/servicios', icon: FileText },
     { name: 'Sucursales', path: '/oficinas', icon: MapPin },
     { name: 'Mi Cuenta', path: '/cuenta/perfil', icon: User },

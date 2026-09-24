@@ -10,6 +10,7 @@ import { StepperTracking } from '../../components/common/StepperTracking';
 import { ExchangeRateBadge } from '../../components/common/ExchangeRateBadge';
 import { enviosService } from '../../services/enviosService';
 import { sucursalesService } from '../../services/sucursalesService';
+import { encryptId } from '../../utils/cryptoUtils';
 
 export const HomePage = () => {
   const navigate = useNavigate();
@@ -47,25 +48,15 @@ export const HomePage = () => {
     loadBranches();
   }, []);
 
-  const handleTrackSubmit = async (e) => {
+  const handleTrackSubmit = (e) => {
     if (e && e.preventDefault) e.preventDefault();
     setTrackingError('');
     if (!guideInput.trim()) {
-      setTrackingError('Por favor ingresa un número de guía');
+      setTrackingError('Por favor ingresa un número de guía válido');
       return;
     }
-
-    setTrackingLoading(true);
-    const found = await enviosService.getByIdOrGuia(guideInput.trim());
-    setTrackingLoading(false);
-
-    if (found) {
-      setTrackedEnvio(found);
-    } else {
-      setTrackingError(`No se encontró la guía "${guideInput}". Mostrando datos del envío de muestra.`);
-      const demo = await enviosService.getByIdOrGuia('CR098421734CR');
-      setTrackedEnvio(demo);
-    }
+    const encrypted = encryptId(guideInput.trim().toUpperCase());
+    navigate(`/cuenta/rastreo/${encrypted}`);
   };
 
   const filteredBranches = branches.filter((b) => {
@@ -163,7 +154,7 @@ export const HomePage = () => {
                 </span>
                 <div className="grid grid-cols-2 gap-2.5">
                   <Link
-                    to="/rastreo"
+                    to="/cuenta/rastreo"
                     className="p-3 rounded-2xl bg-white border border-gray-200 shadow-2xs hover:border-azul-primario transition flex items-center gap-2.5"
                   >
                     <div className="w-8 h-8 rounded-xl bg-sky-100 text-azul-primario flex items-center justify-center flex-shrink-0">
@@ -336,68 +327,7 @@ export const HomePage = () => {
             </p>
           )}
 
-          {/* Active Result Preview Card */}
-          {trackedEnvio && (
-            <div className="p-5 sm:p-6 rounded-2xl bg-gray-50 border border-gray-200 space-y-5">
-              
-              {/* Result Header */}
-              <div className="flex flex-wrap items-center justify-between gap-3 border-b border-gray-200 pb-4">
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs text-gray-500 font-semibold uppercase">Guía Registrada</span>
-                    <span className="badge-verde">● Entrega estimada · En Línea</span>
-                  </div>
-                  <h3 className="text-xl font-extrabold text-azul-oscuro font-mono mt-0.5">
-                    #{trackedEnvio.guia}
-                  </h3>
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => window.print()}
-                    className="btn-neutro text-xs py-2 px-3"
-                  >
-                    <Printer className="w-4 h-4" />
-                    <span>Imprimir Comprobante</span>
-                  </button>
-                </div>
-              </div>
-
-              {/* Stepper Horizontal de 4 pasos */}
-              <StepperTracking envio={trackedEnvio} />
-
-              {/* Route text & details */}
-              <div className="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
-                <div className="space-y-0.5">
-                  <span className="text-gray-400 font-semibold uppercase tracking-wider text-[10px]">
-                    Ruta Postal Nacional
-                  </span>
-                  <p className="font-bold text-gris-oscuro">
-                    {trackedEnvio.ruta || 'San José (CI) → Zapote Clasificación → Distribución Alajuela'}
-                  </p>
-                </div>
-
-                <div className="flex items-center gap-4 text-xs font-semibold">
-                  <Link
-                    to={`/rastreo/${trackedEnvio.guia}`}
-                    className="text-azul-primario hover:underline inline-flex items-center gap-1"
-                  >
-                    <span>Comprobante Digital</span>
-                    <ExternalLink className="w-3.5 h-3.5" />
-                  </Link>
-
-                  <button
-                    onClick={() => alert(`Alertas SMS activadas para el número registrado y la guía ${trackedEnvio.guia}`)}
-                    className="text-verde-oscuro hover:underline inline-flex items-center gap-1"
-                  >
-                    <Bell className="w-3.5 h-3.5" />
-                    <span>Activar alertas SMS</span>
-                  </button>
-                </div>
-              </div>
-
-            </div>
-          )}
+          {/* Tracking result preview removed for privacy. It now directly navigates to private dashboard */}
 
         </div>
       </section>
@@ -492,8 +422,8 @@ export const HomePage = () => {
               </div>
             </div>
             <div className="pt-6 border-t border-gray-100 mt-6">
-              <Link to="/rastreo" className="text-xs font-bold text-azul-primario hover:underline inline-flex items-center gap-1">
-                <span>Ir al rastreador</span>
+              <Link to="/cuenta/rastreo" className="text-xs font-bold text-azul-primario hover:underline inline-flex items-center gap-1">
+                <span>Ir al rastreador seguro</span>
                 <span>→</span>
               </Link>
             </div>

@@ -4,6 +4,7 @@ import { Bookmark, Package, ExternalLink, Trash2, Plus } from 'lucide-react';
 import { enviosService } from '../../services/enviosService';
 import { StatusBadge } from '../../components/common/StatusBadge';
 import { useToast } from '../../context/ToastContext';
+import { encryptId } from '../../utils/cryptoUtils';
 
 export const PaquetesGuardadosPage = () => {
   const { addToast } = useToast();
@@ -79,7 +80,7 @@ export const PaquetesGuardadosPage = () => {
             </div>
 
             <div className="pt-3 border-t border-gray-100 flex items-center justify-between">
-              <Link to={`/rastreo/${envio.guia}`} className="text-xs font-bold text-azul-primario hover:underline inline-flex items-center gap-1">
+              <Link to={`/cuenta/rastreo/${encryptId(envio.guia)}`} className="text-xs font-bold text-azul-primario hover:underline inline-flex items-center gap-1">
                 <span>Rastrear ahora</span>
                 <ExternalLink className="w-3 h-3" />
               </Link>

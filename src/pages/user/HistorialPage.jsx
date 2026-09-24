@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Package, ExternalLink, Calendar, Search, Filter } from 'lucide-react';
 import { enviosService } from '../../services/enviosService';
 import { StatusBadge } from '../../components/common/StatusBadge';
+import { encryptId } from '../../utils/cryptoUtils';
 
 export const HistorialPage = () => {
   const [envios, setEnvios] = useState([]);
@@ -76,7 +77,7 @@ export const HistorialPage = () => {
                   </td>
                   <td className="py-3.5 px-4 text-right">
                     <Link
-                      to={`/rastreo/${item.guia}`}
+                      to={`/cuenta/rastreo/${encryptId(item.guia)}`}
                       className="text-xs font-semibold text-azul-primario hover:underline inline-flex items-center gap-1"
                     >
                       <span>Rastrear</span>

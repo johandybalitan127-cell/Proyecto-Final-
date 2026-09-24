@@ -1354,6 +1354,78 @@
       "resultado": "Resuelto",
       "hora": "09:22:42 a. m.",
       "id": "BYnIsDqHMG0"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "hola",
+      "intencion": "saludo",
+      "confianza": 99.5,
+      "resultado": "Resuelto",
+      "hora": "10:37:00 a. m.",
+      "id": "wZWQiK0G88M"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "puedes crear codigo",
+      "intencion": "consulta_general",
+      "confianza": 88,
+      "resultado": "Orientado",
+      "hora": "10:37:16 a. m.",
+      "id": "GuktFoChlQU"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "cual es mi contraseña",
+      "intencion": "faq_match",
+      "confianza": 94.5,
+      "resultado": "Resuelto",
+      "hora": "10:37:37 a. m.",
+      "id": "jvlVafAB97U"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "como te llamas",
+      "intencion": "faq_match",
+      "confianza": 94.5,
+      "resultado": "Resuelto",
+      "hora": "10:38:18 a. m.",
+      "id": "q8uqDyW27e4"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "ocupo llegar a costa rica como lo hago",
+      "intencion": "faq_match",
+      "confianza": 94.5,
+      "resultado": "Resuelto",
+      "hora": "10:38:33 a. m.",
+      "id": "UrImzjk0dC8"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "Ver sucursales",
+      "intencion": "consulta_sucursal_especifica",
+      "confianza": 98,
+      "resultado": "Resuelto",
+      "hora": "10:40:07 a. m.",
+      "id": "5QxnDYUszGY"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "Cita de Pasaporte VES",
+      "intencion": "cita_ves",
+      "confianza": 98.5,
+      "resultado": "Resuelto",
+      "hora": "10:40:14 a. m.",
+      "id": "kDxixN1mWWY"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "Quiero hablar con un asesor en vivo",
+      "intencion": "transferencia_asesor",
+      "confianza": 98.9,
+      "resultado": "Resuelto",
+      "hora": "10:40:21 a. m.",
+      "id": "B6jZTAYoJZ4"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

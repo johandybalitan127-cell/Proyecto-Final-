@@ -23,7 +23,7 @@ export const Navbar = () => {
   const navLinks = [
     { name: 'Inicio', path: '/' },
     { name: 'Servicios', path: '/servicios' },
-    { name: 'Rastreo', path: '/rastreo' },
+    { name: 'Rastreo', path: '/cuenta/rastreo' },
     { name: 'Oficinas', path: '/oficinas' },
     { name: 'Ayuda', path: '/ayuda' },
   ];
