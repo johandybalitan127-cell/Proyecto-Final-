@@ -4,7 +4,7 @@ import {
   Package, Search, Truck, Globe, ShieldCheck, MapPin, Clock, 
   ExternalLink, Printer, Bell, CheckCircle2, ChevronRight, Navigation,
   Ticket, ArrowRight, MessageCircle, PhoneCall, Sparkles, Building2,
-  Archive, Users, FileCheck, Layers, Calculator
+  Archive, Users, FileCheck, Layers, Calculator, Zap
 } from 'lucide-react';
 import { StepperTracking } from '../../components/common/StepperTracking';
 import { ExchangeRateBadge } from '../../components/common/ExchangeRateBadge';
@@ -126,6 +126,14 @@ export const HomePage = () => {
                 >
                   <span>Ver servicios</span>
                   <span>→</span>
+                </Link>
+
+                <Link
+                  to="/cuenta/citas-premium"
+                  className="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-amber-950 px-6 py-3 rounded-xl text-base font-bold shadow-md shadow-amber-500/20 flex items-center gap-2 transition transform hover:-translate-y-0.5"
+                >
+                  <Zap className="w-5 h-5 text-amber-950" />
+                  <span>Citas VIP (Fila Cero)</span>
                 </Link>
               </div>
 
