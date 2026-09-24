@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { Package, Menu, X, User, LogOut, ShieldCheck, ChevronDown } from 'lucide-react';
+import { Package, Menu, X, User, LogOut, ShieldCheck, ChevronDown, Volume2, VolumeX, Eye } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import { useAccessibility } from '../../context/AccessibilityContext';
 
@@ -8,7 +8,14 @@ export const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const { user, isAuthenticated, isAdmin, logout } = useAuth();
-  const { setIsModalOpen, highContrast } = useAccessibility();
+  const { 
+    setIsModalOpen, 
+    highContrast, 
+    colorblindMode, 
+    isSpeaking, 
+    stopSpeaking, 
+    readCurrentPage 
+  } = useAccessibility();
   const navigate = useNavigate();
 
   const navLinks = [
@@ -67,15 +74,37 @@ export const Navbar = () => {
           {/* Right Action Buttons */}
           <div className="flex items-center gap-2 sm:gap-3">
             
+            {/* Stop Voice Reading button when speaking */}
+            {isSpeaking && (
+              <button
+                onClick={stopSpeaking}
+                className="px-2.5 py-1.5 rounded-lg bg-rose-600 text-white text-xs font-bold flex items-center gap-1.5 shadow-sm animate-pulse hover:bg-rose-700 transition"
+                title="Detener voz (Esc)"
+                aria-label="Detener lectura de voz en curso"
+              >
+                <VolumeX className="w-4 h-4" />
+                <span className="hidden sm:inline">Pausar Voz</span>
+              </button>
+            )}
+
             {/* Accessibility Button */}
             <button
               onClick={() => setIsModalOpen(true)}
-              className="p-2 sm:px-3 sm:py-2 rounded-lg border border-gray-200 text-gray-700 hover:text-azul-primario hover:border-azul-primario bg-white hover:bg-gray-50 transition-all flex items-center gap-1.5 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-azul-primario"
-              aria-label="Abrir panel de accesibilidad universal"
-              title="Accesibilidad Universal (WCAG 2.1 AA)"
+              className={`p-2 sm:px-3 sm:py-2 rounded-lg border text-xs font-bold transition-all flex items-center gap-1.5 focus:outline-none focus:ring-2 ${
+                colorblindMode !== 'none' || highContrast
+                  ? 'bg-amber-400 text-black border-black font-extrabold shadow-sm'
+                  : 'border-gray-200 text-gray-700 hover:text-azul-primario hover:border-azul-primario bg-white hover:bg-gray-50'
+              }`}
+              aria-label="Abrir panel de accesibilidad para personas ciegas y daltónicas (Atajo Alt + A)"
+              title="Accesibilidad: Lector de voz, Daltonismo y Alto Contraste (Alt + A)"
             >
               <span className="text-base leading-none" role="img" aria-label="Símbolo de accesibilidad">♿</span>
               <span className="hidden sm:inline">Accesibilidad</span>
+              {colorblindMode !== 'none' && (
+                <span className="hidden md:inline text-[9px] px-1.5 py-0.5 rounded bg-black text-amber-300 font-mono uppercase">
+                  {colorblindMode}
+                </span>
+              )}
             </button>
 
             {/* Virtual Branch Button */}

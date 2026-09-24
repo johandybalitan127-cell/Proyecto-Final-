@@ -2,18 +2,26 @@ import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { AdminSidebar } from './AdminSidebar';
 import { Lock, Cpu } from 'lucide-react';
+import { AccessibilityModal } from '../common/AccessibilityModal';
 
 export const AdminLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
     <div className="flex min-h-screen bg-[#F5F7F8] font-sans antialiased text-gris-oscuro">
+      <a
+        href="#admin-main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:px-4 focus:py-2.5 focus:bg-amber-400 focus:text-black focus:font-extrabold focus:rounded-xl focus:shadow-2xl focus:ring-4 focus:ring-black"
+      >
+        Saltar al contenido de administración
+      </a>
+
       {/* Responsive Admin Sidebar */}
       <AdminSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       {/* Main Content Viewport */}
       <div className="flex-1 flex flex-col min-w-0">
-        <main className="flex-1 pb-10">
+        <main id="admin-main-content" tabIndex="-1" role="main" className="flex-1 pb-10 outline-none">
           <Outlet context={{ toggleSidebar: () => setSidebarOpen((prev) => !prev) }} />
         </main>
 
@@ -29,6 +37,9 @@ export const AdminLayout = () => {
           </div>
         </footer>
       </div>
+
+      {/* Accessibility Modal */}
+      <AccessibilityModal />
     </div>
   );
 };

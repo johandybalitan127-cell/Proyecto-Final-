@@ -28,21 +28,84 @@
     font-size: 20px;
   }
 
-  /* High Contrast Mode (WCAG 2.1 AA) */
+  /* High Contrast Mode (WCAG 2.1 AAA - Extreme Contrast) */
   html.high-contrast {
-    filter: contrast(125%);
+    filter: contrast(135%);
   }
   html.high-contrast body {
-    @apply bg-black text-white;
+    background-color: #000000 !important;
+    color: #FFFFFF !important;
   }
-  html.high-contrast .bg-white {
-    @apply bg-zinc-900 text-white border-zinc-700;
+  html.high-contrast .bg-white,
+  html.high-contrast .bg-gray-50,
+  html.high-contrast .bg-gray-100 {
+    background-color: #121212 !important;
+    color: #FFFFFF !important;
+    border-color: #555555 !important;
   }
   html.high-contrast .bg-gris-claro {
-    @apply bg-zinc-950 text-white;
+    background-color: #000000 !important;
+    color: #FFFFFF !important;
   }
-  html.high-contrast .text-gris-oscuro {
-    @apply text-zinc-100;
+  html.high-contrast .text-gris-oscuro,
+  html.high-contrast .text-gray-500,
+  html.high-contrast .text-gray-600,
+  html.high-contrast .text-gray-700 {
+    color: #F3F4F6 !important;
+  }
+  html.high-contrast a {
+    color: #FBBF24 !important;
+    text-decoration: underline !important;
+  }
+  html.high-contrast button.btn-primario {
+    background-color: #0284C7 !important;
+    color: #FFFFFF !important;
+    border: 2px solid #FFFFFF !important;
+  }
+
+  /* Colorblind Filters (Daltonismo) */
+  html.colorblind-protanopia {
+    filter: url(#protanopia-filter);
+  }
+  html.colorblind-deuteranopia {
+    filter: url(#deuteranopia-filter);
+  }
+  html.colorblind-tritanopia {
+    filter: url(#tritanopia-filter);
+  }
+  html.colorblind-achromatopsia {
+    filter: url(#achromatopsia-filter) contrast(120%);
+  }
+
+  /* Universal Double Encoding for Badges (Never rely solely on color) */
+  .badge-verde, .badge-rojo, .badge-amarillo, .badge-azul, .badge-gris {
+    font-weight: 700;
+  }
+  html[class*="colorblind-"] .badge-verde,
+  html.high-contrast .badge-verde {
+    background-color: #0284C7 !important;
+    color: #FFFFFF !important;
+    border: 2px solid #0369A1 !important;
+  }
+  html[class*="colorblind-"] .badge-rojo,
+  html.high-contrast .badge-rojo {
+    background-color: #EA580C !important;
+    color: #FFFFFF !important;
+    border: 2px solid #C2410C !important;
+  }
+  html[class*="colorblind-"] .badge-amarillo,
+  html.high-contrast .badge-amarillo {
+    background-color: #F59E0B !important;
+    color: #1F2937 !important;
+    border: 2px solid #D97706 !important;
+  }
+
+  /* Enhanced Focus for Keyboard & Blind Navigation */
+  html.enhanced-focus *:focus-visible {
+    outline: 3px solid #F59E0B !important;
+    outline-offset: 3px !important;
+    box-shadow: 0 0 0 5px rgba(0, 0, 0, 0.9) !important;
+    border-radius: 4px !important;
   }
 }
 
