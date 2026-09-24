@@ -7,6 +7,7 @@ import { AdminTopbar } from '../../components/admin/AdminTopbar';
 import { StatCard } from '../../components/admin/StatCard';
 import { consultasService } from '../../services/consultasService';
 import { Modal } from '../../components/common/Modal';
+import { StatusBadge } from '../../components/common/StatusBadge';
 import { useToast } from '../../context/ToastContext';
 
 export const AdminConsultasPage = () => {
@@ -177,15 +178,7 @@ export const AdminConsultasPage = () => {
                         <span className="badge-gris text-[10px]">{item.prioridad}</span>
                       </td>
                       <td className="py-3 px-3">
-                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                          item.estado === 'Resuelto'
-                            ? 'bg-emerald-100 text-emerald-800'
-                            : item.estado === 'En proceso'
-                            ? 'bg-amber-100 text-amber-800'
-                            : 'bg-rose-100 text-rose-800'
-                        }`}>
-                          {item.estado}
-                        </span>
+                        <StatusBadge status={item.estado} size="xs" />
                       </td>
                       <td className="py-3 px-3 text-right">
                         <div className="flex items-center justify-end gap-1">

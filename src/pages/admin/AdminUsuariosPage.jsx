@@ -7,6 +7,7 @@ import { AdminTopbar } from '../../components/admin/AdminTopbar';
 import { StatCard } from '../../components/admin/StatCard';
 import { usuariosService } from '../../services/usuariosService';
 import { Modal } from '../../components/common/Modal';
+import { StatusBadge } from '../../components/common/StatusBadge';
 import { useToast } from '../../context/ToastContext';
 
 export const AdminUsuariosPage = () => {
@@ -219,15 +220,7 @@ export const AdminUsuariosPage = () => {
                         </span>
                       </td>
                       <td className="py-3 px-3">
-                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                          user.estado === 'Activo'
-                            ? 'bg-emerald-100 text-emerald-800'
-                            : user.estado === 'Pendiente'
-                            ? 'bg-amber-100 text-amber-800'
-                            : 'bg-rose-100 text-rose-800'
-                        }`}>
-                          {user.estado}
-                        </span>
+                        <StatusBadge status={user.estado} size="xs" />
                       </td>
                       <td className="py-3 px-3 text-gray-400 text-[11px] whitespace-nowrap">
                         {user.fechaRegistro}

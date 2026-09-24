@@ -132,7 +132,25 @@
   /* Universal Double Encoding for Badges (Never rely solely on color) */
   .badge-verde, .badge-rojo, .badge-amarillo, .badge-azul, .badge-gris {
     font-weight: 700;
+    letter-spacing: 0.01em;
   }
+  .badge-verde:not(:has(svg))::before {
+    content: "✓ ";
+    font-weight: 900;
+  }
+  .badge-rojo:not(:has(svg))::before {
+    content: "✕ ";
+    font-weight: 900;
+  }
+  .badge-amarillo:not(:has(svg))::before {
+    content: "▲ ";
+    font-weight: 900;
+  }
+  .badge-azul:not(:has(svg))::before {
+    content: "ℹ ";
+    font-weight: 900;
+  }
+
   html[class*="colorblind-"] .badge-verde,
   html.high-contrast .badge-verde {
     background-color: #0284C7 !important;

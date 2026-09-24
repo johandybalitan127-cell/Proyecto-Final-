@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Bookmark, Package, ExternalLink, Trash2, Plus } from 'lucide-react';
 import { enviosService } from '../../services/enviosService';
+import { StatusBadge } from '../../components/common/StatusBadge';
 import { useToast } from '../../context/ToastContext';
 
 export const PaquetesGuardadosPage = () => {
@@ -71,7 +72,7 @@ export const PaquetesGuardadosPage = () => {
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <span className="font-mono font-bold text-azul-oscuro text-base">#{envio.guia}</span>
-                <span className="badge-verde text-[10px]">{envio.estado}</span>
+                <StatusBadge status={envio.estado} size="xs" />
               </div>
               <p className="text-xs text-gray-600 font-semibold">{envio.servicio}</p>
               <p className="text-[11px] text-gray-500">{envio.origen} → {envio.destino}</p>

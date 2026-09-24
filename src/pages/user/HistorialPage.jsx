@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Package, ExternalLink, Calendar, Search, Filter } from 'lucide-react';
 import { enviosService } from '../../services/enviosService';
+import { StatusBadge } from '../../components/common/StatusBadge';
 
 export const HistorialPage = () => {
   const [envios, setEnvios] = useState([]);
@@ -71,17 +72,7 @@ export const HistorialPage = () => {
                     {item.fecha}
                   </td>
                   <td className="py-3.5 px-4">
-                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                      item.estado === 'Entregado'
-                        ? 'bg-emerald-100 text-emerald-800'
-                        : item.estado === 'En tránsito'
-                        ? 'bg-sky-100 text-azul-oscuro'
-                        : item.estado === 'En aduana'
-                        ? 'bg-amber-100 text-amber-800'
-                        : 'bg-gray-100 text-gray-700'
-                    }`}>
-                      {item.estado}
-                    </span>
+                    <StatusBadge status={item.estado} size="xs" />
                   </td>
                   <td className="py-3.5 px-4 text-right">
                     <Link

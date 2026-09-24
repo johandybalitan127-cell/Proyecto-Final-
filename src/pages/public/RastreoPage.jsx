@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { enviosService } from '../../services/enviosService';
 import { StepperTracking } from '../../components/common/StepperTracking';
+import { StatusBadge } from '../../components/common/StatusBadge';
 
 export const RastreoPage = () => {
   const { trackingNumber } = useParams();
@@ -131,7 +132,7 @@ export const RastreoPage = () => {
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Número de Guía Postal</span>
-                <span className="badge-verde text-xs">● {currentEnvio.estado}</span>
+                <StatusBadge status={currentEnvio.estado} size="sm" />
               </div>
               <h2 className="text-2xl sm:text-3xl font-extrabold text-azul-oscuro font-mono mt-1">
                 #{currentEnvio.guia}

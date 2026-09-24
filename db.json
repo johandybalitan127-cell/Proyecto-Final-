@@ -131,6 +131,16 @@
       "telefono": "+506 8456-1230",
       "sucursal": "Tibás",
       "avatar": "GS"
+    },
+    {
+      "nombre": "daniela castro",
+      "correo": "SDJSOHFHO@gmail.com",
+      "telefono": "38124801809580",
+      "password": "12345",
+      "rol": "Usuario",
+      "fechaRegistro": "2026-09-24",
+      "estado": "Activo",
+      "id": "d5vHTKCRYF8"
     }
   ],
   "envios": [
@@ -1236,6 +1246,24 @@
       "resultado": "Orientado",
       "hora": "08:44:55 a. m.",
       "id": "u7KNUZpE2wE"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "Horario de Zapote",
+      "intencion": "consulta_sucursal_especifica",
+      "confianza": 98,
+      "resultado": "Resuelto",
+      "hora": "09:22:15 a. m.",
+      "id": "48js6U3lHbQ"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "hola",
+      "intencion": "saludo",
+      "confianza": 99.5,
+      "resultado": "Resuelto",
+      "hora": "09:22:42 a. m.",
+      "id": "BYnIsDqHMG0"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

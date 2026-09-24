@@ -6,6 +6,7 @@ import { AdminTopbar } from '../../components/admin/AdminTopbar';
 import { StatCard } from '../../components/admin/StatCard';
 import { sucursalesService } from '../../services/sucursalesService';
 import { Modal } from '../../components/common/Modal';
+import { StatusBadge } from '../../components/common/StatusBadge';
 import { useToast } from '../../context/ToastContext';
 
 export const AdminSucursalesPage = () => {
@@ -225,9 +226,7 @@ export const AdminSucursalesPage = () => {
                         {item.horario}
                       </td>
                       <td className="py-3 px-3">
-                        <span className="badge-verde text-[10px]">
-                          ● {item.estado}
-                        </span>
+                        <StatusBadge status={item.estado} size="xs" />
                       </td>
                       <td className="py-3 px-3 text-right">
                         <div className="flex items-center justify-end gap-1">
