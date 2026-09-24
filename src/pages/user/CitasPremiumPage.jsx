@@ -233,7 +233,7 @@ export const CitasPremiumPage = () => {
 
             <button
               type="submit"
-              disabled={processing || envios.length === 0}
+              disabled={processing}
               className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-bold py-4 rounded-xl transition shadow-lg shadow-blue-600/30 flex items-center justify-center gap-2"
             >
               {processing ? (
@@ -244,7 +244,7 @@ export const CitasPremiumPage = () => {
               ) : (
                 <>
                   <Zap className="w-5 h-5" />
-                  Pagar ₡4,500 y Confirmar Cita
+                  Pagar ₡5,000 y Confirmar Cita
                 </>
               )}
             </button>
