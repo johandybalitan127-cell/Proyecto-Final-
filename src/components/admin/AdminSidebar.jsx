@@ -6,6 +6,7 @@ import {
   Bot, BarChart3, Settings, LogOut, Package2, X, Zap
 } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
+import { LogoCorreos } from '../common/LogoCorreos';
 
 export const AdminSidebar = ({ isOpen = false, onClose = () => {} }) => {
   const { user, logout } = useAuth();
@@ -52,21 +53,11 @@ export const AdminSidebar = ({ isOpen = false, onClose = () => {} }) => {
         <div className="flex flex-col flex-1 overflow-hidden">
           {/* Brand header */}
           <div className="px-6 py-6 border-b border-gray-100/50 flex items-center justify-between">
-            <Link to="/" onClick={onClose} className="flex items-center gap-3 group">
-              <motion.div 
-                whileHover={{ rotate: 10, scale: 1.05 }}
-                className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center text-white shadow-lg shadow-blue-500/30"
-              >
-                <Package2 className="w-5 h-5" />
-              </motion.div>
-              <div>
-                <h1 className="font-extrabold text-base tracking-tight leading-none text-slate-800 font-sans">
-                  Correos <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">CR</span>
-                </h1>
-                <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1.5 block">
-                  Dashboard Premium
-                </span>
-              </div>
+            <Link to="/" onClick={onClose} className="flex flex-col gap-1 group">
+              <LogoCorreos className="h-8 w-auto mb-2" />
+              <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest block">
+                Dashboard Premium
+              </span>
             </Link>
 
             {/* Close button on mobile/tablet */}

@@ -3,6 +3,7 @@ import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { Package, Menu, X, User, LogOut, ShieldCheck, ChevronDown, Volume2, VolumeX, Eye } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import { useAccessibility } from '../../context/AccessibilityContext';
+import { LogoCorreos } from './LogoCorreos';
 
 export const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -41,13 +42,8 @@ export const Navbar = () => {
           
           {/* Logo & Subtitle */}
           <Link to="/" className="flex items-center gap-3.5 group focus:outline-none">
-            <div className="w-12 h-12 rounded-xl bg-azul-primario text-white flex items-center justify-center shadow-md group-hover:bg-azul-oscuro transition-colors">
-              <Package className="w-7 h-7" />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-xl sm:text-2xl font-bold tracking-tight text-azul-primario leading-none font-sans">
-                Correos <span className="text-azul-oscuro font-extrabold">de Costa Rica</span>
-              </span>
+            <LogoCorreos className="h-10 sm:h-12 w-auto" />
+            <div className="flex flex-col hidden sm:block">
               <span className="text-[10px] sm:text-xs font-semibold tracking-wider text-gray-500 uppercase mt-1">
                 Plataforma Digital Ciudadana
               </span>
