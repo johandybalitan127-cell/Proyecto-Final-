@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
   MessageSquare, Clock, CheckCircle2, AlertTriangle, Search, Eye, 
-  Edit, Trash2, Workflow, Filter, Send
+  Edit, Trash2, Workflow, Filter, Send, Download
 } from 'lucide-react';
 import { AdminTopbar } from '../../components/admin/AdminTopbar';
 import { StatCard } from '../../components/admin/StatCard';
@@ -251,24 +251,48 @@ export const AdminConsultasPage = () => {
 
             {/* Panel Flujo N8N Activo (Prompt Section 7.5) */}
             <div className="p-5 rounded-2xl bg-sky-50 border border-sky-200 text-xs space-y-3 shadow-2xs">
-              <div className="flex items-center gap-2">
-                <Workflow className="w-4 h-4 text-azul-primario" />
-                <h3 className="font-bold text-azul-oscuro">Flujo N8N Activo (PQRS)</h3>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Workflow className="w-4 h-4 text-azul-primario" />
+                  <h3 className="font-bold text-azul-oscuro">Flujo N8N con AI Agent</h3>
+                </div>
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
+                  🤖 LangChain + GPT-4o
+                </span>
               </div>
 
               <div className="space-y-2 text-gray-600 text-[11px] leading-relaxed">
                 <p>
-                  <strong>Flujo de Automatización #2:</strong> Cuando un ciudadano remite una consulta desde el portal web:
+                  <strong>Flujo de Automatización #2 (AI Agent):</strong> Al recibir una gestión ciudadana:
                 </p>
                 <div className="p-2.5 rounded-lg bg-white border border-sky-100 font-mono text-[10px] space-y-1">
-                  <div>1. Formulario Web → Webhook N8N</div>
-                  <div>2. Clasificador NLP analiza texto y urgencia</div>
-                  <div>3. Enrutamiento automático al departamento</div>
-                  <div>4. Disparo de correo con acuse de recibo</div>
+                  <div>1. Formulario Web → Webhook N8N (/pqrs-ciudadana)</div>
+                  <div>2. AI Agent (OpenAI + LangChain) analiza caso y sentimiento</div>
+                  <div>3. Structured Parser extrae urgencia, SLA y departamento</div>
+                  <div>4. Inserción en JSON Server y acuse oficial al ciudadano</div>
                 </div>
                 <div className="flex items-center gap-1.5 text-emerald-700 font-bold">
                   <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                  <span>Webhook N8N en escucha activa</span>
+                  <span>AI Agent en escucha activa en N8N</span>
+                </div>
+
+                <div className="pt-2 border-t border-sky-200/60 flex flex-col gap-1.5">
+                  <a
+                    href="/n8n-workflow-pqrs-correos.json"
+                    download="n8n-workflow-pqrs-correos.json"
+                    className="inline-flex items-center justify-center gap-1.5 text-xs font-bold text-azul-primario hover:bg-sky-100 bg-white py-2 px-3 rounded-xl border border-sky-200 transition shadow-2xs"
+                  >
+                    <Download className="w-3.5 h-3.5" />
+                    <span>Descargar Flujo PQRS (N8N)</span>
+                  </a>
+                  <a
+                    href="/n8n-workflow-registro-usuario.json"
+                    download="n8n-workflow-registro-usuario.json"
+                    className="inline-flex items-center justify-center gap-1.5 text-[11px] font-semibold text-gray-600 hover:text-azul-primario hover:bg-gray-50 bg-white/70 py-1.5 px-3 rounded-lg border border-gray-200 transition"
+                  >
+                    <Download className="w-3 h-3" />
+                    <span>Descargar Flujo Registro (N8N)</span>
+                  </a>
                 </div>
               </div>
             </div>

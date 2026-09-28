@@ -1,29 +1,19 @@
 import React, { useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { Package, Menu, X, User, LogOut, ShieldCheck, ChevronDown, Volume2, VolumeX, Eye } from 'lucide-react';
+import { Package, Menu, X, User, LogOut, ShieldCheck, ChevronDown } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
-import { useAccessibility } from '../../context/AccessibilityContext';
 import { LogoCorreos } from './LogoCorreos';
 
 export const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const { user, isAuthenticated, isAdmin, logout } = useAuth();
-  const { 
-    setIsModalOpen, 
-    highContrast, 
-    colorblindMode, 
-    textScale,
-    setTextScale,
-    isSpeaking, 
-    stopSpeaking, 
-    readCurrentPage 
-  } = useAccessibility();
   const navigate = useNavigate();
 
   const navLinks = [
     { name: 'Inicio', path: '/' },
     { name: 'Servicios', path: '/servicios' },
+    { name: 'Internacional', path: '/internacional' },
     { name: 'Rastreo', path: '/cuenta/rastreo' },
     { name: 'Oficinas', path: '/oficinas' },
     { name: 'Ayuda', path: '/ayuda' },
@@ -38,10 +28,10 @@ export const Navbar = () => {
   return (
     <header className="sticky top-0 z-40 bg-white border-b border-gray-100 shadow-sm transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between min-h-[5rem] py-2 flex-wrap gap-y-2">
+        <div className="flex items-center justify-between h-20 flex-nowrap gap-x-3">
           
           {/* Logo & Subtitle */}
-          <Link to="/" className="flex items-center gap-3.5 group focus:outline-none">
+          <Link to="/" className="flex items-center gap-3.5 group focus:outline-none flex-shrink-0">
             <LogoCorreos className="h-10 sm:h-12 w-auto" />
             <div className="flex flex-col hidden sm:block">
               <span className="text-[10px] sm:text-xs font-semibold tracking-wider text-gray-500 uppercase mt-1">
@@ -51,13 +41,13 @@ export const Navbar = () => {
           </Link>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden md:flex items-center gap-1 lg:gap-2">
+          <nav className="hidden lg:flex items-center gap-1 xl:gap-2">
             {navLinks.map((link) => (
               <NavLink
                 key={link.path}
                 to={link.path}
                 className={({ isActive }) =>
-                  `px-3.5 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  `px-2.5 xl:px-3.5 py-2 rounded-lg text-xs xl:text-sm font-medium transition-colors whitespace-nowrap ${
                     isActive
                       ? 'text-azul-primario bg-sky-50 font-semibold'
                       : 'text-gris-oscuro hover:text-azul-primario hover:bg-gray-50'
@@ -70,115 +60,22 @@ export const Navbar = () => {
           </nav>
 
           {/* Right Action Buttons */}
-          <div className="flex items-center gap-2 sm:gap-3">
-            
-            {/* Stop Voice Reading button when speaking */}
-            {isSpeaking && (
-              <button
-                onClick={stopSpeaking}
-                className="px-2.5 py-1.5 rounded-lg bg-rose-600 text-white text-xs font-bold flex items-center gap-1.5 shadow-sm animate-pulse hover:bg-rose-700 transition"
-                title="Detener voz (Esc)"
-                aria-label="Detener lectura de voz en curso"
-              >
-                <VolumeX className="w-4 h-4" />
-                <span className="hidden sm:inline">Pausar Voz</span>
-              </button>
-            )}
-
-            {/* Quick Font Size Adjuster (A / A+ / A++) */}
-            <div 
-              className="hidden sm:inline-flex items-center bg-gray-100 rounded-lg p-0.5 border border-gray-200" 
-              role="group"
-              aria-label="Ajuste rápido de tamaño de texto"
-              title="Ajuste rápido de tamaño de texto (Atajo Alt + T)"
-            >
-              <button 
-                onClick={() => setTextScale('normal')} 
-                className={`px-2 py-1 rounded text-xs font-bold transition ${
-                  textScale === 'normal' 
-                    ? 'bg-white text-azul-primario shadow-2xs' 
-                    : 'text-gray-600 hover:text-azul-primario'
-                }`}
-                aria-pressed={textScale === 'normal'}
-                aria-label="Tamaño de texto normal 100%"
-                title="Texto Normal (100%)"
-              >
-                A
-              </button>
-              <button 
-                onClick={() => setTextScale('large')} 
-                className={`px-2 py-1 rounded text-xs font-bold transition ${
-                  textScale === 'large' 
-                    ? 'bg-white text-azul-primario shadow-2xs' 
-                    : 'text-gray-600 hover:text-azul-primario'
-                }`}
-                aria-pressed={textScale === 'large'}
-                aria-label="Tamaño de texto grande 120%"
-                title="Texto Grande (120%)"
-              >
-                A+
-              </button>
-              <button 
-                onClick={() => setTextScale('xlarge')} 
-                className={`px-2 py-1 rounded text-xs font-bold transition ${
-                  textScale === 'xlarge' 
-                    ? 'bg-white text-azul-primario shadow-2xs' 
-                    : 'text-gray-600 hover:text-azul-primario'
-                }`}
-                aria-pressed={textScale === 'xlarge'}
-                aria-label="Tamaño de texto extra grande 140%"
-                title="Texto Extra Grande (140%)"
-              >
-                A++
-              </button>
-            </div>
-
-            {/* Accessibility Button */}
-            <button
-              onClick={() => setIsModalOpen(true)}
-              className={`p-2 sm:px-3 sm:py-2 rounded-lg border text-xs font-bold transition-all flex items-center gap-1.5 focus:outline-none focus:ring-2 ${
-                colorblindMode !== 'none' || highContrast
-                  ? 'bg-amber-400 text-black border-black font-extrabold shadow-sm'
-                  : 'border-gray-200 text-gray-700 hover:text-azul-primario hover:border-azul-primario bg-white hover:bg-gray-50'
-              }`}
-              aria-label="Abrir panel de accesibilidad para personas ciegas y daltónicas (Atajo Alt + A)"
-              title="Accesibilidad: Lector de voz, Daltonismo y Alto Contraste (Alt + A)"
-            >
-              <span className="text-base leading-none" role="img" aria-label="Símbolo de accesibilidad">♿</span>
-              <span className="hidden sm:inline">Accesibilidad</span>
-              {colorblindMode !== 'none' && (
-                <span className="hidden md:inline text-[9px] px-1.5 py-0.5 rounded bg-black text-amber-300 font-mono uppercase">
-                  {colorblindMode}
-                </span>
-              )}
-            </button>
-
-            {/* Virtual Branch Button */}
+          <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0 ml-auto">
+            {/* Quick Virtual Branch Link */}
             <Link
               to="/cuenta/perfil"
-              className="hidden lg:inline-flex btn-primario text-sm py-2 px-3.5 shadow-sm"
+              className="hidden lg:inline-flex btn-primario text-xs py-2 px-3 shadow-2xs whitespace-nowrap flex-shrink-0"
             >
               <span>Sucursal Virtual</span>
               <span className="text-xs">→</span>
             </Link>
 
-            {/* Admin Panel Direct Link (if admin) */}
-            {isAdmin && (
-              <Link
-                to="/admin"
-                className="hidden sm:inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200 hover:bg-emerald-100 transition"
-              >
-                <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                <span>Panel Admin</span>
-              </Link>
-            )}
-
             {/* User Dropdown / Login Button */}
             {isAuthenticated ? (
-              <div className="relative">
+              <div className="relative flex-shrink-0">
                 <button
                   onClick={() => setUserDropdownOpen(!userDropdownOpen)}
-                  className="flex items-center gap-2 p-1.5 sm:px-3 sm:py-2 rounded-lg border border-gray-200 hover:bg-gray-50 text-left transition"
+                  className="flex items-center gap-2 p-1 sm:px-2.5 sm:py-1.5 rounded-xl border border-gray-200 hover:bg-gray-50 text-left transition whitespace-nowrap"
                   aria-expanded={userDropdownOpen}
                 >
                   <div className="w-8 h-8 rounded-full bg-azul-oscuro text-white text-xs font-bold flex items-center justify-center shadow-inner">

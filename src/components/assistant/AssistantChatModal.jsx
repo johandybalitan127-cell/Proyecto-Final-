@@ -2,14 +2,63 @@ import React, { useState, useEffect, useRef } from 'react';
 import { 
   Bot, Send, X, RefreshCw, Volume2, Download, User, CheckCircle2, 
   HelpCircle, Headphones, Lock, ShieldCheck, MapPin, Calendar, Clock,
-  FileCheck, Calculator, Sparkles
+  FileCheck, Calculator, Sparkles, ExternalLink
 } from 'lucide-react';
 import { enviosService } from '../../services/enviosService';
 import { iaLogsService } from '../../services/iaLogsService';
+import { n8nService } from '../../services/n8nService';
+import { useAuth } from '../../hooks/useAuth';
 import { TrackingCardBubble } from './TrackingCardBubble';
 import initialDb from '../../data/initialDb.json';
 
+// Detector inteligente de consultas fuera de contexto institucional de Correos de Costa Rica
+const isOutOfDomainQuery = (text) => {
+  if (!text) return false;
+  const lower = text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+
+  // Excepciones donde la consulta sí tiene relación con servicios postales
+  const postalKeywords = [
+    'correo', 'correos', 'postal', 'paquete', 'guia', 'rastreo', 'rastrear', 'tracking',
+    'sucursal', 'oficina', 'zapote', 'horario', 'tarifa', 'precio', 'cotizar', 'peso',
+    'kilo', 'gramo', 'envio', 'enviar', 'mandar', 'ves', 'pasaporte', 'cedula', 'dimex',
+    'cita', 'citas', 'migracion', 'box', 'miami', 'casillero', 'aduana', 'aduanas',
+    'impuesto', 'aforo', 'dga', 'retenido', 'pymexpress', 'ems', 'apartado', 'apartados',
+    'codigo postal', 'zip', 'asesor', 'reclamo', 'queja', 'pqrs', 'desviar', 'tiempo'
+  ];
+
+  const hasPostalContext = postalKeywords.some(pk => lower.includes(pk));
+
+  // Patrones claros de temas ajenos a Correos de Costa Rica (marcas comerciales, comidas, deportes, entretenimiento, etc.)
+  const offTopicPatterns = [
+    /\b(dos pinos|pinitos|coronado|coopeleche|natilla|leche|queso|yogurt|helado|helados)\b/i,
+    /\b(coca cola|pepsi|cerveza|imperial|pilsen|mcdonalds|burger king|kfc|pizza hut|taco bell|subway)\b/i,
+    /\b(futbol|saprissa|la liga|alajuelense|herediano|cartagines|messi|ronaldo|champions|concacaf|estadio|fifa)\b/i,
+    /\b(chiste|chistes|broma|poema|cancion|musica|cantar|pelicula|cine|serie|netflix|anime|novela)\b/i,
+    /\b(receta|cocinar|cocina|ingredientes|como preparar|pastel|queque|gallo pinto)\b/i,
+    /\b(politica|presidente|diputado|chaves|figueres|alcalde|elecciones)\b/i,
+    /\b(clima|temperatura de hoy|va a llover|pronostico)\b/i,
+    /\b(amor|pareja|novio|novia|enamorado|horoscopo|signo zodiacal|astrologia)\b/i,
+    /\b(tarea|ensayo|resumen|matematicas|ecuacion|cuanto es \d+)\b/i,
+    /\b(programacion|codigo python|codigo javascript|python|java|c\+\+|html|css)\b/i,
+    /\b(medicina|dolor de cabeza|pastilla|remedio|sintomas|enfermedad)\b/i,
+    /\b(quien gano|quien descubrio|capital de|cuando nacio|que significa la palabra)\b/i
+  ];
+
+  // Si coincide con patrones ajenos explícitos
+  if (offTopicPatterns.some(p => p.test(lower))) {
+    return true;
+  }
+
+  // Preguntas de definición general "qué es X" o "quién es X" sin términos postales
+  if (/^(que es|quien es|que son|para que sirve|definicion de)\s+/i.test(lower) && !hasPostalContext) {
+    return true;
+  }
+
+  return false;
+};
+
 export const AssistantChatModal = ({ onClose, isFloating = false }) => {
+  const { user } = useAuth();
   const [messages, setMessages] = useState([
     {
       id: 1,
@@ -52,7 +101,73 @@ export const AssistantChatModal = ({ onClose, isFloating = false }) => {
     setInputValue('');
     setIsTyping(true);
 
-    // Natural Language Processing Engine
+    // 0. Detección proactiva de preguntas fuera de contexto (marcas ajenas, temas no postales, etc.)
+    if (isOutOfDomainQuery(query)) {
+      setTimeout(() => {
+        const botResponse = {
+          id: Date.now() + 1,
+          sender: 'bot',
+          text: `Esa consulta se sale de mis conocimientos y está fuera de contexto. 🚫\n\nComo Asistente Postal Oficial de Correos de Costa Rica, fui diseñado para responder exclusivamente sobre trámites, envíos y servicios de nuestra institución:\n\n• 📦 Rastreo oficial de paquetes y guías (ej. CR098421734CR)\n• 🏢 Horarios y ubicación de nuestras 110 sucursales en todo el país\n• 📅 Citas oficiales VES de Pasaporte Biométrico y DIMEX\n• 💰 Cotización de tarifas EMS, Pymexpress y envíos a domicilio\n• ✈️ Casillero Box Correos Miami y trámites de aduana\n• 📝 Radicación formal de reclamos e incidencias (PQRS)\n\n¿En qué trámite de Correos de Costa Rica te puedo colaborar hoy?`,
+          time: new Date().toLocaleTimeString('es-CR', { hour: '2-digit', minute: '2-digit' }),
+          quickSuggestions: ['Rastrear CR098421734CR', 'Horario de Zapote', 'Citas Pasaporte VES', 'Hablar con un asesor']
+        };
+
+        setMessages((prev) => [...prev, botResponse]);
+        setIsTyping(false);
+
+        iaLogsService.createLog({
+          usuario: user?.nombre || 'Ciudadano Web',
+          consulta: query,
+          intencion: 'fuera_de_contexto',
+          confianza: 99.9,
+          resultado: 'Fuera de contexto'
+        }).catch(() => {});
+      }, 500);
+      return;
+    }
+
+    // 1. Invocar en tiempo real el AI Agent en N8N Cloud
+    try {
+      const n8nResult = await n8nService.sendChatMessage({
+        message: query,
+        user
+      });
+
+      if (n8nResult.success && n8nResult.replyText) {
+        const botResponse = {
+          id: Date.now() + 1,
+          sender: 'bot',
+          text: n8nResult.replyText,
+          isN8n: true,
+          n8nMeta: {
+            departamento: n8nResult.departamento,
+            prioridad: n8nResult.prioridad,
+            ticket: n8nResult.ticket,
+            sla: n8nResult.sla,
+            sentimiento: n8nResult.sentimiento
+          },
+          time: new Date().toLocaleTimeString('es-CR', { hour: '2-digit', minute: '2-digit' }),
+          quickSuggestions: ['Rastrear CR098421734CR', 'Horario de Zapote', 'Cita de Pasaporte VES']
+        };
+
+        setMessages((prev) => [...prev, botResponse]);
+
+        iaLogsService.createLog({
+          usuario: user?.nombre || 'Ciudadano Web',
+          consulta: query,
+          intencion: n8nResult.departamento || 'n8n_cloud_ai_agent',
+          confianza: 99.8,
+          resultado: 'Resuelto por N8N AI Agent'
+        }).catch(() => {});
+
+        setIsTyping(false);
+        return;
+      }
+    } catch (n8nErr) {
+      console.warn('Webhook N8N no disponible, activando motor postal local:', n8nErr);
+    }
+
+    // 2. Motor de contingencia postal inteligente (si N8N no responde o está en configuración)
     setTimeout(async () => {
       try {
         let botResponse = {};
@@ -494,17 +609,17 @@ export const AssistantChatModal = ({ onClose, isFloating = false }) => {
             botResponse = {
               id: Date.now() + 1,
               sender: 'bot',
-              text: `He recibido tu consulta sobre: "${query}".\n\nPara brindarte la atención exacta que necesitas, puedes elegir una de las opciones rápidas aquí abajo o comunicarte con un asesor humano en vivo:`,
+              text: `Esa consulta se sale de mis conocimientos y está fuera de contexto. 🚫\n\nComo Asistente Postal Oficial de Correos de Costa Rica, fui diseñado para responder exclusivamente sobre trámites, envíos y servicios de nuestra institución:\n\n• 📦 Rastreo de paquetes y guías (ej. CR098421734CR)\n• 🏢 Horarios y ubicación de nuestras 110 sucursales en todo el país\n• 📅 Citas oficiales de pasaporte y cédulas VES\n• 💰 Tarifas de envíos Pymexpress, EMS y entregas a domicilio\n• ✈️ Casillero Box Correos Miami y gestión aduanal\n\n¿En qué trámite de Correos de Costa Rica te puedo colaborar hoy? Si necesitas un trámite especial, también puedes hablar con un asesor humano en vivo:`,
               time: new Date().toLocaleTimeString('es-CR', { hour: '2-digit', minute: '2-digit' }),
               quickSuggestions: ['Quiero hablar con un asesor en vivo', 'Rastrear CR098421734CR', 'Horario de Zapote', 'Tarifas Pymexpress', 'Cita Pasaporte VES']
             };
 
             iaLogsService.createLog({
-              usuario: 'Ciudadano Web',
+              usuario: user?.nombre || 'Ciudadano Web',
               consulta: query,
-              intencion: 'consulta_general',
-              confianza: 88.0,
-              resultado: 'Orientado'
+              intencion: 'fuera_de_contexto',
+              confianza: 95.0,
+              resultado: 'Fuera de contexto'
             }).catch(() => {});
           }
         }
@@ -624,12 +739,22 @@ export const AssistantChatModal = ({ onClose, isFloating = false }) => {
 
         {/* Status ticker */}
         <div className="bg-sky-50 px-4 py-2 border-b border-sky-100 flex items-center justify-between text-xs text-azul-oscuro">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span>Agente en línea · ⚡ Inmediato · ⇄ API Institucional activa</span>
+            <span className="font-bold text-azul-oscuro">Conectado a N8N Cloud:</span>
+            <a 
+              href="https://johandyblitan.app.n8n.cloud/webhook/pqrs-ciudadana" 
+              target="_blank" 
+              rel="noreferrer"
+              className="font-mono text-[10px] text-azul-primario hover:underline bg-white px-2 py-0.5 rounded border border-sky-200 flex items-center gap-1 shadow-2xs"
+              title="Webhook de N8N en la nube activo"
+            >
+              <span>johandyblitan.app.n8n.cloud</span>
+              <ExternalLink className="w-2.5 h-2.5" />
+            </a>
           </div>
           <span className="hidden sm:inline text-[11px] text-gray-500 font-medium">
-            Atención ciudadana 24/7
+            AI Agent UPU Activo 24/7
           </span>
         </div>
 
@@ -659,6 +784,37 @@ export const AssistantChatModal = ({ onClose, isFloating = false }) => {
                   }`}
                 >
                   <p className="whitespace-pre-line">{msg.text}</p>
+
+                  {/* N8N AI Agent Badge & Metadata */}
+                  {msg.isN8n && msg.n8nMeta && (
+                    <div className="mt-2.5 pt-2 border-t border-sky-200/50 text-[10px] space-y-1">
+                      <div className="flex flex-wrap items-center gap-1.5 font-semibold text-azul-oscuro">
+                        <span className="bg-sky-100 text-azul-primario px-2 py-0.5 rounded-full font-bold flex items-center gap-1">
+                          <span>🤖</span>
+                          <span>AI Agent N8N Cloud</span>
+                        </span>
+                        {msg.n8nMeta.departamento && (
+                          <span className="bg-gray-100 text-gray-700 px-2 py-0.5 rounded-full border border-gray-200">
+                            {msg.n8nMeta.departamento}
+                          </span>
+                        )}
+                        {msg.n8nMeta.prioridad && (
+                          <span className={`px-2 py-0.5 rounded-full font-bold ${
+                            msg.n8nMeta.prioridad === 'Alta' 
+                              ? 'bg-rose-100 text-rose-800 border border-rose-200' 
+                              : 'bg-emerald-100 text-emerald-800 border border-emerald-200'
+                          }`}>
+                            Prioridad: {msg.n8nMeta.prioridad}
+                          </span>
+                        )}
+                      </div>
+                      {msg.n8nMeta.sla && (
+                        <p className="text-[10px] text-gray-500 italic">
+                          Plazo de resolución: {msg.n8nMeta.sla}
+                        </p>
+                      )}
+                    </div>
+                  )}
 
                   {/* Embedded Tracking Card if available */}
                   {msg.envio && (

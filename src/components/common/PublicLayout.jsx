@@ -5,6 +5,7 @@ import { Footer } from './Footer';
 import { AccessibilityModal } from './AccessibilityModal';
 import { FloatingAssistantButton } from './FloatingAssistantButton';
 import { MobileBottomBar } from './MobileBottomBar';
+import { RightFloatingDock } from './RightFloatingDock';
 
 export const PublicLayout = () => {
   return (
@@ -27,6 +28,9 @@ export const PublicLayout = () => {
 
       {/* 4-column institutional footer */}
       <Footer />
+
+      {/* Right Floating Quick Action Dock (en columna hacia abajo a un lado) */}
+      <RightFloatingDock />
 
       {/* Persistent Floating Assistant AI button */}
       <FloatingAssistantButton />

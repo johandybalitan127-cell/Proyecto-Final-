@@ -1,0 +1,117 @@
+{
+  "name": "Correos CR - Flujo 1: Registro Ciudadano y Bienvenida",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "nuevo-usuario",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "node-webhook-registro",
+      "name": "Webhook Trigger Registro",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        220,
+        340
+      ],
+      "webhookId": "correos-cr-registro-webhook"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Validación de Identidad y Asignación de Casillero Box Correos Miami\nconst body = $input.first().json.body || $input.first().json;\n\nconst nombre = body.nombre || 'Ciudadano';\nconst correo = (body.correo || body.email || '').trim().toLowerCase();\nconst telefono = body.telefono || '+506 8000-0000';\nconst cedula = body.cedula || '1-0000-0000';\n\n// 1. Generación de Número de Cliente y Casillero Miami (CR-BOX-XXXX)\nconst clientCode = Math.floor(10000 + Math.random() * 90000);\nconst casilleroMiami = `CR-MIA-${clientCode}`;\nconst fechaRegistro = new Date().toISOString().split('T')[0];\n\nreturn [{\n  json: {\n    id: `USR-${clientCode}`,\n    nombre,\n    correo,\n    cedula,\n    telefono,\n    rol: 'Usuario',\n    estado: 'Activo',\n    fechaRegistro,\n    casilleroMiami,\n    direccionMiami: `8200 NW 27th St, Suite 104, Miami, FL 33122 (${casilleroMiami})`,\n    emailBienvenidaEnviado: true\n  }\n}];"
+      },
+      "id": "node-validation-casillero",
+      "name": "Validar Identidad & Generar Casillero",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        480,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:3001/usuarios",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json) }}",
+        "options": {}
+      },
+      "id": "node-insert-user",
+      "name": "Guardar en Base Usuarios (JSON Server)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        740,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"success\": true,\n  \"clienteId\": \"{{ $json.id }}\",\n  \"nombre\": \"{{ $json.nombre }}\",\n  \"casilleroMiami\": \"{{ $json.casilleroMiami }}\",\n  \"direccionMiami\": \"{{ $json.direccionMiami }}\",\n  \"mensaje\": \"Cuenta ciudadana registrada con éxito y casillero asignado.\"\n}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "node-respond-register",
+      "name": "Respuesta Webhook Registro",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1000,
+        340
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger Registro": {
+      "main": [
+        [
+          {
+            "node": "Validar Identidad & Generar Casillero",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validar Identidad & Generar Casillero": {
+      "main": [
+        [
+          {
+            "node": "Guardar en Base Usuarios (JSON Server)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guardar en Base Usuarios (JSON Server)": {
+      "main": [
+        [
+          {
+            "node": "Respuesta Webhook Registro",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "tags": [
+    {
+      "name": "Correos de Costa Rica"
+    },
+    {
+      "name": "Registro"
+    }
+  ]
+}

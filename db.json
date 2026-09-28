@@ -11,6 +11,19 @@
       "telefono": "+506 8888-8888",
       "sucursal": "Sede Central",
       "avatar": "AD"
+    },
+    {
+      "id": "USR-002",
+      "nombre": "María Elena Rojas",
+      "correo": "m.rojas@gmail.com",
+      "cedula": "1-1234-0567",
+      "password": "123",
+      "rol": "Usuario",
+      "estado": "Activo",
+      "fechaRegistro": "2024-02-15",
+      "telefono": "+506 8765-4321",
+      "sucursal": "San Pedro",
+      "avatar": "MR"
     }
   ],
   "envios": [
@@ -540,6 +553,50 @@
           "actual": true
         }
       ]
+    },
+    {
+      "guia": "CR541234830CR",
+      "remitente": "Ventanilla Central Zapote",
+      "destinatario": "jjjjlkj",
+      "servicio": "EMS Courier Nacional",
+      "origen": "San José Central",
+      "destino": "Alajuela / GAM",
+      "estado": "Procesando",
+      "fecha": "2026-09-25",
+      "ruta": "Zapote → Hub Central Distribución",
+      "repartidorId": "REP-101",
+      "etapas": [
+        {
+          "paso": 1,
+          "nombre": "Admisión / Recibida",
+          "ubicacion": "Sucursal San José Central",
+          "hora": "08:30 a.m.",
+          "completado": true
+        },
+        {
+          "paso": 2,
+          "nombre": "En Clasificación Postal",
+          "ubicacion": "Centro Logístico Automatizado Zapote",
+          "hora": "11:15 a.m.",
+          "completado": true,
+          "actual": true
+        },
+        {
+          "paso": 3,
+          "nombre": "En Tránsito",
+          "ubicacion": "Consolidación hacia Alajuela / GAM",
+          "hora": "Programado hoy 03:00 p.m.",
+          "completado": false
+        },
+        {
+          "paso": 4,
+          "nombre": "Entrega Final",
+          "ubicacion": "Alajuela / GAM",
+          "hora": "Estimado mañana",
+          "completado": false
+        }
+      ],
+      "id": "l61wDmJjopk"
     }
   ],
   "sucursales": [
@@ -1305,6 +1362,96 @@
       "resultado": "Resuelto",
       "hora": "01:36:44 p. m.",
       "id": "rnR4CqsV9_s"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "hola",
+      "intencion": "saludo",
+      "confianza": 99.5,
+      "resultado": "Resuelto",
+      "hora": "09:25:40 a. m.",
+      "id": "ytbjzT6wjo0"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "Quiero hablar con un asesor en vivo",
+      "intencion": "transferencia_asesor",
+      "confianza": 98.9,
+      "resultado": "Resuelto",
+      "hora": "09:25:49 a. m.",
+      "id": "kiw_KMq0afg"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "Buenos días. Mi paquete contiene un tratamiento oncológico urgente enviado desde España para mi madre. En el rastreo indica que está en revisión aduanal en el Centro Postal Zapote desde hace 5 días. Si no se entrega esta semana, se pierde la cadena de frío y el tratamiento se interrumpe. Por favor, solicito auxilio inmediato para pagar los impuestos y retirarlo hoy mismo",
+      "intencion": "consulta_sucursal_especifica",
+      "confianza": 98,
+      "resultado": "Resuelto",
+      "hora": "09:27:32 a. m.",
+      "id": "F9qrFVs4GGM"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "Buenos días. Mi paquete contiene un tratamiento oncológico urgente enviado desde España para mi madre. En el rastreo indica que está en revisión aduanal en el Centro Postal Zapote desde hace 5 días. Si no se entrega esta semana, se pierde la cadena de frío y el tratamiento se interrumpe. Por favor, solicito auxilio inmediato para pagar los impuestos y retirarlo hoy mismo",
+      "intencion": "consulta_sucursal_especifica",
+      "confianza": 98,
+      "resultado": "Resuelto",
+      "hora": "09:28:11 a. m.",
+      "id": "kFVIzE4GtJY"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "Buenos días. Mi paquete contiene un tratamiento oncológico urgente enviado desde España para mi madre. En el rastreo indica que está en revisión aduanal en el Centro Postal Zapote desde hace 5 días. Si no se entrega esta semana, se pierde la cadena de frío y el tratamiento se interrumpe. Por favor, solicito auxilio inmediato para pagar los impuestos y retirarlo hoy mismo",
+      "intencion": "consulta_sucursal_especifica",
+      "confianza": 98,
+      "resultado": "Resuelto",
+      "hora": "09:29:19 a. m.",
+      "id": "Y40cMYFtVlo"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "\"Buenas tardes. Quisiera saber si la oficina de Correos en San Pedro (frente al parque) abre los sábados para retiro de paquetes de casillero y hasta qué hora reciben público.\"",
+      "intencion": "consulta_sucursal_especifica",
+      "confianza": 98,
+      "resultado": "Resuelto",
+      "hora": "10:08:54 a. m.",
+      "id": "YL-cLqxmoPg"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "Recibí un aviso de que mi paquete comprado en Amazon necesita nota de exención o permiso del Ministerio de Salud. Ya tengo la factura original en PDF y el registro sanitario. ¿A cuál correo o ventanilla de Zapote debo presentar la documentación para que liberen el aforo?\"",
+      "intencion": "consulta_sucursal_especifica",
+      "confianza": 98,
+      "resultado": "Resuelto",
+      "hora": "10:10:41 a. m.",
+      "id": "NK7hN0pr810"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "que es la dos pinos",
+      "intencion": "consulta_general",
+      "confianza": 88,
+      "resultado": "Orientado",
+      "hora": "10:18:48 a. m.",
+      "id": "thrE-MF5Hjo"
+    },
+    {
+      "usuario": "María Elena Rojas",
+      "consulta": "que es la dos pinos?",
+      "intencion": "fuera_de_contexto",
+      "confianza": 99.9,
+      "resultado": "Fuera de contexto",
+      "hora": "10:28:11 a. m.",
+      "id": "TQDNevyCc20"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "hola",
+      "intencion": "saludo",
+      "confianza": 99.5,
+      "resultado": "Resuelto",
+      "hora": "10:29:06 a. m.",
+      "id": "Op1CuhQw-Ls"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

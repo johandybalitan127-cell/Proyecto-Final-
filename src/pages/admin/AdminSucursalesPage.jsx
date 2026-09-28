@@ -41,11 +41,20 @@ export const AdminSucursalesPage = () => {
 
   const provincias = ['Todas', 'San José', 'Alajuela', 'Heredia', 'Cartago', 'Guanacaste', 'Puntarenas', 'Limón'];
 
+  const normalizeText = (text = '') =>
+    String(text || '')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .trim();
+
   const filtered = sucursales.filter((s) => {
-    const matchProv = provFilter === 'Todas' || s.provincia === provFilter;
-    const matchSearch = !searchTerm ||
-      s.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      s.direccion.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchProv = provFilter === 'Todas' || normalizeText(s.provincia) === normalizeText(provFilter);
+    const normSearch = normalizeText(searchTerm);
+    const matchSearch = !normSearch ||
+      normalizeText(s.nombre).includes(normSearch) ||
+      normalizeText(s.direccion).includes(normSearch) ||
+      normalizeText(s.provincia).includes(normSearch);
     return matchProv && matchSearch;
   });
 

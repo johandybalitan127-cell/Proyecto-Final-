@@ -11,6 +11,8 @@ import { ExchangeRateBadge } from '../../components/common/ExchangeRateBadge';
 import { enviosService } from '../../services/enviosService';
 import { sucursalesService } from '../../services/sucursalesService';
 import { encryptId } from '../../utils/cryptoUtils';
+import { InternationalShippingSection } from '../../components/home/InternationalShippingSection';
+import { ExpressHomeDeliverySection } from '../../components/home/ExpressHomeDeliverySection';
 
 export const HomePage = () => {
   const navigate = useNavigate();
@@ -59,9 +61,21 @@ export const HomePage = () => {
     navigate(`/cuenta/rastreo/${encrypted}`);
   };
 
+  const normalizeText = (text = '') =>
+    String(text || '')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .trim();
+
   const filteredBranches = branches.filter((b) => {
-    const matchProv = b.provincia.toLowerCase() === selectedProvince.toLowerCase();
-    const matchSearch = cantonSearch ? (b.nombre.toLowerCase().includes(cantonSearch.toLowerCase()) || b.direccion.toLowerCase().includes(cantonSearch.toLowerCase())) : true;
+    const matchProv = normalizeText(b.provincia) === normalizeText(selectedProvince);
+    const normSearch = normalizeText(cantonSearch);
+    const matchSearch = normSearch ? (
+      normalizeText(b.nombre).includes(normSearch) || 
+      normalizeText(b.direccion).includes(normSearch) || 
+      normalizeText(b.provincia).includes(normSearch)
+    ) : true;
     return matchProv && matchSearch;
   });
 
@@ -76,8 +90,31 @@ export const HomePage = () => {
         </div>
       </div>
 
+      {/* Official Promotional Banner - Campaña de Citas de Pasaportes */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6">
+        <div className="relative group overflow-hidden rounded-2xl sm:rounded-3xl border border-sky-200/80 shadow-md hover:shadow-xl transition-all duration-300 bg-sky-400">
+          <Link 
+            to="/oficinas"
+            className="block relative overflow-hidden focus:outline-none focus:ring-4 focus:ring-sky-300 rounded-2xl sm:rounded-3xl"
+            title="¿Necesitás pasaporte? Citas disponibles en Tibás y Pavas - Correos de Costa Rica"
+          >
+            <img 
+              src="/images/banner-pasaportes.png" 
+              alt="¿Necesitás Pasaporte? Citas disponibles en las sucursales de Tibás y Pavas - Correos de Costa Rica. ¡Agendá ya!" 
+              className="w-full h-auto object-cover max-h-[220px] sm:max-h-[260px] md:max-h-[300px] transition-transform duration-500 group-hover:scale-[1.01]"
+              loading="eager"
+            />
+            {/* Interactive Call to Action Tag */}
+            <div className="absolute bottom-3 right-3 sm:bottom-4 sm:right-6 bg-azul-oscuro/90 hover:bg-azul-oscuro text-white text-xs sm:text-sm font-bold px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl shadow-lg flex items-center gap-2 transition-all transform group-hover:scale-105 backdrop-blur-xs">
+              <span>Agendar Cita Oficial</span>
+              <span className="text-base font-black">→</span>
+            </div>
+          </Link>
+        </div>
+      </div>
+
       {/* Hero Section */}
-      <section className="relative overflow-hidden pt-8 lg:pt-16 pb-8 bg-gradient-to-b from-white via-sky-50/30 to-gris-claro">
+      <section className="relative overflow-hidden pt-6 lg:pt-12 pb-8 bg-gradient-to-b from-white via-sky-50/30 to-gris-claro">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
@@ -375,17 +412,25 @@ export const HomePage = () => {
               <p className="text-xs text-gray-600 leading-relaxed">
                 Mensajería EMS y paquetería estándar puerta a puerta con entrega de 24 a 48 horas en los 84 cantones.
               </p>
-              <div className="pt-2">
+              <div className="pt-2 flex flex-wrap gap-1.5">
                 <span className="text-[11px] font-semibold text-gray-500 bg-gray-100 px-2.5 py-1 rounded-md">
                   Tiempos: 24 a 48h · Desde ₡2,350
                 </span>
+                <span className="text-[11px] font-bold text-amber-900 bg-amber-100/80 border border-amber-200 px-2 py-0.5 rounded-md flex items-center gap-1">
+                  <Zap className="w-3 h-3 text-amber-600" />
+                  <span>Entrega Express a Casa +₡2,000</span>
+                </span>
               </div>
             </div>
-            <div className="pt-6 border-t border-gray-100 mt-6">
+            <div className="pt-6 border-t border-gray-100 mt-6 flex items-center justify-between">
               <Link to="/servicios" className="text-xs font-bold text-azul-primario hover:underline inline-flex items-center gap-1">
-                <span>Cotizar envío</span>
+                <span>Cotizar regular</span>
                 <span>→</span>
               </Link>
+              <a href="#envio-express-casa" className="text-xs font-bold text-amber-700 hover:text-amber-800 hover:underline inline-flex items-center gap-1">
+                <span>Acelerar (+₡2,000)</span>
+                <span>⚡</span>
+              </a>
             </div>
           </div>
 
@@ -406,10 +451,10 @@ export const HomePage = () => {
               </div>
             </div>
             <div className="pt-6 border-t border-gray-100 mt-6">
-              <Link to="/servicios" className="text-xs font-bold text-azul-primario hover:underline inline-flex items-center gap-1">
-                <span>Ver tarifas mundiales</span>
+              <a href="#internacional" className="text-xs font-bold text-azul-primario hover:underline inline-flex items-center gap-1">
+                <span>Ver cotizador mundial</span>
                 <span>→</span>
-              </Link>
+              </a>
             </div>
           </div>
 
@@ -512,6 +557,12 @@ export const HomePage = () => {
         </div>
 
       </section>
+
+      {/* Sección Entrega Express a Casa Más Rápido (+₡2,000 extras) */}
+      <ExpressHomeDeliverySection />
+
+      {/* Sección Oficial de Envíos Internacionales & Exportación UPU */}
+      <InternationalShippingSection />
 
       {/* Sección "¿Dónde estamos?" (Geolocalización) */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">

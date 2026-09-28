@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Package, Lock, Mail, ArrowRight } from 'lucide-react';
+import { Package, Lock, Mail, ArrowRight, ShieldCheck, UserCheck, Calendar } from 'lucide-react';
+import { LogoCorreos } from '../../components/common/LogoCorreos';
 import { useAuth } from '../../hooks/useAuth';
 import { useToast } from '../../context/ToastContext';
 
 export const LoginPage = () => {
-  const { login } = useAuth();
+  const { login, loginAsDemo } = useAuth();
   const { addToast } = useToast();
   const navigate = useNavigate();
   const location = useLocation();
@@ -16,6 +17,7 @@ export const LoginPage = () => {
   const [error, setError] = useState('');
 
   const targetPath = location.state?.from || null;
+  const isFromAppointment = targetPath === '/oficinas';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,7 +29,7 @@ export const LoginPage = () => {
       addToast(`Bienvenido(a), ${res.user.nombre}`, 'success');
       if (targetPath) {
         navigate(targetPath);
-      } else if (res.user.rol === 'Administrador') {
+      } else if (res.user.rol === 'admin' || res.user.rol === 'Administrador') {
         navigate('/admin');
       } else {
         navigate('/cuenta/perfil');
@@ -41,12 +43,14 @@ export const LoginPage = () => {
   };
 
   const handleDemo = (role) => {
-    loginAsDemo(role);
-    addToast(`Sesión iniciada como demo: ${role}`, 'info');
-    if (role === 'Administrador') {
-      navigate(targetPath || '/admin');
+    const demoUser = loginAsDemo(role);
+    addToast(`Sesión iniciada como: ${demoUser.nombre}`, 'info');
+    if (targetPath) {
+      navigate(targetPath);
+    } else if (role === 'Administrador') {
+      navigate('/admin');
     } else {
-      navigate(targetPath || '/cuenta/perfil');
+      navigate('/cuenta/perfil');
     }
   };
 
@@ -55,13 +59,26 @@ export const LoginPage = () => {
       <div className="max-w-md w-full bg-white rounded-3xl border border-gray-200 shadow-xl p-8 space-y-6">
         
         {/* Brand */}
-        <div className="text-center space-y-2">
-          <div className="w-12 h-12 rounded-2xl bg-azul-primario text-white flex items-center justify-center mx-auto shadow-md">
-            <Package className="w-7 h-7" />
+        <div className="text-center space-y-3">
+          <div className="flex justify-center mb-1">
+            <LogoCorreos className="h-12 w-auto" />
           </div>
           <h1 className="text-2xl font-bold text-azul-oscuro">Sucursal Virtual</h1>
           <p className="text-xs text-gray-500">Ingreso a la Plataforma Digital Ciudadana</p>
         </div>
+
+        {/* Notice if redirected from Appointment booking */}
+        {isFromAppointment && (
+          <div className="p-3.5 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 text-xs flex items-start gap-2.5 shadow-xs">
+            <Calendar className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+            <div className="space-y-0.5">
+              <p className="font-bold text-amber-950">Inicio de Sesión Requerido</p>
+              <p className="text-amber-800 text-[11px] leading-relaxed">
+                Para agendar una cita oficial en la sucursal seleccionada, ingresa a tu cuenta ciudadana de Correos de Costa Rica.
+              </p>
+            </div>
+          </div>
+        )}
 
         {error && (
           <div className="p-3 rounded-xl bg-rose-50 text-rose-800 text-xs border border-rose-200">
@@ -79,7 +96,7 @@ export const LoginPage = () => {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="ejemplo@correos.go.cr"
+                placeholder="ejemplo@correos.go.cr o m.rojas@gmail.com"
                 className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-gray-300 text-xs bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-azul-primario"
               />
             </div>
@@ -110,7 +127,36 @@ export const LoginPage = () => {
           </button>
         </form>
 
-        <div className="text-center text-xs text-gray-500 pt-4 border-t border-gray-100">
+        {/* Demo Fast Access */}
+        <div className="pt-2 space-y-2">
+          <div className="relative flex items-center justify-center">
+            <div className="border-t border-gray-200 w-full"></div>
+            <span className="bg-white px-2 text-[10px] uppercase font-bold text-gray-400 tracking-wider">
+              Acceso Rápido Demo
+            </span>
+          </div>
+
+          <div className="grid grid-cols-2 gap-2 pt-1">
+            <button
+              type="button"
+              onClick={() => handleDemo('Usuario')}
+              className="py-2 px-2.5 rounded-xl border border-sky-200 bg-sky-50/80 hover:bg-sky-100 text-azul-oscuro text-[11px] font-semibold flex items-center justify-center gap-1.5 transition"
+            >
+              <UserCheck className="w-3.5 h-3.5 text-azul-primario" />
+              <span>Ciudadano</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => handleDemo('Administrador')}
+              className="py-2 px-2.5 rounded-xl border border-emerald-200 bg-emerald-50/80 hover:bg-emerald-100 text-emerald-950 text-[11px] font-semibold flex items-center justify-center gap-1.5 transition"
+            >
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+              <span>Administrador</span>
+            </button>
+          </div>
+        </div>
+
+        <div className="text-center text-xs text-gray-500 pt-3 border-t border-gray-100">
           ¿No tienes una cuenta?{' '}
           <Link to="/register" className="text-azul-primario font-bold hover:underline">
             Crear cuenta ciudadana

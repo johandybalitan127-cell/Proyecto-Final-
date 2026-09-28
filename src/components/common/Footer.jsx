@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Package, MapPin, Phone, Mail, Clock, ShieldCheck, Globe, Share2 } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock, ShieldCheck, Globe, Share2 } from 'lucide-react';
+import { LogoCorreos } from './LogoCorreos';
 
 export const Footer = () => {
   return (
@@ -10,18 +11,11 @@ export const Footer = () => {
           
           {/* Column 1: Correos de CR & Propuesta Académica */}
           <div className="space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-azul-primario text-white flex items-center justify-center">
-                <Package className="w-6 h-6" />
-              </div>
-              <div className="flex flex-col">
-                <span className="font-bold text-lg text-azul-primario leading-tight">
-                  Correos <span className="text-azul-oscuro">de Costa Rica</span>
-                </span>
-                <span className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider">
-                  Plataforma Digital Ciudadana
-                </span>
-              </div>
+            <div className="flex flex-col gap-1.5">
+              <LogoCorreos className="h-10 w-auto object-left self-start" />
+              <span className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider">
+                Plataforma Digital Ciudadana
+              </span>
             </div>
             
             <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">

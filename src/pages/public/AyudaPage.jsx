@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
   HelpCircle, Search, MessageSquare, ChevronDown, CheckCircle2, 
-  Send, ShieldAlert, Sparkles, Workflow, ArrowRight, Phone, Mail, Clock
+  Send, ShieldAlert, Sparkles, Workflow, ArrowRight, Phone, Mail, Clock, Download
 } from 'lucide-react';
 import { faqService } from '../../services/faqService';
 import { consultasService } from '../../services/consultasService';
@@ -276,15 +276,31 @@ export const AyudaPage = () => {
             )}
           </div>
 
-          {/* Panel Flujo N8N Activo (Exigido en prompt) */}
+          {/* Panel Flujo N8N Activo con AI Agent */}
           <div className="p-5 rounded-2xl bg-sky-50/80 border border-sky-200 text-xs space-y-3">
-            <div className="flex items-center gap-2">
-              <Workflow className="w-4 h-4 text-azul-primario" />
-              <h3 className="font-bold text-azul-oscuro">Automatización con N8N Activa</h3>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Workflow className="w-4 h-4 text-azul-primario" />
+                <h3 className="font-bold text-azul-oscuro">Automatización con AI Agent en N8N</h3>
+              </div>
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200 flex items-center gap-1">
+                <span>🤖</span>
+                <span>AI Agent Activo</span>
+              </span>
             </div>
             <p className="text-gray-600 leading-relaxed text-[11px]">
-              Al enviar tu formulario PQRS, un webhook en <strong>N8N</strong> activa un modelo NLP que clasifica la urgencia y remite la gestión automáticamente al departamento correspondiente (Aduanas, Reclamos o Soporte Ciudadano) con acuse de recibo inmediato.
+              Al enviar tu formulario PQRS, un webhook en <strong>N8N</strong> activa un <strong>AI Agent (LangChain + OpenAI)</strong> que realiza análisis semántico y de sentimientos, clasifica la urgencia real, remite el ticket automáticamente al departamento competente (Aduanas, Reclamos o Soporte) y redacta el acuse de recibo oficial de forma autónoma.
             </p>
+            <div className="pt-2 border-t border-sky-100 flex items-center justify-between">
+              <a
+                href="/n8n-workflow-pqrs-correos.json"
+                download="n8n-workflow-pqrs-correos.json"
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-azul-primario hover:underline bg-white px-3 py-1.5 rounded-xl border border-sky-200 shadow-2xs hover:bg-sky-50 transition"
+              >
+                <Download className="w-3.5 h-3.5 text-azul-primario" />
+                <span>Descargar Workflow JSON para N8N</span>
+              </a>
+            </div>
           </div>
 
         </div>

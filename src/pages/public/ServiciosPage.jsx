@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Truck, Globe, ShoppingBag, Archive, Package, FileCheck, Calculator, 
-  CheckCircle2, ArrowRight, ShieldCheck, DollarSign, Layers
+  CheckCircle2, ArrowRight, ShieldCheck, DollarSign, Layers, Zap
 } from 'lucide-react';
 import { serviciosService } from '../../services/serviciosService';
 import { tarifasService } from '../../services/tarifasService';
@@ -13,6 +13,7 @@ export const ServiciosPage = () => {
   const [filterType, setFilterType] = useState('Todos');
   const [weightKg, setWeightKg] = useState('1.5');
   const [selectedServiceType, setSelectedServiceType] = useState('EMS Courier Nacional');
+  const [expressDelivery, setExpressDelivery] = useState(false);
   const [calculatedCost, setCalculatedCost] = useState(0);
   const [usdRate, setUsdRate] = useState(514.50);
 
@@ -29,9 +30,9 @@ export const ServiciosPage = () => {
   }, []);
 
   useEffect(() => {
-    const cost = tarifasService.estimateTariff(weightKg, selectedServiceType);
-    setCalculatedCost(cost);
-  }, [weightKg, selectedServiceType]);
+    const baseCost = tarifasService.estimateTariff(weightKg, selectedServiceType);
+    setCalculatedCost(baseCost + (expressDelivery ? 2000 : 0));
+  }, [weightKg, selectedServiceType, expressDelivery]);
 
   const categories = ['Todos', 'Nacional', 'Internacional', 'Comercio Electrónico', 'Casillero'];
 
@@ -112,6 +113,26 @@ export const ServiciosPage = () => {
                 ≈ ${(calculatedCost / usdRate).toFixed(2)} USD
               </span>
             </div>
+          </div>
+
+          {/* Express Home Delivery Checkbox (+2000 CRC) */}
+          <div className="pt-2 border-t border-white/15 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <label className="flex items-center gap-2.5 cursor-pointer bg-white/10 hover:bg-white/20 px-3.5 py-2 rounded-xl transition border border-white/20 select-none">
+              <input
+                type="checkbox"
+                checked={expressDelivery}
+                onChange={(e) => setExpressDelivery(e.target.checked)}
+                className="w-4 h-4 rounded text-amber-500 focus:ring-amber-400 accent-amber-500 cursor-pointer"
+              />
+              <span className="text-xs font-bold text-amber-300 flex items-center gap-1.5">
+                <Zap className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
+                <span>Agregar Envío Express a Domicilio (+₡2,000 extras)</span>
+              </span>
+            </label>
+
+            <span className="text-[11px] text-sky-200">
+              ⚡ Entrega el mismo día en GAM o en 24h a nivel nacional directamente a tu puerta.
+            </span>
           </div>
         </div>
       </div>

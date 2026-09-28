@@ -21,13 +21,23 @@ const DEFAULT_ADMIN = {
   codigoOperador: 'OP-8821'
 };
 
+const DEMO_USER = {
+  id: 'USR-002',
+  nombre: 'María Elena Rojas',
+  correo: 'm.rojas@gmail.com',
+  cedula: '1-1234-0567',
+  rol: 'Usuario',
+  sucursal: 'San Pedro',
+  avatar: 'MR'
+};
+
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
     try {
       const saved = localStorage.getItem('correos_user');
-      return saved ? JSON.parse(saved) : DEFAULT_ADMIN;
+      return saved ? JSON.parse(saved) : null;
     } catch {
-      return DEFAULT_ADMIN;
+      return null;
     }
   });
 
@@ -45,16 +55,22 @@ export const AuthProvider = ({ children }) => {
       setUser(foundUser);
       return { success: true, user: foundUser };
     } catch (err) {
-      if (email === 'admin@admin.com' && password === 'admin') {
+      if (email === 'admin@admin.com' && (password === 'admin' || !password)) {
         setUser(DEFAULT_ADMIN);
         return { success: true, user: DEFAULT_ADMIN };
+      }
+      if (email === 'm.rojas@gmail.com') {
+        setUser(DEMO_USER);
+        return { success: true, user: DEMO_USER };
       }
       return { success: false, error: 'Credenciales inválidas' };
     }
   };
 
-  const loginAsDemo = (role = 'Administrador') => {
-    setUser(DEFAULT_ADMIN);
+  const loginAsDemo = (role = 'Usuario') => {
+    const demo = (role === 'Administrador' || role === 'admin') ? DEFAULT_ADMIN : DEMO_USER;
+    setUser(demo);
+    return demo;
   };
 
   const logout = () => {

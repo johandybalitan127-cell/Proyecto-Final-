@@ -12,6 +12,7 @@ import { ProtectedRoute } from './components/common/ProtectedRoute';
 // Public Pages
 import { HomePage } from './pages/public/HomePage';
 import { ServiciosPage } from './pages/public/ServiciosPage';
+import { InternacionalPage } from './pages/public/InternacionalPage';
 import { OficinasPage } from './pages/public/OficinasPage';
 import { AsistenteIAPage } from './pages/public/AsistenteIAPage';
 import { AyudaPage } from './pages/public/AyudaPage';
@@ -49,6 +50,8 @@ function App() {
               <Route element={<PublicLayout />}>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/servicios" element={<ServiciosPage />} />
+                <Route path="/internacional" element={<InternacionalPage />} />
+                <Route path="/envios-internacionales" element={<Navigate to="/internacional" replace />} />
                 <Route path="/oficinas" element={<OficinasPage />} />
                 <Route path="/asistente-ia" element={<AsistenteIAPage />} />
                 <Route path="/ayuda" element={<AyudaPage />} />
