@@ -8,6 +8,8 @@ import { StatCard } from '../../components/admin/StatCard';
 import { enviosService } from '../../services/enviosService';
 import { Modal } from '../../components/common/Modal';
 import { StepperTracking } from '../../components/common/StepperTracking';
+import { StatusBadge } from '../../components/common/StatusBadge';
+import { generateTrackingStages } from '../../utils/trackingUtils';
 import { useToast } from '../../context/ToastContext';
 
 export const AdminEnviosPage = () => {
@@ -67,6 +69,7 @@ export const AdminEnviosPage = () => {
       ruta: 'Zapote → Hub Central Distribución',
       repartidorId: 'REP-101'
     };
+    newEnvio.etapas = generateTrackingStages(newEnvio);
 
     await enviosService.create(newEnvio);
     addToast(`Guía oficial #${newGuia} generada con éxito`, 'success');
@@ -245,17 +248,7 @@ export const AdminEnviosPage = () => {
                         <span className="block truncate max-w-[130px]">{item.origen} → {item.destino}</span>
                       </td>
                       <td className="py-3 px-3">
-                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                          item.estado === 'Entregado'
-                            ? 'bg-emerald-100 text-emerald-800'
-                            : item.estado === 'En tránsito'
-                            ? 'bg-sky-100 text-azul-oscuro'
-                            : item.estado === 'En aduana'
-                            ? 'bg-amber-100 text-amber-800'
-                            : 'bg-gray-100 text-gray-700'
-                        }`}>
-                          {item.estado}
-                        </span>
+                        <StatusBadge status={item.estado} size="xs" />
                       </td>
                       <td className="py-3 px-3 text-gray-400 text-[11px] whitespace-nowrap">
                         {item.fecha}
@@ -450,11 +443,15 @@ export const AdminEnviosPage = () => {
         <form
           onSubmit={async (e) => {
             e.preventDefault();
+            const payload = {
+              ...editForm,
+              etapas: generateTrackingStages(editForm)
+            };
             if (modalMode === 'create') {
-              await enviosService.create(editForm);
+              await enviosService.create(payload);
               addToast(`Envío #${editForm.guia} creado`, 'success');
             } else {
-              await enviosService.update(selectedEnvio.id, editForm);
+              await enviosService.update(selectedEnvio.id, payload);
               addToast(`Envío #${editForm.guia} actualizado`, 'success');
             }
             setModalMode(null);
@@ -480,9 +477,11 @@ export const AdminEnviosPage = () => {
                 onChange={(e) => setEditForm({ ...editForm, estado: e.target.value })}
                 className="w-full px-3 py-1.5 rounded-lg border text-xs bg-white"
               >
-                <option value="Procesando">Procesando</option>
-                <option value="En tránsito">En tránsito</option>
-                <option value="En aduana">En aduana</option>
+                <option value="Recibida">Recibida / Admisión</option>
+                <option value="Procesando">Procesando / Clasificación</option>
+                <option value="En aduana">En aduana (Aforo fiscal)</option>
+                <option value="En tránsito">En tránsito / Reparto</option>
+                <option value="Disponible en sucursal">Disponible en sucursal</option>
                 <option value="Entregado">Entregado</option>
               </select>
             </div>

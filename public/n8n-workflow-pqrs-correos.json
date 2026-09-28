@@ -1,0 +1,224 @@
+{
+  "name": "Correos CR - Flujo PQRS con AI Agent & Enrutamiento Inteligente",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "pqrs-ciudadana",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "node-webhook-pqrs",
+      "name": "Webhook Trigger PQRS",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        180,
+        340
+      ],
+      "webhookId": "correos-cr-pqrs-webhook"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "Analiza la siguiente petición, queja o reclamo (PQRS) recibido en Correos de Costa Rica:\n\n• Nombre del ciudadano: {{ $json.body?.usuario || $json.usuario || 'Ciudadano' }}\n• Correo electrónico: {{ $json.body?.correo || $json.correo || 'No indicado' }}\n• Categoría indicada: {{ $json.body?.categoria || $json.categoria || 'General' }}\n• Prioridad declarada: {{ $json.body?.prioridad || $json.prioridad || 'Media' }}\n• Asunto: {{ $json.body?.asunto || $json.asunto || 'Sin asunto' }}\n• Detalle de la gestión:\n{{ $json.body?.mensaje || $json.mensaje || 'Sin mensaje' }}",
+        "options": {
+          "systemMessage": "Eres el Agente Inteligente Oficial de Atención Ciudadana y Clasificación Postal de Correos de Costa Rica.\n\nPOLÍTICA ESTRICTA DE CONTEXTO Y CONOCIMIENTO:\nTu conocimiento y ámbito de servicio se circunscriben EXCLUSIVAMENTE a Correos de Costa Rica (rastreo de envíos, sucursales y horarios, citas VES de pasaportes y DIMEX, tarifas EMS y Pymexpress, casillero Box Miami, trámites de aduana y reclamos PQRS).\nSi la consulta o mensaje del usuario trata sobre temas ajenos (por ejemplo marcas comerciales como Dos Pinos, recetas de cocina, deportes, tareas escolares, política, cultura general, etc.):\nDebes responder en 'respuestaAlCiudadano' indicando explícitamente: 'Esa consulta se sale de mis conocimientos y está fuera de contexto institucional de Correos de Costa Rica. Como Asistente Postal Oficial, únicamente puedo ayudarte con trámites postales, rastreo de guías, sucursales, citas VES y tarifas.' En dicho caso, asigna prioridad 'Baja', departamento 'Soporte y Atención Ciudadana' y resumenEjecutivo 'Consulta fuera de contexto institucional'.\n\nTu función general para trámites postales válidos:\n1. Analizar el mensaje y asunto del ciudadano usando procesamiento de lenguaje natural (NLP) y análisis semántico.\n2. Evaluar el nivel de urgencia real (Alta, Media, Baja). Asigna 'Alta' si hay medicamentos, pérdidas evidentes, daño de contenido, presunción de extravío o amenazas de proceso judicial.\n3. Determinar el departamento resolutor competente entre:\n   - 'Unidad de Aforo Fiscal y Postal' (temas aduaneros, retención en Zapote, impuestos, aforo, aranceles, DGA)\n   - 'Auditoría de Envíos y Seguros' (paquetes dañados, extraviados, robados o solicitudes de indemnización)\n   - 'Atención Comercial Pymexpress' (clientes corporativos, contratos pyme, facturación masiva)\n   - 'Soporte y Atención Ciudadana' (consultas generales, horarios, información de oficinas y rastreo simple)\n4. Redactar un resumen ejecutivo conciso del caso.\n5. Redactar una respuesta oficial de acuse de recibo empática, profesional y personalizada para el ciudadano.\n6. Asignar el SLA regulado (Alta: '24 horas hábiles', Media: '48 horas hábiles', Baja: '72 horas hábiles).\n\nDebes responder estrictamente en el formato estructurado definido."
+        }
+      },
+      "id": "node-ai-agent-pqrs",
+      "name": "AI Agent Clasificador PQRS",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        460,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o-mini",
+        "options": {
+          "temperature": 0.2
+        }
+      },
+      "id": "node-openai-model",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        400,
+        560
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "openai-correos-creds",
+          "name": "OpenAI API Correos CR"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"prioridadCalculada\": {\n      \"type\": \"string\",\n      \"enum\": [\"Alta\", \"Media\", \"Baja\"],\n      \"description\": \"Nivel de urgencia evaluado por el modelo según la gravedad y términos del reclamo\"\n    },\n    \"departamento\": {\n      \"type\": \"string\",\n      \"enum\": [\n        \"Unidad de Aforo Fiscal y Postal\",\n        \"Auditoría de Envíos y Seguros\",\n        \"Atención Comercial Pymexpress\",\n        \"Soporte y Atención Ciudadana\"\n      ],\n      \"description\": \"Departamento competente de Correos de Costa Rica\"\n    },\n    \"resumenEjecutivo\": {\n      \"type\": \"string\",\n      \"description\": \"Resumen conciso del reclamo en una sola oración\"\n    },\n    \"slaHoras\": {\n      \"type\": \"string\",\n      \"description\": \"Tiempo máximo de respuesta regulado (ej. 24 horas hábiles)\"\n    },\n    \"respuestaAlCiudadano\": {\n      \"type\": \"string\",\n      \"description\": \"Mensaje formal, empático e institucional de confirmación para el ciudadano\"\n    },\n    \"analisisSentimiento\": {\n      \"type\": \"string\",\n      \"enum\": [\"Molesto/Crítico\", \"Preocupado\", \"Neutral/Informativo\", \"Agradecido\"],\n      \"description\": \"Tono emocional detectado en la comunicación\"\n    },\n    \"accionesRecomendadas\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"string\"\n      },\n      \"description\": \"Pasos inmediatos que debe tomar el equipo resolutor\"\n    }\n  },\n  \"required\": [\n    \"prioridadCalculada\",\n    \"departamento\",\n    \"resumenEjecutivo\",\n    \"slaHoras\",\n    \"respuestaAlCiudadano\",\n    \"analisisSentimiento\"\n  ]\n}"
+      },
+      "id": "node-structured-output",
+      "name": "Structured Output Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        600,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Consolidar información del Webhook original con la decisión del AI Agent\nconst aiOutput = $input.first().json.output || $input.first().json;\n\n// Obtener datos originales del webhook\nconst webhookData = $('Webhook Trigger PQRS').first().json.body || $('Webhook Trigger PQRS').first().json;\n\nconst randomTicketNum = Math.floor(1000 + Math.random() * 9000);\nconst currentYear = new Date().getFullYear();\nconst ticketId = `PQ-${currentYear}-${randomTicketNum}`;\nconst fechaActual = new Date().toISOString().split('T')[0];\nconst horaActual = new Date().toLocaleTimeString('es-CR');\n\n// Departamento y prioridad decididos por el AI Agent\nconst departamento = aiOutput.departamento || (webhookData.categoria === 'Aduanas' ? 'Unidad de Aforo Fiscal y Postal' : 'Soporte y Atención Ciudadana');\nconst prioridad = aiOutput.prioridadCalculada || webhookData.prioridad || 'Media';\nconst sla = aiOutput.slaHoras || (prioridad === 'Alta' ? '24 horas hábiles' : '48 horas hábiles');\nconst resumen = aiOutput.resumenEjecutivo || webhookData.asunto || 'Gestión ciudadana';\nconst respuestaCiudadano = aiOutput.respuestaAlCiudadano || `Estimado(a) ciudadano(a), su gestión ha sido radicada bajo el código ${ticketId}.`;\nconst sentimiento = aiOutput.analisisSentimiento || 'Neutral/Informativo';\n\nconst ticketCompleto = {\n  ticket: ticketId,\n  usuario: webhookData.usuario || 'Ciudadano Registrado',\n  correo: webhookData.correo || '',\n  categoria: webhookData.categoria || 'General',\n  prioridad: prioridad,\n  prioridadOriginal: webhookData.prioridad || 'Media',\n  asunto: webhookData.asunto || 'Consulta sin asunto',\n  mensaje: webhookData.mensaje || '',\n  estado: 'En Investigación',\n  fecha: fechaActual,\n  hora: horaActual,\n  n8nProcessed: true,\n  aiAgentProcessed: true,\n  aiModel: 'OpenAI GPT-4o-mini (LangChain)',\n  n8nDepartment: departamento,\n  slaHoras: sla,\n  resumenEjecutivo: resumen,\n  respuestaAlCiudadano: respuestaCiudadano,\n  analisisSentimiento: sentimiento,\n  accionesRecomendadas: aiOutput.accionesRecomendadas || ['Asignar a analista de turno']\n};\n\nreturn [{\n  json: ticketCompleto\n}];"
+      },
+      "id": "node-consolidate-ticket",
+      "name": "Consolidar Ticket con Datos del AI Agent",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        800,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:3001/consultas",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json) }}",
+        "options": {}
+      },
+      "id": "node-db-insert",
+      "name": "Guardar en Base Postal (JSON Server)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1060,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"success\": true,\n  \"ticket\": \"{{ $json.ticket }}\",\n  \"departamento\": \"{{ $json.n8nDepartment }}\",\n  \"prioridad\": \"{{ $json.prioridad }}\",\n  \"sla\": \"{{ $json.slaHoras }}\",\n  \"resumen\": \"{{ $json.resumenEjecutivo }}\",\n  \"sentimiento\": \"{{ $json.analisisSentimiento }}\",\n  \"respuestaOficial\": \"{{ $json.respuestaAlCiudadano }}\",\n  \"procesadoPor\": \"AI Agent Correos CR (LangChain)\",\n  \"timestamp\": \"{{ $json.fecha }} {{ $json.hora }}\"\n}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "node-respond-webhook",
+      "name": "Respuesta HTTP al Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1300,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 🤖 Correos CR — AI Agent de Clasificación PQRS\n\nEste flujo utiliza un **AI Agent de LangChain en N8N** con **OpenAI (GPT-4o-mini)** y un **Structured Output Parser** para:\n1. Analizar el texto del reclamo con NLP y detectar la urgencia real.\n2. Enrutar automáticamente al departamento resolutor (Aduanas, Seguros, Pymes o Soporte).\n3. Generar un acuse de recibo empático y oficial con SLA garantizado.\n4. Almacenar el ticket en el backend postal (`http://localhost:3001/consultas`).",
+        "height": 260,
+        "width": 380,
+        "color": 4
+      },
+      "id": "node-sticky-note",
+      "name": "Nota Informativa AI Agent",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        140,
+        40
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger PQRS": {
+      "main": [
+        [
+          {
+            "node": "AI Agent Clasificador PQRS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent Clasificador PQRS",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent Clasificador PQRS",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent Clasificador PQRS": {
+      "main": [
+        [
+          {
+            "node": "Consolidar Ticket con Datos del AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consolidar Ticket con Datos del AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Guardar en Base Postal (JSON Server)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guardar en Base Postal (JSON Server)": {
+      "main": [
+        [
+          {
+            "node": "Respuesta HTTP al Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "tags": [
+    {
+      "name": "Correos de Costa Rica"
+    },
+    {
+      "name": "AI Agent"
+    },
+    {
+      "name": "LangChain"
+    },
+    {
+      "name": "PQRS"
+    }
+  ]
+}

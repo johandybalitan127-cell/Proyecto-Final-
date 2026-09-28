@@ -6,6 +6,7 @@ import { AdminTopbar } from '../../components/admin/AdminTopbar';
 import { StatCard } from '../../components/admin/StatCard';
 import { sucursalesService } from '../../services/sucursalesService';
 import { Modal } from '../../components/common/Modal';
+import { StatusBadge } from '../../components/common/StatusBadge';
 import { useToast } from '../../context/ToastContext';
 
 export const AdminSucursalesPage = () => {
@@ -40,11 +41,20 @@ export const AdminSucursalesPage = () => {
 
   const provincias = ['Todas', 'San José', 'Alajuela', 'Heredia', 'Cartago', 'Guanacaste', 'Puntarenas', 'Limón'];
 
+  const normalizeText = (text = '') =>
+    String(text || '')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .trim();
+
   const filtered = sucursales.filter((s) => {
-    const matchProv = provFilter === 'Todas' || s.provincia === provFilter;
-    const matchSearch = !searchTerm ||
-      s.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      s.direccion.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchProv = provFilter === 'Todas' || normalizeText(s.provincia) === normalizeText(provFilter);
+    const normSearch = normalizeText(searchTerm);
+    const matchSearch = !normSearch ||
+      normalizeText(s.nombre).includes(normSearch) ||
+      normalizeText(s.direccion).includes(normSearch) ||
+      normalizeText(s.provincia).includes(normSearch);
     return matchProv && matchSearch;
   });
 
@@ -225,9 +235,7 @@ export const AdminSucursalesPage = () => {
                         {item.horario}
                       </td>
                       <td className="py-3 px-3">
-                        <span className="badge-verde text-[10px]">
-                          ● {item.estado}
-                        </span>
+                        <StatusBadge status={item.estado} size="xs" />
                       </td>
                       <td className="py-3 px-3 text-right">
                         <div className="flex items-center justify-end gap-1">

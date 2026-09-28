@@ -1,5 +1,5 @@
 // Central API service with intelligent fallback to local storage cache if json-server is offline
-import initialDb from '../../db.json';
+import initialDb from '../data/initialDb.json';
 
 const API_BASE_URL = 'http://localhost:3001';
 const STORAGE_PREFIX = 'correos_cr_db_';

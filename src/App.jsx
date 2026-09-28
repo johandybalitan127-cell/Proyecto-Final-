@@ -12,7 +12,7 @@ import { ProtectedRoute } from './components/common/ProtectedRoute';
 // Public Pages
 import { HomePage } from './pages/public/HomePage';
 import { ServiciosPage } from './pages/public/ServiciosPage';
-import { RastreoPage } from './pages/public/RastreoPage';
+import { InternacionalPage } from './pages/public/InternacionalPage';
 import { OficinasPage } from './pages/public/OficinasPage';
 import { AsistenteIAPage } from './pages/public/AsistenteIAPage';
 import { AyudaPage } from './pages/public/AyudaPage';
@@ -24,8 +24,9 @@ import { PerfilPage } from './pages/user/PerfilPage';
 import { HistorialPage } from './pages/user/HistorialPage';
 import { PaquetesGuardadosPage } from './pages/user/PaquetesGuardadosPage';
 import { ConfiguracionUsuarioPage } from './pages/user/ConfiguracionUsuarioPage';
+import { RastreoInternoPage } from './pages/user/RastreoInternoPage';
+import { CitasPremiumPage } from './pages/user/CitasPremiumPage';
 
-// Admin Pages
 import { AdminDashboardPage } from './pages/admin/AdminDashboardPage';
 import { AdminEnviosPage } from './pages/admin/AdminEnviosPage';
 import { AdminUsuariosPage } from './pages/admin/AdminUsuariosPage';
@@ -35,6 +36,7 @@ import { AdminConsultasPage } from './pages/admin/AdminConsultasPage';
 import { AdminAsistenteIAPage } from './pages/admin/AdminAsistenteIAPage';
 import { AdminReportesPage } from './pages/admin/AdminReportesPage';
 import { AdminConfiguracionPage } from './pages/admin/AdminConfiguracionPage';
+import { AdminCitasPremiumPage } from './pages/admin/AdminCitasPremiumPage';
 
 function App() {
   return (
@@ -48,8 +50,8 @@ function App() {
               <Route element={<PublicLayout />}>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/servicios" element={<ServiciosPage />} />
-                <Route path="/rastreo" element={<RastreoPage />} />
-                <Route path="/rastreo/:trackingNumber" element={<RastreoPage />} />
+                <Route path="/internacional" element={<InternacionalPage />} />
+                <Route path="/envios-internacionales" element={<Navigate to="/internacional" replace />} />
                 <Route path="/oficinas" element={<OficinasPage />} />
                 <Route path="/asistente-ia" element={<AsistenteIAPage />} />
                 <Route path="/ayuda" element={<AyudaPage />} />
@@ -66,6 +68,14 @@ function App() {
                   }
                 />
                 <Route
+                  path="/cuenta/citas-premium"
+                  element={
+                    <ProtectedRoute>
+                      <CitasPremiumPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
                   path="/cuenta/historial"
                   element={
                     <ProtectedRoute>
@@ -78,6 +88,22 @@ function App() {
                   element={
                     <ProtectedRoute>
                       <PaquetesGuardadosPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/cuenta/rastreo"
+                  element={
+                    <ProtectedRoute>
+                      <RastreoInternoPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/cuenta/rastreo/:trackingNumber"
+                  element={
+                    <ProtectedRoute>
+                      <RastreoInternoPage />
                     </ProtectedRoute>
                   }
                 />
@@ -106,6 +132,7 @@ function App() {
                 <Route path="sucursales" element={<AdminSucursalesPage />} />
                 <Route path="servicios-tarifas" element={<AdminServiciosTarifasPage />} />
                 <Route path="consultas" element={<AdminConsultasPage />} />
+                <Route path="citas-premium" element={<AdminCitasPremiumPage />} />
                 <Route path="asistente-ia" element={<AdminAsistenteIAPage />} />
                 <Route path="reportes" element={<AdminReportesPage />} />
                 <Route path="configuracion" element={<AdminConfiguracionPage />} />

@@ -7,10 +7,21 @@ import { AdminTopbar } from '../../components/admin/AdminTopbar';
 import { StatCard } from '../../components/admin/StatCard';
 import { useToast } from '../../context/ToastContext';
 import { useAccessibility } from '../../context/AccessibilityContext';
+import { Eye, Play } from 'lucide-react';
 
 export const AdminConfiguracionPage = () => {
   const { addToast } = useToast();
-  const { highContrast, toggleHighContrast, screenReaderHelp, toggleScreenReaderHelp } = useAccessibility();
+  const { 
+    highContrast, 
+    toggleHighContrast, 
+    colorblindMode, 
+    setColorblindMode, 
+    voiceReadingActive, 
+    toggleVoiceReading,
+    readCurrentPage,
+    screenReaderHelp, 
+    toggleScreenReaderHelp 
+  } = useAccessibility();
 
   const [generalForm, setGeneralForm] = useState({
     nombreInstitucion: 'Correos de Costa Rica S.A.',
@@ -312,14 +323,62 @@ export const AdminConfiguracionPage = () => {
               </div>
             </div>
 
-            {/* Panel Accesibilidad */}
-            <div className="bg-white p-5 rounded-2xl border border-gray-200/80 shadow-2xs space-y-3 text-xs">
-              <h3 className="font-bold text-azul-oscuro uppercase tracking-wider text-[11px]">
-                Accesibilidad WCAG 2.1 AA
-              </h3>
+            {/* Panel Accesibilidad: Ceguera y Daltonismo */}
+            <div className="bg-white p-5 rounded-2xl border border-gray-200/80 shadow-2xs space-y-4 text-xs">
+              <div className="flex items-center justify-between">
+                <h3 className="font-bold text-azul-oscuro uppercase tracking-wider text-[11px]">
+                  Accesibilidad (Ceguera y Daltonismo)
+                </h3>
+                <span className="badge-verde text-[9px]">WCAG 2.1 AAA</span>
+              </div>
 
               <div className="space-y-3 pt-1">
+                {/* Lector de voz */}
                 <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-1.5 text-gray-600 text-[11px]">
+                    <Volume2 className="w-3.5 h-3.5 text-azul-primario" />
+                    <span>Lector de Voz Integrado</span>
+                  </div>
+                  <button
+                    onClick={toggleVoiceReading}
+                    className={`w-9 h-5 rounded-full flex items-center p-0.5 transition-colors ${voiceReadingActive ? 'bg-verde-principal' : 'bg-gray-300'}`}
+                    aria-label="Alternar lector de voz asistida"
+                  >
+                    <span className={`w-4 h-4 bg-white rounded-full shadow transform transition-transform ${voiceReadingActive ? 'translate-x-4' : ''}`} />
+                  </button>
+                </div>
+
+                {/* Botón escuchar página */}
+                <button
+                  onClick={readCurrentPage}
+                  className="w-full py-1.5 px-2.5 rounded-lg bg-sky-50 text-azul-primario hover:bg-sky-100 font-semibold text-[11px] flex items-center justify-center gap-1.5 transition"
+                >
+                  <Play className="w-3 h-3 fill-azul-primario" />
+                  <span>Escuchar Panel Administrativo</span>
+                </button>
+
+                {/* Daltonismo */}
+                <div className="space-y-1.5 pt-1">
+                  <div className="flex items-center gap-1.5 text-gray-600 text-[11px]">
+                    <Eye className="w-3.5 h-3.5 text-azul-primario" />
+                    <span>Filtro para Daltonismo:</span>
+                  </div>
+                  <select
+                    value={colorblindMode}
+                    onChange={(e) => setColorblindMode(e.target.value)}
+                    className="w-full text-[11px] p-2 rounded-lg border border-gray-200 bg-gray-50 focus:bg-white focus:outline-none focus:ring-1 focus:ring-azul-primario"
+                    aria-label="Seleccionar modo de daltonismo"
+                  >
+                    <option value="none">Estándar (Sin filtro)</option>
+                    <option value="deuteranopia">Deuteranopía (Verde débil)</option>
+                    <option value="protanopia">Protanopía (Rojo débil)</option>
+                    <option value="tritanopia">Tritanopía (Azul/Amarillo)</option>
+                    <option value="achromatopsia">Acromatopsia (Monocromo)</option>
+                  </select>
+                </div>
+
+                {/* Alto Contraste */}
+                <div className="flex items-center justify-between pt-1">
                   <div className="flex items-center gap-1.5 text-gray-600 text-[11px]">
                     <Contrast className="w-3.5 h-3.5" />
                     <span>Modo Alto Contraste</span>
@@ -327,21 +386,9 @@ export const AdminConfiguracionPage = () => {
                   <button
                     onClick={toggleHighContrast}
                     className={`w-9 h-5 rounded-full flex items-center p-0.5 transition-colors ${highContrast ? 'bg-azul-primario' : 'bg-gray-300'}`}
+                    aria-label="Alternar modo de alto contraste"
                   >
                     <span className={`w-4 h-4 bg-white rounded-full shadow transform transition-transform ${highContrast ? 'translate-x-4' : ''}`} />
-                  </button>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1.5 text-gray-600 text-[11px]">
-                    <Volume2 className="w-3.5 h-3.5" />
-                    <span>Lector de Pantalla ARIA</span>
-                  </div>
-                  <button
-                    onClick={toggleScreenReaderHelp}
-                    className={`w-9 h-5 rounded-full flex items-center p-0.5 transition-colors ${screenReaderHelp ? 'bg-verde-principal' : 'bg-gray-300'}`}
-                  >
-                    <span className={`w-4 h-4 bg-white rounded-full shadow transform transition-transform ${screenReaderHelp ? 'translate-x-4' : ''}`} />
                   </button>
                 </div>
               </div>

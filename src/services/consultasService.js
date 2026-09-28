@@ -21,6 +21,16 @@ export const consultasService = {
                      consulta.categoria === 'Reclamos' ? 'Auditoría de Envíos y Seguros' :
                      consulta.categoria === 'Solicitudes' ? 'Atención Comercial Pymes' : 'Soporte Ciudadano'
     };
+
+    // Notificar al Webhook de N8N Cloud en tiempo real
+    try {
+      fetch('https://johandyblitan.app.n8n.cloud/webhook/pqrs-ciudadana', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newTicket)
+      }).catch((e) => console.warn('N8N Webhook notice:', e));
+    } catch {}
+
     return createItem(COLLECTION, newTicket);
   },
   update: (id, updates) => updateItem(COLLECTION, id, updates),

@@ -2,19 +2,19 @@ import React, { useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { Package, Menu, X, User, LogOut, ShieldCheck, ChevronDown } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
-import { useAccessibility } from '../../context/AccessibilityContext';
+import { LogoCorreos } from './LogoCorreos';
 
 export const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const { user, isAuthenticated, isAdmin, logout } = useAuth();
-  const { setIsModalOpen, highContrast } = useAccessibility();
   const navigate = useNavigate();
 
   const navLinks = [
     { name: 'Inicio', path: '/' },
     { name: 'Servicios', path: '/servicios' },
-    { name: 'Rastreo', path: '/rastreo' },
+    { name: 'Internacional', path: '/internacional' },
+    { name: 'Rastreo', path: '/cuenta/rastreo' },
     { name: 'Oficinas', path: '/oficinas' },
     { name: 'Ayuda', path: '/ayuda' },
   ];
@@ -28,17 +28,12 @@ export const Navbar = () => {
   return (
     <header className="sticky top-0 z-40 bg-white border-b border-gray-100 shadow-sm transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-between h-20 flex-nowrap gap-x-3">
           
           {/* Logo & Subtitle */}
-          <Link to="/" className="flex items-center gap-3.5 group focus:outline-none">
-            <div className="w-12 h-12 rounded-xl bg-azul-primario text-white flex items-center justify-center shadow-md group-hover:bg-azul-oscuro transition-colors">
-              <Package className="w-7 h-7" />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-xl sm:text-2xl font-bold tracking-tight text-azul-primario leading-none font-sans">
-                Correos <span className="text-azul-oscuro font-extrabold">de Costa Rica</span>
-              </span>
+          <Link to="/" className="flex items-center gap-3.5 group focus:outline-none flex-shrink-0">
+            <LogoCorreos className="h-10 sm:h-12 w-auto" />
+            <div className="flex flex-col hidden sm:block">
               <span className="text-[10px] sm:text-xs font-semibold tracking-wider text-gray-500 uppercase mt-1">
                 Plataforma Digital Ciudadana
               </span>
@@ -46,13 +41,13 @@ export const Navbar = () => {
           </Link>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden md:flex items-center gap-1 lg:gap-2">
+          <nav className="hidden lg:flex items-center gap-1 xl:gap-2">
             {navLinks.map((link) => (
               <NavLink
                 key={link.path}
                 to={link.path}
                 className={({ isActive }) =>
-                  `px-3.5 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  `px-2.5 xl:px-3.5 py-2 rounded-lg text-xs xl:text-sm font-medium transition-colors whitespace-nowrap ${
                     isActive
                       ? 'text-azul-primario bg-sky-50 font-semibold'
                       : 'text-gris-oscuro hover:text-azul-primario hover:bg-gray-50'
@@ -65,45 +60,22 @@ export const Navbar = () => {
           </nav>
 
           {/* Right Action Buttons */}
-          <div className="flex items-center gap-2 sm:gap-3">
-            
-            {/* Accessibility Button */}
-            <button
-              onClick={() => setIsModalOpen(true)}
-              className="p-2 sm:px-3 sm:py-2 rounded-lg border border-gray-200 text-gray-700 hover:text-azul-primario hover:border-azul-primario bg-white hover:bg-gray-50 transition-all flex items-center gap-1.5 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-azul-primario"
-              aria-label="Abrir panel de accesibilidad universal"
-              title="Accesibilidad Universal (WCAG 2.1 AA)"
-            >
-              <span className="text-base leading-none" role="img" aria-label="Símbolo de accesibilidad">♿</span>
-              <span className="hidden sm:inline">Accesibilidad</span>
-            </button>
-
-            {/* Virtual Branch Button */}
+          <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0 ml-auto">
+            {/* Quick Virtual Branch Link */}
             <Link
               to="/cuenta/perfil"
-              className="hidden lg:inline-flex btn-primario text-sm py-2 px-3.5 shadow-sm"
+              className="hidden lg:inline-flex btn-primario text-xs py-2 px-3 shadow-2xs whitespace-nowrap flex-shrink-0"
             >
               <span>Sucursal Virtual</span>
               <span className="text-xs">→</span>
             </Link>
 
-            {/* Admin Panel Direct Link (if admin) */}
-            {isAdmin && (
-              <Link
-                to="/admin"
-                className="hidden sm:inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200 hover:bg-emerald-100 transition"
-              >
-                <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                <span>Panel Admin</span>
-              </Link>
-            )}
-
             {/* User Dropdown / Login Button */}
             {isAuthenticated ? (
-              <div className="relative">
+              <div className="relative flex-shrink-0">
                 <button
                   onClick={() => setUserDropdownOpen(!userDropdownOpen)}
-                  className="flex items-center gap-2 p-1.5 sm:px-3 sm:py-2 rounded-lg border border-gray-200 hover:bg-gray-50 text-left transition"
+                  className="flex items-center gap-2 p-1 sm:px-2.5 sm:py-1.5 rounded-xl border border-gray-200 hover:bg-gray-50 text-left transition whitespace-nowrap"
                   aria-expanded={userDropdownOpen}
                 >
                   <div className="w-8 h-8 rounded-full bg-azul-oscuro text-white text-xs font-bold flex items-center justify-center shadow-inner">

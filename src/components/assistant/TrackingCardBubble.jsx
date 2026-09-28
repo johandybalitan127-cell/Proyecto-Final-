@@ -2,6 +2,7 @@ import React from 'react';
 import { Package, MapPin, ExternalLink, Printer, Clock } from 'lucide-react';
 import { StepperTracking } from '../common/StepperTracking';
 import { Link } from 'react-router-dom';
+import { encryptId } from '../../utils/cryptoUtils';
 
 export const TrackingCardBubble = ({ envio, onOpenMap = null }) => {
   if (!envio) return null;
@@ -64,7 +65,7 @@ export const TrackingCardBubble = ({ envio, onOpenMap = null }) => {
           <span className="font-medium">Unidad GPS en ruta: GAM Central</span>
         </div>
         <Link
-          to={`/rastreo/${envio.guia}`}
+          to={`/cuenta/rastreo/${encryptId(envio.guia)}`}
           className="text-xs font-semibold text-azul-primario hover:underline inline-flex items-center gap-1"
         >
           <span>Ver detalle completo</span>

@@ -1,5 +1,14 @@
-import { useAuthContext } from '../context/AuthContext';
+import { useContext } from 'react';
+import { AuthContext } from '../context/AuthContext';
 
 export const useAuth = () => {
-  return useAuthContext();
+  const context = useContext(AuthContext);
+  return context || {
+    user: null,
+    isAuthenticated: false,
+    isAdmin: false,
+    login: async () => ({ success: false }),
+    loginAsDemo: () => {},
+    logout: () => {},
+  };
 };

@@ -1,29 +1,136 @@
 {
   "usuarios": [
     {
-      "id": "admin-1",
-      "nombre": "Administrador Sistema",
-      "correo": "admin@admin.com",
-      "password": "admin",
-      "rol": "admin",
+      "id": "USR-001",
+      "nombre": "Carlos Mora Jiménez",
+      "correo": "carlos.mora@correos.go.cr",
+      "rol": "Administrador",
       "estado": "Activo",
-      "fechaRegistro": "2024-01-01",
-      "telefono": "+506 8888-8888",
-      "sucursal": "Sede Central",
-      "avatar": "AD"
+      "fechaRegistro": "2023-01-15",
+      "telefono": "+506 8821-4321",
+      "sucursal": "Zapote Central",
+      "avatar": "CM"
     },
     {
       "id": "USR-002",
       "nombre": "María Elena Rojas",
       "correo": "m.rojas@gmail.com",
-      "cedula": "1-1234-0567",
-      "password": "123",
       "rol": "Usuario",
       "estado": "Activo",
-      "fechaRegistro": "2024-02-15",
+      "fechaRegistro": "2023-04-10",
       "telefono": "+506 8765-4321",
       "sucursal": "San Pedro",
       "avatar": "MR"
+    },
+    {
+      "id": "USR-003",
+      "nombre": "Inversiones del Valle S.A.",
+      "correo": "logistica@inversionesvalle.cr",
+      "rol": "Cliente Empresarial",
+      "estado": "Activo",
+      "fechaRegistro": "2023-05-22",
+      "telefono": "+506 2222-3333",
+      "sucursal": "Heredia Centro",
+      "avatar": "IV"
+    },
+    {
+      "id": "USR-004",
+      "nombre": "Andrés Fallas Solano",
+      "correo": "afallas@outlook.com",
+      "rol": "Usuario",
+      "estado": "Activo",
+      "fechaRegistro": "2023-06-18",
+      "telefono": "+506 7012-3456",
+      "sucursal": "Alajuela Central",
+      "avatar": "AF"
+    },
+    {
+      "id": "USR-005",
+      "nombre": "Boutique Artesanal CR",
+      "correo": "ventas@boutiquecr.com",
+      "rol": "Cliente Empresarial",
+      "estado": "Activo",
+      "fechaRegistro": "2023-07-03",
+      "telefono": "+506 8345-6789",
+      "sucursal": "Cartago Los Ángeles",
+      "avatar": "BA"
+    },
+    {
+      "id": "USR-006",
+      "nombre": "Laura Méndez Castro",
+      "correo": "laura.mendez@correos.go.cr",
+      "rol": "Administrador",
+      "estado": "Activo",
+      "fechaRegistro": "2023-02-01",
+      "telefono": "+506 8999-1122",
+      "sucursal": "Edificio Central",
+      "avatar": "LM"
+    },
+    {
+      "id": "USR-007",
+      "nombre": "Roberto Vargas Brenes",
+      "correo": "rvargas@gmail.com",
+      "rol": "Usuario",
+      "estado": "Suspendido",
+      "fechaRegistro": "2023-08-14",
+      "telefono": "+506 8654-7890",
+      "sucursal": "Liberia",
+      "avatar": "RV"
+    },
+    {
+      "id": "USR-008",
+      "nombre": "Distribuidora del Caribe",
+      "correo": "contacto@distribuidoracaribe.com",
+      "rol": "Cliente Empresarial",
+      "estado": "Activo",
+      "fechaRegistro": "2023-09-01",
+      "telefono": "+506 2758-1234",
+      "sucursal": "Limón Centro",
+      "avatar": "DC"
+    },
+    {
+      "id": "USR-009",
+      "nombre": "Sofía Alvarado Cordero",
+      "correo": "sofia.alvarado@yahoo.com",
+      "rol": "Usuario",
+      "estado": "Pendiente",
+      "fechaRegistro": "2024-01-20",
+      "telefono": "+506 7123-9876",
+      "sucursal": "Puntarenas",
+      "avatar": "SA"
+    },
+    {
+      "id": "USR-010",
+      "nombre": "Daniel Chaves Umaña",
+      "correo": "dchaves@gmail.com",
+      "rol": "Usuario",
+      "estado": "Activo",
+      "fechaRegistro": "2024-02-11",
+      "telefono": "+506 8888-5544",
+      "sucursal": "Escazú",
+      "avatar": "DC"
+    },
+    {
+      "id": "USR-011",
+      "nombre": "Exportadora AgroSur S.A.",
+      "correo": "envios@agrosur.cr",
+      "rol": "Cliente Empresarial",
+      "estado": "Activo",
+      "fechaRegistro": "2024-03-05",
+      "telefono": "+506 2771-4455",
+      "sucursal": "Pérez Zeledón",
+      "avatar": "EA"
+    },
+    {
+      "id": "USR-012",
+      "nombre": "Gabriela Solís Quirós",
+      "correo": "gaby.solis@hotmail.com",
+      "rol": "Usuario",
+      "estado": "Activo",
+      "fechaRegistro": "2024-04-12",
+      "telefono": "+506 8456-1230",
+      "sucursal": "Tibás",
+      "avatar": "GS"
     }
   ],
   "envios": [
@@ -553,50 +660,6 @@
           "actual": true
         }
       ]
-    },
-    {
-      "guia": "CR541234830CR",
-      "remitente": "Ventanilla Central Zapote",
-      "destinatario": "jjjjlkj",
-      "servicio": "EMS Courier Nacional",
-      "origen": "San José Central",
-      "destino": "Alajuela / GAM",
-      "estado": "Procesando",
-      "fecha": "2026-09-25",
-      "ruta": "Zapote → Hub Central Distribución",
-      "repartidorId": "REP-101",
-      "etapas": [
-        {
-          "paso": 1,
-          "nombre": "Admisión / Recibida",
-          "ubicacion": "Sucursal San José Central",
-          "hora": "08:30 a.m.",
-          "completado": true
-        },
-        {
-          "paso": 2,
-          "nombre": "En Clasificación Postal",
-          "ubicacion": "Centro Logístico Automatizado Zapote",
-          "hora": "11:15 a.m.",
-          "completado": true,
-          "actual": true
-        },
-        {
-          "paso": 3,
-          "nombre": "En Tránsito",
-          "ubicacion": "Consolidación hacia Alajuela / GAM",
-          "hora": "Programado hoy 03:00 p.m.",
-          "completado": false
-        },
-        {
-          "paso": 4,
-          "nombre": "Entrega Final",
-          "ubicacion": "Alajuela / GAM",
-          "hora": "Estimado mañana",
-          "completado": false
-        }
-      ],
-      "id": "l61wDmJjopk"
     }
   ],
   "sucursales": [
@@ -1141,317 +1204,6 @@
       "usuario": "test",
       "consulta": "test",
       "id": "3EzsBdA0DqQ"
-    },
-    {
-      "usuario": "Prueba Ciudadano",
-      "consulta": "Rastrear CR098421734CR",
-      "id": "N8Wk813XGM0"
-    },
-    {
-      "usuario": "Ciudadano Web",
-      "consulta": "Rastrear CR098421734CR",
-      "intencion": "rastreo_envio",
-      "confianza": 98.6,
-      "resultado": "Resuelto",
-      "hora": "08:33:25 a. m.",
-      "id": "DHeBD3shT4A"
-    },
-    {
-      "usuario": "Ciudadano Web",
-      "consulta": "Horario de Zapote",
-      "intencion": "consulta_horario",
-      "confianza": 97.4,
-      "resultado": "Resuelto",
-      "hora": "08:33:31 a. m.",
-      "id": "b_abhnq3fKk"
-    },
-    {
-      "usuario": "Ciudadano Web",
-      "consulta": "¿Cómo abro un reclamo o reporte de incidente?",
-      "intencion": "informacion_general",
-      "confianza": 92,
-      "resultado": "Resuelto",
-      "hora": "08:33:43 a. m.",
-      "id": "fioRlORv5Go"
-    },
-    {
-      "usuario": "Ciudadano Web",
-      "consulta": "quiero enviar un correo a panama como hago",
-      "intencion": "informacion_general",
-      "confianza": 92,
-      "resultado": "Resuelto",
-      "hora": "08:34:25 a. m.",
-      "id": "InrWtej1LGY"
-    },
-    {
-      "usuario": "Ciudadano Web",
-      "consulta": "osea tengo que ir a entregar el correo en persona",
-      "intencion": "informacion_general",
-      "confianza": 92,
-      "resultado": "Resuelto",
-      "hora": "08:35:40 a. m.",
-      "id": "wt51I0xNucw"
-    },
-    {
-      "usuario": "Ciudadano Web",
-      "consulta": "Quiero hablar con un asesor en vivo",
-      "intencion": "informacion_general",
-      "confianza": 92,
-      "resultado": "Resuelto",
-      "hora": "08:35:52 a. m.",
-      "id": "G7OVL4uj4Qc"
-    },
-    {
-      "usuario": "Ciudadano Web",
-      "consulta": "¿Cómo abro un reclamo o reporte de incidente?",
-      "intencion": "informacion_general",
-      "confianza": 92,
-      "resultado": "Resuelto",
-      "hora": "08:35:59 a. m.",
-      "id": "mHNekQQvyq0"
-    },
-    {
-      "usuario": "Ciudadano Web",
-      "consulta": "Quiero hablar con un asesor en vivo",
-      "intencion": "transferencia_asesor",
-      "confianza": 98.9,
-      "resultado": "Resuelto",
-      "hora": "08:41:28 a. m.",
-      "id": "frgpFcBdBU8"
-    },
-    {
-      "usuario": "Ciudadano Web",
-      "consulta": "Solicito hablar con un asesor humano en vivo por favor",
-      "intencion": "transferencia_asesor",
-      "confianza": 98.9,
-      "resultado": "Resuelto",
-      "hora": "08:41:45 a. m.",
-      "id": "uwFsDNiSjC4"
-    },
-    {
-      "usuario": "Ciudadano Web",
-      "consulta": "Quiero hablar con un asesor en vivo",
-      "intencion": "transferencia_asesor",
-      "confianza": 98.9,
-      "resultado": "Resuelto",
-      "hora": "08:44:27 a. m.",
-      "id": "dBA9tD8E69E"
-    },
-    {
-      "usuario": "Ciudadano Web",
-      "consulta": "¿Cómo abro un reclamo o reporte de incidente?",
-      "intencion": "reclamo_pqrs",
-      "confianza": 97.8,
-      "resultado": "Escalado",
-      "hora": "08:44:37 a. m.",
-      "id": "WpD26JAODhM"
-    },
-    {
-      "usuario": "Ciudadano Web",
-      "consulta": "¿Cómo desviar mi envío a un casillero o sucursal?",
-      "intencion": "desvio_envio",
-      "confianza": 96.5,
-      "resultado": "Resuelto",
-      "hora": "08:44:42 a. m.",
-      "id": "5_kk06Tful8"
-    },
-    {
-      "usuario": "Ciudadano Web",
-      "consulta": "quiero ir al parque",
-      "intencion": "consulta_general",
-      "confianza": 88,
-      "resultado": "Orientado",
-      "hora": "08:44:55 a. m.",
-      "id": "u7KNUZpE2wE"
-    },
-    {
-      "usuario": "Ciudadano Web",
-      "consulta": "Horario de Zapote",
-      "intencion": "consulta_sucursal_especifica",
-      "confianza": 98,
-      "resultado": "Resuelto",
-      "hora": "09:22:15 a. m.",
-      "id": "48js6U3lHbQ"
-    },
-    {
-      "usuario": "Ciudadano Web",
-      "consulta": "hola",
-      "intencion": "saludo",
-      "confianza": 99.5,
-      "resultado": "Resuelto",
-      "hora": "09:22:42 a. m.",
-      "id": "BYnIsDqHMG0"
-    },
-    {
-      "usuario": "Ciudadano Web",
-      "consulta": "hola",
-      "intencion": "saludo",
-      "confianza": 99.5,
-      "resultado": "Resuelto",
-      "hora": "10:37:00 a. m.",
-      "id": "wZWQiK0G88M"
-    },
-    {
-      "usuario": "Ciudadano Web",
-      "consulta": "puedes crear codigo",
-      "intencion": "consulta_general",
-      "confianza": 88,
-      "resultado": "Orientado",
-      "hora": "10:37:16 a. m.",
-      "id": "GuktFoChlQU"
-    },
-    {
-      "usuario": "Ciudadano Web",
-      "consulta": "cual es mi contraseña",
-      "intencion": "faq_match",
-      "confianza": 94.5,
-      "resultado": "Resuelto",
-      "hora": "10:37:37 a. m.",
-      "id": "jvlVafAB97U"
-    },
-    {
-      "usuario": "Ciudadano Web",
-      "consulta": "como te llamas",
-      "intencion": "faq_match",
-      "confianza": 94.5,
-      "resultado": "Resuelto",
-      "hora": "10:38:18 a. m.",
-      "id": "q8uqDyW27e4"
-    },
-    {
-      "usuario": "Ciudadano Web",
-      "consulta": "ocupo llegar a costa rica como lo hago",
-      "intencion": "faq_match",
-      "confianza": 94.5,
-      "resultado": "Resuelto",
-      "hora": "10:38:33 a. m.",
-      "id": "UrImzjk0dC8"
-    },
-    {
-      "usuario": "Ciudadano Web",
-      "consulta": "Ver sucursales",
-      "intencion": "consulta_sucursal_especifica",
-      "confianza": 98,
-      "resultado": "Resuelto",
-      "hora": "10:40:07 a. m.",
-      "id": "5QxnDYUszGY"
-    },
-    {
-      "usuario": "Ciudadano Web",
-      "consulta": "Cita de Pasaporte VES",
-      "intencion": "cita_ves",
-      "confianza": 98.5,
-      "resultado": "Resuelto",
-      "hora": "10:40:14 a. m.",
-      "id": "kDxixN1mWWY"
-    },
-    {
-      "usuario": "Ciudadano Web",
-      "consulta": "Quiero hablar con un asesor en vivo",
-      "intencion": "transferencia_asesor",
-      "confianza": 98.9,
-      "resultado": "Resuelto",
-      "hora": "10:40:21 a. m.",
-      "id": "B6jZTAYoJZ4"
-    },
-    {
-      "usuario": "Ciudadano Web",
-      "consulta": "dameme a citas premium",
-      "intencion": "cita_ves",
-      "confianza": 98.5,
-      "resultado": "Resuelto",
-      "hora": "01:36:44 p. m.",
-      "id": "rnR4CqsV9_s"
-    },
-    {
-      "usuario": "Ciudadano Web",
-      "consulta": "hola",
-      "intencion": "saludo",
-      "confianza": 99.5,
-      "resultado": "Resuelto",
-      "hora": "09:25:40 a. m.",
-      "id": "ytbjzT6wjo0"
-    },
-    {
-      "usuario": "Ciudadano Web",
-      "consulta": "Quiero hablar con un asesor en vivo",
-      "intencion": "transferencia_asesor",
-      "confianza": 98.9,
-      "resultado": "Resuelto",
-      "hora": "09:25:49 a. m.",
-      "id": "kiw_KMq0afg"
-    },
-    {
-      "usuario": "Ciudadano Web",
-      "consulta": "Buenos días. Mi paquete contiene un tratamiento oncológico urgente enviado desde España para mi madre. En el rastreo indica que está en revisión aduanal en el Centro Postal Zapote desde hace 5 días. Si no se entrega esta semana, se pierde la cadena de frío y el tratamiento se interrumpe. Por favor, solicito auxilio inmediato para pagar los impuestos y retirarlo hoy mismo",
-      "intencion": "consulta_sucursal_especifica",
-      "confianza": 98,
-      "resultado": "Resuelto",
-      "hora": "09:27:32 a. m.",
-      "id": "F9qrFVs4GGM"
-    },
-    {
-      "usuario": "Ciudadano Web",
-      "consulta": "Buenos días. Mi paquete contiene un tratamiento oncológico urgente enviado desde España para mi madre. En el rastreo indica que está en revisión aduanal en el Centro Postal Zapote desde hace 5 días. Si no se entrega esta semana, se pierde la cadena de frío y el tratamiento se interrumpe. Por favor, solicito auxilio inmediato para pagar los impuestos y retirarlo hoy mismo",
-      "intencion": "consulta_sucursal_especifica",
-      "confianza": 98,
-      "resultado": "Resuelto",
-      "hora": "09:28:11 a. m.",
-      "id": "kFVIzE4GtJY"
-    },
-    {
-      "usuario": "Ciudadano Web",
-      "consulta": "Buenos días. Mi paquete contiene un tratamiento oncológico urgente enviado desde España para mi madre. En el rastreo indica que está en revisión aduanal en el Centro Postal Zapote desde hace 5 días. Si no se entrega esta semana, se pierde la cadena de frío y el tratamiento se interrumpe. Por favor, solicito auxilio inmediato para pagar los impuestos y retirarlo hoy mismo",
-      "intencion": "consulta_sucursal_especifica",
-      "confianza": 98,
-      "resultado": "Resuelto",
-      "hora": "09:29:19 a. m.",
-      "id": "Y40cMYFtVlo"
-    },
-    {
-      "usuario": "Ciudadano Web",
-      "consulta": "\"Buenas tardes. Quisiera saber si la oficina de Correos en San Pedro (frente al parque) abre los sábados para retiro de paquetes de casillero y hasta qué hora reciben público.\"",
-      "intencion": "consulta_sucursal_especifica",
-      "confianza": 98,
-      "resultado": "Resuelto",
-      "hora": "10:08:54 a. m.",
-      "id": "YL-cLqxmoPg"
-    },
-    {
-      "usuario": "Ciudadano Web",
-      "consulta": "Recibí un aviso de que mi paquete comprado en Amazon necesita nota de exención o permiso del Ministerio de Salud. Ya tengo la factura original en PDF y el registro sanitario. ¿A cuál correo o ventanilla de Zapote debo presentar la documentación para que liberen el aforo?\"",
-      "intencion": "consulta_sucursal_especifica",
-      "confianza": 98,
-      "resultado": "Resuelto",
-      "hora": "10:10:41 a. m.",
-      "id": "NK7hN0pr810"
-    },
-    {
-      "usuario": "Ciudadano Web",
-      "consulta": "que es la dos pinos",
-      "intencion": "consulta_general",
-      "confianza": 88,
-      "resultado": "Orientado",
-      "hora": "10:18:48 a. m.",
-      "id": "thrE-MF5Hjo"
-    },
-    {
-      "usuario": "María Elena Rojas",
-      "consulta": "que es la dos pinos?",
-      "intencion": "fuera_de_contexto",
-      "confianza": 99.9,
-      "resultado": "Fuera de contexto",
-      "hora": "10:28:11 a. m.",
-      "id": "TQDNevyCc20"
-    },
-    {
-      "usuario": "Ciudadano Web",
-      "consulta": "hola",
-      "intencion": "saludo",
-      "confianza": 99.5,
-      "resultado": "Resuelto",
-      "hora": "10:29:06 a. m.",
-      "id": "Op1CuhQw-Ls"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

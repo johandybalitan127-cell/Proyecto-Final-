@@ -11,6 +11,7 @@ import { AdminTopbar } from '../../components/admin/AdminTopbar';
 import { StatCard } from '../../components/admin/StatCard';
 import { enviosService } from '../../services/enviosService';
 import { Link } from 'react-router-dom';
+import { StatusBadge } from '../../components/common/StatusBadge';
 
 export const AdminDashboardPage = () => {
   const [envios, setEnvios] = useState([]);
@@ -242,17 +243,7 @@ export const AdminDashboardPage = () => {
                         {item.servicio}
                       </td>
                       <td className="py-3 px-4">
-                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                          item.estado === 'Entregado'
-                            ? 'bg-emerald-100 text-emerald-800'
-                            : item.estado === 'En tránsito'
-                            ? 'bg-sky-100 text-azul-oscuro'
-                            : item.estado === 'En aduana'
-                            ? 'bg-amber-100 text-amber-800'
-                            : 'bg-gray-100 text-gray-700'
-                        }`}>
-                          {item.estado}
-                        </span>
+                        <StatusBadge status={item.estado} size="xs" />
                       </td>
                       <td className="py-3 px-4 text-gray-400 text-[11px]">
                         {item.fecha} · 10:15 am

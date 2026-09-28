@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Package, User, Mail, Lock, Phone, ShieldCheck, Workflow, ArrowRight } from 'lucide-react';
+import { LogoCorreos } from '../../components/common/LogoCorreos';
 import { usuariosService } from '../../services/usuariosService';
 import { useAuth } from '../../hooks/useAuth';
 import { useToast } from '../../context/ToastContext';
@@ -39,9 +40,9 @@ export const RegisterPage = () => {
     <div className="min-h-[85vh] flex items-center justify-center px-4 py-12">
       <div className="max-w-md w-full bg-white rounded-3xl border border-gray-200 shadow-xl p-8 space-y-6">
         
-        <div className="text-center space-y-2">
-          <div className="w-12 h-12 rounded-2xl bg-verde-principal text-white flex items-center justify-center mx-auto shadow-md">
-            <Package className="w-7 h-7" />
+        <div className="text-center space-y-3">
+          <div className="flex justify-center mb-1">
+            <LogoCorreos className="h-12 w-auto" />
           </div>
           <h1 className="text-2xl font-bold text-azul-oscuro">Registro Ciudadano</h1>
           <p className="text-xs text-gray-500">Crea tu identidad digital para rastreo y casillero virtual</p>
