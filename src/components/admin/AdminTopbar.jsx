@@ -6,10 +6,21 @@ export const AdminTopbar = ({
   currentSection = 'Dashboard', 
   actionButton = null, 
   showDatePicker = false,
-  onMenuToggle = null 
+  onMenuToggle = null,
+  selectedBranch,
+  onBranchChange
 }) => {
   const [serverOnline, setServerOnline] = useState(false);
-  const [selectedBranch, setSelectedBranch] = useState('Centro Operativo Postal (Zapote)');
+  const [localBranch, setLocalBranch] = useState('Sucursal Central San José');
+
+  const currentBranch = selectedBranch !== undefined ? selectedBranch : localBranch;
+  const handleBranchChange = (value) => {
+    if (onBranchChange) {
+      onBranchChange(value);
+    } else {
+      setLocalBranch(value);
+    }
+  };
 
   useEffect(() => {
     const verifyServer = async () => {
@@ -68,13 +79,18 @@ export const AdminTopbar = ({
         {/* Center / Branch selector */}
         <div className="relative hidden sm:block">
           <select
-            value={selectedBranch}
-            onChange={(e) => setSelectedBranch(e.target.value)}
-            className="text-xs font-semibold text-gris-oscuro bg-gray-50 border border-gray-200 rounded-lg px-2.5 py-1.5 pr-7 focus:outline-none focus:ring-2 focus:ring-azul-primario cursor-pointer appearance-none max-w-[190px] truncate"
+            value={currentBranch}
+            onChange={(e) => handleBranchChange(e.target.value)}
+            className="text-xs font-semibold text-gris-oscuro bg-gray-50 border border-gray-200 rounded-lg px-2.5 py-1.5 pr-7 focus:outline-none focus:ring-2 focus:ring-azul-primario cursor-pointer appearance-none max-w-[210px] truncate"
           >
-            <option value="Centro Operativo Postal (Zapote)">Zapote Operativo</option>
             <option value="Sucursal Central San José">Central San José</option>
+            <option value="Centro Operativo Postal (Zapote)">Zapote Operativo</option>
             <option value="Alajuela Centro Regional">Alajuela Regional</option>
+            <option value="Sucursal Heredia Central">Heredia Central</option>
+            <option value="Sucursal Cartago Los Ángeles">Cartago Los Ángeles</option>
+            <option value="Sucursal Liberia Centro">Liberia Guanacaste</option>
+            <option value="Sucursal Puntarenas Puerto">Puntarenas Puerto</option>
+            <option value="Sucursal Limón Centro">Limón Centro</option>
             <option value="Aduana Postal Santamaría">Aduana Santamaría</option>
           </select>
           <ChevronDown className="w-3.5 h-3.5 text-gray-400 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" />

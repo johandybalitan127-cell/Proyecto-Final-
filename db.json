@@ -3005,6 +3005,303 @@
       "resultado": "Desglose oficial de las 7 provincias",
       "hora": "10:57:24 a. m.",
       "id": "v2PUvume24I"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "me gustaria saber de la provincia de sam jose",
+      "intencion": "sucursal_provincia_especifica",
+      "confianza": 99,
+      "resultado": "Sucursal en San José",
+      "hora": "01:05:07 p. m.",
+      "id": "tZJMuNu_WAM"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "haz que me pueda decir de cada provincia de costa rica cual es la socursal mas cercana donde queda",
+      "intencion": "sucursales_todas_las_provincias",
+      "confianza": 99.5,
+      "resultado": "Desglose oficial de las 7 provincias",
+      "hora": "01:05:08 p. m.",
+      "id": "T4N9pnX3v7M"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "¿Dónde queda la sucursal de Alajuela?",
+      "intencion": "sucursal_provincia_especifica",
+      "confianza": 99,
+      "resultado": "Sucursal en Alajuela",
+      "hora": "01:05:08 p. m.",
+      "id": "x_FSWVboY7I"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "Heredia",
+      "intencion": "sucursal_provincia_especifica",
+      "confianza": 99,
+      "resultado": "Sucursal en Heredia",
+      "hora": "01:05:08 p. m.",
+      "id": "igCovv2QLPw"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "Cartago",
+      "intencion": "sucursal_provincia_especifica",
+      "confianza": 99,
+      "resultado": "Sucursal en Cartago",
+      "hora": "01:05:08 p. m.",
+      "id": "f35Krz1j4Jg"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "Guanacaste",
+      "intencion": "sucursal_provincia_especifica",
+      "confianza": 99,
+      "resultado": "Sucursal en Guanacaste",
+      "hora": "01:05:08 p. m.",
+      "id": "Z4coy4FeflY"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "Puntarenas",
+      "intencion": "sucursal_provincia_especifica",
+      "confianza": 99,
+      "resultado": "Sucursal en Puntarenas",
+      "hora": "01:05:08 p. m.",
+      "id": "GXwVUgzudtY"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "Limón",
+      "intencion": "sucursal_provincia_especifica",
+      "confianza": 99,
+      "resultado": "Sucursal en Limón",
+      "hora": "01:05:08 p. m.",
+      "id": "4BkdI4ZZYT8"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "¿Cuánto cuesta enviar un paquete de 2 kilos?",
+      "intencion": "cotizar_tarifa",
+      "confianza": 98,
+      "resultado": "Tarifa calculada",
+      "hora": "01:05:08 p. m.",
+      "id": "NsochEhEqNY"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "Rastrear CR098421734CR",
+      "intencion": "rastreo_envio",
+      "confianza": 99.2,
+      "resultado": "Envío encontrado",
+      "hora": "01:05:08 p. m.",
+      "id": "9iFWt1hf8xY"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "¿Qué es la Dos Pinos?",
+      "intencion": "fuera_de_contexto",
+      "confianza": 99,
+      "resultado": "Fuera de contexto institucional",
+      "hora": "01:05:08 p. m.",
+      "id": "8eGRMJfzedw"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "me gustaria saber de la provincia de sam jose",
+      "intencion": "sucursal_provincia_especifica",
+      "confianza": 99,
+      "resultado": "Sucursal en San José",
+      "hora": "01:06:23 p. m.",
+      "id": "83qg-qclBj0"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "haz que me pueda decir de cada provincia de costa rica cual es la socursal mas cercana donde queda",
+      "intencion": "sucursales_todas_las_provincias",
+      "confianza": 99.5,
+      "resultado": "Desglose oficial de las 7 provincias",
+      "hora": "01:06:23 p. m.",
+      "id": "YJja_USYYco"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "¿Dónde queda la sucursal de Alajuela?",
+      "intencion": "sucursal_provincia_especifica",
+      "confianza": 99,
+      "resultado": "Sucursal en Alajuela",
+      "hora": "01:06:23 p. m.",
+      "id": "GaQ4IBnb6rY"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "Heredia",
+      "intencion": "sucursal_provincia_especifica",
+      "confianza": 99,
+      "resultado": "Sucursal en Heredia",
+      "hora": "01:06:23 p. m.",
+      "id": "vR6VzwmS0r0"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "Cartago",
+      "intencion": "sucursal_provincia_especifica",
+      "confianza": 99,
+      "resultado": "Sucursal en Cartago",
+      "hora": "01:06:23 p. m.",
+      "id": "hFDUT9GeTag"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "Guanacaste",
+      "intencion": "sucursal_provincia_especifica",
+      "confianza": 99,
+      "resultado": "Sucursal en Guanacaste",
+      "hora": "01:06:23 p. m.",
+      "id": "5NYmLtUN2Ms"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "Puntarenas",
+      "intencion": "sucursal_provincia_especifica",
+      "confianza": 99,
+      "resultado": "Sucursal en Puntarenas",
+      "hora": "01:06:23 p. m.",
+      "id": "O5NVI52ur4c"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "Limón",
+      "intencion": "sucursal_provincia_especifica",
+      "confianza": 99,
+      "resultado": "Sucursal en Limón",
+      "hora": "01:06:23 p. m.",
+      "id": "i6EsTHDdDYQ"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "¿Cuánto cuesta enviar un paquete de 2 kilos?",
+      "intencion": "cotizar_tarifa",
+      "confianza": 98,
+      "resultado": "Tarifa calculada",
+      "hora": "01:06:23 p. m.",
+      "id": "KxLLpWX50AQ"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "Rastrear CR098421734CR",
+      "intencion": "rastreo_envio",
+      "confianza": 99.2,
+      "resultado": "Envío encontrado",
+      "hora": "01:06:23 p. m.",
+      "id": "jiOCI0xuE4E"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "¿Qué es la Dos Pinos?",
+      "intencion": "fuera_de_contexto",
+      "confianza": 99,
+      "resultado": "Fuera de contexto institucional",
+      "hora": "01:06:23 p. m.",
+      "id": "CMH0fJbOPaI"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "me gustaria saber de la provincia de sam jose",
+      "intencion": "sucursal_provincia_especifica",
+      "confianza": 99,
+      "resultado": "Sucursal en San José",
+      "hora": "01:10:59 p. m.",
+      "id": "DBNtOHXCVaU"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "haz que me pueda decir de cada provincia de costa rica cual es la socursal mas cercana donde queda",
+      "intencion": "sucursales_todas_las_provincias",
+      "confianza": 99.5,
+      "resultado": "Desglose oficial de las 7 provincias",
+      "hora": "01:10:59 p. m.",
+      "id": "u4K8VCL9F7Y"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "¿Dónde queda la sucursal de Alajuela?",
+      "intencion": "sucursal_provincia_especifica",
+      "confianza": 99,
+      "resultado": "Sucursal en Alajuela",
+      "hora": "01:10:59 p. m.",
+      "id": "18QT4gKg5Gs"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "Heredia",
+      "intencion": "sucursal_provincia_especifica",
+      "confianza": 99,
+      "resultado": "Sucursal en Heredia",
+      "hora": "01:10:59 p. m.",
+      "id": "cn2x-F43euk"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "Cartago",
+      "intencion": "sucursal_provincia_especifica",
+      "confianza": 99,
+      "resultado": "Sucursal en Cartago",
+      "hora": "01:10:59 p. m.",
+      "id": "newUuVEz-9c"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "Guanacaste",
+      "intencion": "sucursal_provincia_especifica",
+      "confianza": 99,
+      "resultado": "Sucursal en Guanacaste",
+      "hora": "01:10:59 p. m.",
+      "id": "9qDIL5sxF74"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "Puntarenas",
+      "intencion": "sucursal_provincia_especifica",
+      "confianza": 99,
+      "resultado": "Sucursal en Puntarenas",
+      "hora": "01:10:59 p. m.",
+      "id": "dlVPSCGACAY"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "Limón",
+      "intencion": "sucursal_provincia_especifica",
+      "confianza": 99,
+      "resultado": "Sucursal en Limón",
+      "hora": "01:10:59 p. m.",
+      "id": "CjVeozwEp_0"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "¿Cuánto cuesta enviar un paquete de 2 kilos?",
+      "intencion": "cotizar_tarifa",
+      "confianza": 98,
+      "resultado": "Tarifa calculada",
+      "hora": "01:10:59 p. m.",
+      "id": "Gbtv0KGuG0s"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "Rastrear CR098421734CR",
+      "intencion": "rastreo_envio",
+      "confianza": 99.2,
+      "resultado": "Envío encontrado",
+      "hora": "01:10:59 p. m.",
+      "id": "3pU-9hyh4ls"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "¿Qué es la Dos Pinos?",
+      "intencion": "fuera_de_contexto",
+      "confianza": 99,
+      "resultado": "Fuera de contexto institucional",
+      "hora": "01:10:59 p. m.",
+      "id": "TXrzQYgcLv0"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

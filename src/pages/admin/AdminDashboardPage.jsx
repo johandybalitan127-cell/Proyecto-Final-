@@ -12,9 +12,11 @@ import { StatCard } from '../../components/admin/StatCard';
 import { enviosService } from '../../services/enviosService';
 import { Link } from 'react-router-dom';
 import { StatusBadge } from '../../components/common/StatusBadge';
+import { getBranchDashboardData } from '../../data/branchDashboardData';
 
 export const AdminDashboardPage = () => {
   const [envios, setEnvios] = useState([]);
+  const [selectedBranch, setSelectedBranch] = useState('Sucursal Central San José');
 
   useEffect(() => {
     const load = async () => {
@@ -24,37 +26,18 @@ export const AdminDashboardPage = () => {
     load();
   }, []);
 
-  // Data for "Envíos por Mes" (Line chart with peak in June: 15,420)
-  const enviosPorMes = [
-    { mes: 'Ene', envios: 10200 },
-    { mes: 'Feb', envios: 11450 },
-    { mes: 'Mar', envios: 12800 },
-    { mes: 'Abr', envios: 13600 },
-    { mes: 'May', envios: 14200 },
-    { mes: 'Jun', envios: 15420 },
-    { mes: 'Jul', envios: 14100 },
-    { mes: 'Ago', envios: 13900 },
-    { mes: 'Set', envios: 14500 },
-    { mes: 'Oct', envios: 14820 },
-    { mes: 'Nov', envios: 15100 },
-    { mes: 'Dic', envios: 15300 },
-  ];
-
-  // Data for "Tipo de Servicio" (Horizontal bars)
-  const serviciosData = [
-    { servicio: 'Pymexpress', porcentaje: 40, color: '#78BE20' },
-    { servicio: 'EMS Internacional', porcentaje: 28, color: '#0066A1' },
-    { servicio: 'Paquete Postal', porcentaje: 22, color: '#004B78' },
-    { servicio: 'Box Miami / API', porcentaje: 10, color: '#F59E0B' },
-  ];
-
-  // Data for "Estado de los Envíos" (Donut)
-  const estadosData = [
-    { name: 'Entregado', value: 75, color: '#78BE20' },
-    { name: 'En tránsito', value: 20, color: '#0066A1' },
-    { name: 'Aduanas', value: 3, color: '#F59E0B' },
-    { name: 'Incidencias', value: 2, color: '#EF4444' },
-  ];
+  // Obtenemos los datos dinámicos y porcentajes exclusivos de la sede seleccionada
+  const branchData = getBranchDashboardData(selectedBranch);
+  const { 
+    stats, 
+    estados: estadosData, 
+    servicios: serviciosData, 
+    enviosPorMes, 
+    actividadReciente, 
+    picoMesTexto, 
+    subtitulo, 
+    nombreCorto 
+  } = branchData;
 
   const exportCSV = () => {
     const headers = 'ID,Guia,Remitente,Destinatario,Servicio,Estado,Fecha\n';
@@ -69,10 +52,12 @@ export const AdminDashboardPage = () => {
   return (
     <div className="space-y-6">
       
-      {/* Topbar */}
+      {/* Topbar con selector de sede conectado */}
       <AdminTopbar
         currentSection="Dashboard Ejecutivo"
         showDatePicker={true}
+        selectedBranch={selectedBranch}
+        onBranchChange={setSelectedBranch}
         actionButton={
           <button onClick={exportCSV} className="btn-neutro text-xs py-1.5 px-3">
             <Download className="w-3.5 h-3.5" />
@@ -85,45 +70,50 @@ export const AdminDashboardPage = () => {
         
         {/* Page Title & Subtitle */}
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold text-azul-oscuro">
-            Centro de Operaciones y Monitoreo Postal
-          </h1>
-          <p className="text-xs text-gray-500">
-            Vista general del flujo nacional e internacional de paquetería, aduanas y atenciones ciudadanas.
+          <div className="flex flex-wrap items-center gap-2">
+            <h1 className="text-xl sm:text-2xl font-bold text-azul-oscuro">
+              Centro de Operaciones y Monitoreo Postal
+            </h1>
+            <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-sky-100 text-azul-primario border border-sky-200">
+              {nombreCorto}
+            </span>
+          </div>
+          <p className="text-xs text-gray-500 mt-1">
+            {subtitulo}
           </p>
         </div>
 
-        {/* 4 Stat Cards (Prompt section 7.0) */}
+        {/* 4 Stat Cards con valores y porcentajes dinámicos por sede */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <StatCard
             label="Envíos Registrados"
-            value="14,820"
-            delta="+12.4%"
-            deltaType="positive"
+            value={stats.registrados.valor}
+            delta={stats.registrados.delta}
+            deltaType={stats.registrados.deltaType}
             icon={Package}
             iconBg="bg-sky-100 text-azul-primario"
           />
           <StatCard
             label="Envíos en Tránsito"
-            value="3,415"
-            delta="112 rutas"
-            deltaType="neutral"
+            value={stats.transito.valor}
+            delta={stats.transito.delta}
+            deltaType={stats.transito.deltaType}
             icon={Truck}
             iconBg="bg-amber-100 text-amber-700"
           />
           <StatCard
             label="Envíos Entregados"
-            value="11,180"
-            delta="98.2% a tiempo"
-            deltaType="positive"
+            value={stats.entregados.valor}
+            delta={stats.entregados.delta}
+            deltaType={stats.entregados.deltaType}
             icon={CheckCircle2}
             iconBg="bg-emerald-100 text-verde-principal"
           />
           <StatCard
             label="Consultas de Usuarios"
-            value="1,290"
-            delta="94% IA resueltas"
-            deltaType="positive"
+            value={stats.consultas.valor}
+            delta={stats.consultas.delta}
+            deltaType={stats.consultas.deltaType}
             icon={MessageSquare}
             iconBg="bg-purple-100 text-purple-700"
           />
@@ -137,7 +127,7 @@ export const AdminDashboardPage = () => {
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-sm font-bold text-azul-oscuro">Envíos por Mes — Evolución 2024</h3>
-                <p className="text-[11px] text-gray-500">Pico máximo registrado en Junio con 15,420 guías</p>
+                <p className="text-[11px] text-gray-500">{picoMesTexto}</p>
               </div>
               <span className="badge-azul text-[10px]">Anual</span>
             </div>
@@ -296,12 +286,7 @@ export const AdminDashboardPage = () => {
               </div>
 
               <div className="space-y-3 relative before:absolute before:left-2 before:top-2 before:bottom-2 before:w-0.5 before:bg-gray-200">
-                {[
-                  { time: 'Hace 4 minutos', text: 'Paquete #CR098421734CR ingresó a Hub Alajuela', color: 'bg-azul-primario' },
-                  { time: 'Hace 12 minutos', text: 'Guía #CR109283745CR entregada con firma digital', color: 'bg-verde-principal' },
-                  { time: 'Hace 28 minutos', text: 'Ticket PQRS #PQ-2025-0144 clasificado por N8N', color: 'bg-amber-500' },
-                  { time: 'Hace 45 minutos', text: 'Cierre de manifiesto aéreo Box Miami #8842', color: 'bg-purple-600' },
-                ].map((act, idx) => (
+                {actividadReciente.map((act, idx) => (
                   <div key={idx} className="relative pl-6 space-y-0.5 text-xs">
                     <span className={`absolute left-0 top-1 w-4 h-4 rounded-full ${act.color} ring-4 ring-white`}></span>
                     <p className="font-medium text-gris-oscuro text-[11px] leading-snug">{act.text}</p>
