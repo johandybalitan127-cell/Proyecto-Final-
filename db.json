@@ -1,29 +1,136 @@
 {
   "usuarios": [
     {
-      "id": "admin-1",
-      "nombre": "Administrador Sistema",
-      "correo": "admin@admin.com",
-      "password": "admin",
-      "rol": "admin",
+      "id": "USR-001",
+      "nombre": "Carlos Mora Jiménez",
+      "correo": "carlos.mora@correos.go.cr",
+      "rol": "Administrador",
       "estado": "Activo",
-      "fechaRegistro": "2024-01-01",
-      "telefono": "+506 8888-8888",
-      "sucursal": "Sede Central",
-      "avatar": "AD"
+      "fechaRegistro": "2023-01-15",
+      "telefono": "+506 8821-4321",
+      "sucursal": "Zapote Central",
+      "avatar": "CM"
     },
     {
       "id": "USR-002",
       "nombre": "María Elena Rojas",
       "correo": "m.rojas@gmail.com",
-      "cedula": "1-1234-0567",
-      "password": "123",
       "rol": "Usuario",
       "estado": "Activo",
-      "fechaRegistro": "2024-02-15",
+      "fechaRegistro": "2023-04-10",
       "telefono": "+506 8765-4321",
       "sucursal": "San Pedro",
       "avatar": "MR"
+    },
+    {
+      "id": "USR-003",
+      "nombre": "Inversiones del Valle S.A.",
+      "correo": "logistica@inversionesvalle.cr",
+      "rol": "Cliente Empresarial",
+      "estado": "Activo",
+      "fechaRegistro": "2023-05-22",
+      "telefono": "+506 2222-3333",
+      "sucursal": "Heredia Centro",
+      "avatar": "IV"
+    },
+    {
+      "id": "USR-004",
+      "nombre": "Andrés Fallas Solano",
+      "correo": "afallas@outlook.com",
+      "rol": "Usuario",
+      "estado": "Activo",
+      "fechaRegistro": "2023-06-18",
+      "telefono": "+506 7012-3456",
+      "sucursal": "Alajuela Central",
+      "avatar": "AF"
+    },
+    {
+      "id": "USR-005",
+      "nombre": "Boutique Artesanal CR",
+      "correo": "ventas@boutiquecr.com",
+      "rol": "Cliente Empresarial",
+      "estado": "Activo",
+      "fechaRegistro": "2023-07-03",
+      "telefono": "+506 8345-6789",
+      "sucursal": "Cartago Los Ángeles",
+      "avatar": "BA"
+    },
+    {
+      "id": "USR-006",
+      "nombre": "Laura Méndez Castro",
+      "correo": "laura.mendez@correos.go.cr",
+      "rol": "Administrador",
+      "estado": "Activo",
+      "fechaRegistro": "2023-02-01",
+      "telefono": "+506 8999-1122",
+      "sucursal": "Edificio Central",
+      "avatar": "LM"
+    },
+    {
+      "id": "USR-007",
+      "nombre": "Roberto Vargas Brenes",
+      "correo": "rvargas@gmail.com",
+      "rol": "Usuario",
+      "estado": "Suspendido",
+      "fechaRegistro": "2023-08-14",
+      "telefono": "+506 8654-7890",
+      "sucursal": "Liberia",
+      "avatar": "RV"
+    },
+    {
+      "id": "USR-008",
+      "nombre": "Distribuidora del Caribe",
+      "correo": "contacto@distribuidoracaribe.com",
+      "rol": "Cliente Empresarial",
+      "estado": "Activo",
+      "fechaRegistro": "2023-09-01",
+      "telefono": "+506 2758-1234",
+      "sucursal": "Limón Centro",
+      "avatar": "DC"
+    },
+    {
+      "id": "USR-009",
+      "nombre": "Sofía Alvarado Cordero",
+      "correo": "sofia.alvarado@yahoo.com",
+      "rol": "Usuario",
+      "estado": "Pendiente",
+      "fechaRegistro": "2024-01-20",
+      "telefono": "+506 7123-9876",
+      "sucursal": "Puntarenas",
+      "avatar": "SA"
+    },
+    {
+      "id": "USR-010",
+      "nombre": "Daniel Chaves Umaña",
+      "correo": "dchaves@gmail.com",
+      "rol": "Usuario",
+      "estado": "Activo",
+      "fechaRegistro": "2024-02-11",
+      "telefono": "+506 8888-5544",
+      "sucursal": "Escazú",
+      "avatar": "DC"
+    },
+    {
+      "id": "USR-011",
+      "nombre": "Exportadora AgroSur S.A.",
+      "correo": "envios@agrosur.cr",
+      "rol": "Cliente Empresarial",
+      "estado": "Activo",
+      "fechaRegistro": "2024-03-05",
+      "telefono": "+506 2771-4455",
+      "sucursal": "Pérez Zeledón",
+      "avatar": "EA"
+    },
+    {
+      "id": "USR-012",
+      "nombre": "Gabriela Solís Quirós",
+      "correo": "gaby.solis@hotmail.com",
+      "rol": "Usuario",
+      "estado": "Activo",
+      "fechaRegistro": "2024-04-12",
+      "telefono": "+506 8456-1230",
+      "sucursal": "Tibás",
+      "avatar": "GS"
     }
   ],
   "envios": [
@@ -1035,6 +1142,606 @@
       "estado": "Pendiente",
       "fecha": "2025-05-14",
       "mensaje": "El paquete llegó con rasgaduras en la cubierta exterior en la sucursal de Puntarenas."
+    },
+    {
+      "ticket": "PQ-2026-7388",
+      "usuario": "María Elena Rojas",
+      "correo": "m.rojas@gmail.com",
+      "categoria": "Consulta Chat IA",
+      "prioridad": "Media",
+      "prioridadOriginal": "Media",
+      "asunto": "\"¿A qué hora abre la sucursal de Zapote y cómo agendo cita p...",
+      "mensaje": "\"¿A qué hora abre la sucursal de Zapote y cómo agendo cita para pasaporte biométrico?",
+      "estado": "En Investigación",
+      "fecha": "2026-09-29",
+      "hora": "8:53:40 a. m.",
+      "n8nProcessed": true,
+      "aiAgentProcessed": true,
+      "aiModel": "OpenAI GPT-4o-mini (LangChain)",
+      "n8nDepartment": "Soporte y Atención Ciudadana",
+      "slaHoras": "48 horas hábiles",
+      "resumenEjecutivo": "\"¿A qué hora abre la sucursal de Zapote y cómo agendo cita p...",
+      "respuestaAlCiudadano": "Estimado(a) ciudadano(a), su gestión ha sido radicada bajo el código PQ-2026-7388.",
+      "analisisSentimiento": "Neutral/Informativo",
+      "accionesRecomendadas": [
+        "Asignar a analista de turno"
+      ],
+      "id": "KVGKxLdK_uI"
+    },
+    {
+      "ticket": "PQ-2026-4992",
+      "usuario": "María Elena Rojas",
+      "correo": "m.rojas@gmail.com",
+      "categoria": "Consulta Chat IA",
+      "prioridad": "Media",
+      "prioridadOriginal": "Media",
+      "asunto": "Hola, recibí mi paquete CR098421734CR pero la caja venía gol...",
+      "mensaje": "Hola, recibí mi paquete CR098421734CR pero la caja venía golpeada y con daño, ¿cómo puedo abrir un reclamo?\"",
+      "estado": "En Investigación",
+      "fecha": "2026-09-29",
+      "hora": "8:54:30 a. m.",
+      "n8nProcessed": true,
+      "aiAgentProcessed": true,
+      "aiModel": "OpenAI GPT-4o-mini (LangChain)",
+      "n8nDepartment": "Soporte y Atención Ciudadana",
+      "slaHoras": "48 horas hábiles",
+      "resumenEjecutivo": "Hola, recibí mi paquete CR098421734CR pero la caja venía gol...",
+      "respuestaAlCiudadano": "Estimado(a) ciudadano(a), su gestión ha sido radicada bajo el código PQ-2026-4992.",
+      "analisisSentimiento": "Neutral/Informativo",
+      "accionesRecomendadas": [
+        "Asignar a analista de turno"
+      ],
+      "id": "kL0-RzskESM"
+    },
+    {
+      "ticket": "PQ-2026-8021",
+      "usuario": "María Elena Rojas",
+      "correo": "m.rojas@gmail.com",
+      "categoria": "Consulta Chat IA",
+      "prioridad": "Media",
+      "prioridadOriginal": "Media",
+      "asunto": "Hola, como estas",
+      "mensaje": "Hola, como estas",
+      "estado": "En Investigación",
+      "fecha": "2026-09-29",
+      "hora": "8:54:59 a. m.",
+      "n8nProcessed": true,
+      "aiAgentProcessed": true,
+      "aiModel": "OpenAI GPT-4o-mini (LangChain)",
+      "n8nDepartment": "Soporte y Atención Ciudadana",
+      "slaHoras": "48 horas hábiles",
+      "resumenEjecutivo": "Hola, como estas",
+      "respuestaAlCiudadano": "Estimado(a) ciudadano(a), su gestión ha sido radicada bajo el código PQ-2026-8021.",
+      "analisisSentimiento": "Neutral/Informativo",
+      "accionesRecomendadas": [
+        "Asignar a analista de turno"
+      ],
+      "id": "FOUfGpmLZ0I"
+    },
+    {
+      "ticket": "PQ-2026-5465",
+      "usuario": "Juan Pérez",
+      "correo": "juan.perez@ejemplo.com",
+      "categoria": "Consulta General",
+      "prioridad": "Media",
+      "prioridadOriginal": "Media",
+      "asunto": "Consulta sin asunto",
+      "mensaje": "Hola, ¿cuál es el horario de la sucursal de Zapote?",
+      "estado": "En Investigación",
+      "fecha": "2026-09-29",
+      "hora": "8:57:36 a. m.",
+      "n8nProcessed": true,
+      "aiAgentProcessed": true,
+      "aiModel": "OpenAI GPT-4o-mini (LangChain)",
+      "n8nDepartment": "Soporte y Atención Ciudadana",
+      "slaHoras": "48 horas hábiles",
+      "resumenEjecutivo": "Gestión ciudadana",
+      "respuestaAlCiudadano": "Estimado(a) ciudadano(a), su gestión ha sido radicada bajo el código PQ-2026-5465.",
+      "analisisSentimiento": "Neutral/Informativo",
+      "accionesRecomendadas": [
+        "Asignar a analista de turno"
+      ],
+      "id": "FvkibaBP6LI"
+    },
+    {
+      "ticket": "PQ-2026-4095",
+      "usuario": "María Elena Rojas",
+      "correo": "m.rojas@gmail.com",
+      "categoria": "Consulta Chat IA",
+      "prioridad": "Media",
+      "prioridadOriginal": "Media",
+      "asunto": "\"¿Cuánto me cuesta enviar un paquete de 2.5 kg desde San Jos...",
+      "mensaje": "\"¿Cuánto me cuesta enviar un paquete de 2.5 kg desde San José hasta Cartago por EMS Courier?",
+      "estado": "En Investigación",
+      "fecha": "2026-09-29",
+      "hora": "9:14:59 a. m.",
+      "n8nProcessed": true,
+      "aiAgentProcessed": true,
+      "aiModel": "DeepSeek / AI Agent (LangChain)",
+      "n8nDepartment": "Soporte y Atención Ciudadana",
+      "slaHoras": "48 horas hábiles",
+      "resumenEjecutivo": "El ciudadano {{ $json.body?.usuario || $json.usuario || 'Ciudadano' }} presenta una consulta general bajo la categoría '{{ $json.body?.categoria || $json.categoria || 'General' }}' con prioridad declarada '{{ $json.body?.prioridad || $json.prioridad || 'Media' }}'. El asunto '{{ $json.body?.asunto || $json.asunto || 'Sin asunto' }}' y el detalle proporcionado no evidencian situaciones críticas como pérdida, daño de contenido, medicamentos o amenazas judiciales, por lo que se clasifica como un requerimiento de información o trámite simple.",
+      "respuestaAlCiudadano": "Estimado(a) {{ $json.body?.usuario || $json.usuario || 'Ciudadano' }},\n\nReciba un cordial saludo de Correos de Costa Rica. Hemos recibido su mensaje con asunto '{{ $json.body?.asunto || $json.asunto || 'Sin asunto' }}' y deseamos agradecerle por ponerse en contacto con nosotros. Su solicitud ha sido registrada y será atendida por nuestro equipo de Soporte y Atención Ciudadana.\n\nEntendemos su inquietud y trabajaremos para brindarle una respuesta clara y oportuna en un plazo máximo de 48 horas hábiles. Si su caso requiere atención inmediata, le recordamos que puede comunicarse a nuestra línea de atención telefónica o visitar cualquiera de nuestras sucursales.\n\nAgradecemos su confianza en nuestros servicios y quedamos atentos a cualquier información adicional que desee proporcionarnos.\n\nAtentamente,\nEquipo de Atención al Ciudadano\nCorreos de Costa Rica",
+      "analisisSentimiento": "Neutral/Informativo",
+      "accionesRecomendadas": [
+        "Asignar a analista de turno"
+      ],
+      "id": "CS9RiY4rlEo"
+    },
+    {
+      "ticket": "PQ-2026-8481",
+      "usuario": "María Elena Rojas",
+      "correo": "m.rojas@gmail.com",
+      "categoria": "Consulta Chat IA",
+      "prioridad": "Media",
+      "prioridadOriginal": "Media",
+      "asunto": "\"¿Cuánto me cuesta enviar un paquete de 2.5 kg desde San Jos...",
+      "mensaje": "\"¿Cuánto me cuesta enviar un paquete de 2.5 kg desde San José hasta Cartago por EMS Courier?\"",
+      "estado": "En Investigación",
+      "fecha": "2026-09-29",
+      "hora": "9:24:11 a. m.",
+      "n8nProcessed": true,
+      "aiAgentProcessed": true,
+      "aiModel": "DeepSeek / AI Agent (LangChain)",
+      "n8nDepartment": "Soporte y Atención Ciudadana",
+      "slaHoras": "48 horas hábiles",
+      "resumenEjecutivo": "El ciudadano {{ $json.body?.usuario || $json.usuario || 'Ciudadano' }} ha presentado una solicitud con categoría '{{ $json.body?.categoria || $json.categoria || 'General' }}' y prioridad declarada '{{ $json.body?.prioridad || $json.prioridad || 'Media' }}'. El asunto es '{{ $json.body?.asunto || $json.asunto || 'Sin asunto' }}' y el detalle proporcionado es: '{{ $json.body?.mensaje || $json.mensaje || 'Sin mensaje' }}'. No se identifican elementos de alta criticidad como medicamentos, pérdidas evidentes, daño de contenido, presunción de extravío o amenazas judiciales, por lo que se clasifica como una consulta general.",
+      "respuestaAlCiudadano": "Estimado(a) {{ $json.body?.usuario || $json.usuario || 'Ciudadano' }},\n\nReciba un cordial saludo de Correos de Costa Rica. Agradecemos su comunicación y lamentamos cualquier inconveniente que haya podido experimentar. Hemos recibido su solicitud con el asunto '{{ $json.body?.asunto || $json.asunto || 'Sin asunto' }}' y la hemos registrado bajo la categoría '{{ $json.body?.categoria || $json.categoria || 'General' }}'.\n\nSu caso será atendido por nuestro equipo de Soporte y Atención Ciudadana, quienes revisarán la información proporcionada y le brindarán una respuesta en un plazo máximo de 48 horas hábiles. Si requiere asistencia adicional, puede contactarnos a través de nuestros canales oficiales.\n\nAgradecemos su confianza en nuestros servicios.\n\nAtentamente,\nCorreos de Costa Rica",
+      "analisisSentimiento": "Neutral/Informativo",
+      "accionesRecomendadas": [
+        "Asignar a analista de turno"
+      ],
+      "id": "NUB3BLD2pE0"
+    },
+    {
+      "ticket": "PQ-2026-8045",
+      "usuario": "María Elena Rojas",
+      "correo": "m.rojas@gmail.com",
+      "categoria": "Consulta Chat IA",
+      "prioridad": "Alta",
+      "prioridadOriginal": "Media",
+      "asunto": "\"Tengo un paquete retenido en la aduana de Zapote que compré...",
+      "mensaje": "\"Tengo un paquete retenido en la aduana de Zapote que compré por internet, ¿qué requisitos me solicitan para liberarlo?\"",
+      "estado": "En Investigación",
+      "fecha": "2026-09-29",
+      "hora": "9:24:47 a. m.",
+      "n8nProcessed": true,
+      "aiAgentProcessed": true,
+      "aiModel": "DeepSeek / AI Agent (LangChain)",
+      "n8nDepartment": "Auditoría de Envíos y Seguros",
+      "slaHoras": "24 horas hábiles",
+      "resumenEjecutivo": "Ciudadano reporta presunta pérdida de un envío con medicamentos, lo que constituye un caso crítico. Se requiere investigación inmediata bajo protocolo de alta prioridad.",
+      "respuestaAlCiudadano": "Estimado(a) ciudadano(a), reciba un cordial saludo de Correos de Costa Rica. Hemos recibido su reporte sobre la presunta pérdida de un envío que contiene medicamentos. Lamentamos profundamente esta situación y comprendemos su preocupación. Hemos activado de inmediato nuestro protocolo de casos críticos y su solicitud ha sido remitida a la Auditoría de Envíos y Seguros, quienes iniciarán la investigación correspondiente. Nos pondremos en contacto con usted a la brevedad posible. Agradecemos su confianza y quedamos atentos a cualquier información adicional.",
+      "analisisSentimiento": "Neutral/Informativo",
+      "accionesRecomendadas": [
+        "Asignar a analista de turno"
+      ],
+      "id": "DQFr6iznwrs"
+    },
+    {
+      "ticket": "PQ-2026-8609",
+      "usuario": "María Elena Rojas",
+      "correo": "m.rojas@gmail.com",
+      "categoria": "Consulta Chat IA",
+      "prioridad": "Media",
+      "prioridadOriginal": "Media",
+      "asunto": "que tal el clima en zapote",
+      "mensaje": "que tal el clima en zapote",
+      "estado": "En Investigación",
+      "fecha": "2026-09-29",
+      "hora": "9:25:15 a. m.",
+      "n8nProcessed": true,
+      "aiAgentProcessed": true,
+      "aiModel": "DeepSeek / AI Agent (LangChain)",
+      "n8nDepartment": "Soporte y Atención Ciudadana",
+      "slaHoras": "48 horas hábiles",
+      "resumenEjecutivo": "El ciudadano {{ $json.body?.usuario || $json.usuario || 'Ciudadano' }} presenta una consulta general categorizada como '{{ $json.body?.categoria || $json.categoria || 'General' }}' con prioridad declarada '{{ $json.body?.prioridad || $json.prioridad || 'Media' }}'. El asunto refiere a '{{ $json.body?.asunto || $json.asunto || 'Sin asunto' }}'. No se identifican elementos de alta criticidad (medicamentos, pérdidas, daños, amenazas judiciales) en el detalle proporcionado.",
+      "respuestaAlCiudadano": "Estimado(a) {{ $json.body?.usuario || $json.usuario || 'Ciudadano' }},\n\nReciba un cordial saludo de Correos de Costa Rica. Hemos recibido su mensaje con el asunto '{{ $json.body?.asunto || $json.asunto || 'Sin asunto' }}', remitido a nuestra categoría de '{{ $json.body?.categoria || $json.categoria || 'General' }}'.\n\nAgradecemos su confianza y el tiempo dedicado a contactarnos. Su solicitud ha sido registrada correctamente y será atendida por nuestro equipo de Soporte y Atención Ciudadana, quien le brindará la información o asistencia requerida.\n\nSi su consulta está relacionada con el rastreo de un envío, puede consultar el estado en nuestro sitio web o a través de la línea de atención. Para casos más específicos, un asesor se pondrá en contacto con usted.\n\nLe recordamos que puede escribirnos a nuestro correo de atención o visitar cualquiera de nuestras sucursales a nivel nacional.\n\nAtentamente,\nEquipo de Soporte y Atención Ciudadana\nCorreos de Costa Rica",
+      "analisisSentimiento": "Neutral/Informativo",
+      "accionesRecomendadas": [
+        "Asignar a analista de turno"
+      ],
+      "id": "q5UUENbl0Os"
+    },
+    {
+      "ticket": "PQ-2026-5259",
+      "usuario": "María Elena Rojas",
+      "correo": "m.rojas@gmail.com",
+      "categoria": "Consulta Chat IA",
+      "prioridad": "Alta",
+      "prioridadOriginal": "Media",
+      "asunto": "\"Tengo un paquete retenido en la aduana de Zapote que compré...",
+      "mensaje": "\"Tengo un paquete retenido en la aduana de Zapote que compré por internet, ¿qué requisitos me solicitan para liberarlo?\"",
+      "estado": "En Investigación",
+      "fecha": "2026-09-29",
+      "hora": "9:26:08 a. m.",
+      "n8nProcessed": true,
+      "aiAgentProcessed": true,
+      "aiModel": "DeepSeek / AI Agent (LangChain)",
+      "n8nDepartment": "Auditoría de Envíos y Seguros",
+      "slaHoras": "24 horas hábiles",
+      "resumenEjecutivo": "El ciudadano presenta una queja porque un paquete con medicamentos de receta, enviado con 3 días de anticipación, no fue entregado en Puntarenas; el sistema de rastreo no reporta movimiento desde el 15 de mayo, lo que hace presumir su extravío y genera un riesgo grave para la salud del destinatario.",
+      "respuestaAlCiudadano": "Estimado(a) [NOMBRE]:\n\nReciba un cordial saludo de Correos de Costa Rica. Hemos recibido su mensaje y comprendemos la urgencia e importancia de su caso, especialmente por tratarse de medicamentos de receta que son esenciales para la salud de su familiar. Lamentamos sinceramente la situación que nos describe.\n\nSu reporte ha sido clasificado como de urgencia Alta y ha sido asignado de inmediato a la Unidad de Auditoría de Envíos y Seguros, unidad competente para investigar posibles extravíos y gestionar las indemnizaciones correspondientes. Un(a) especialista revisará el recorrido del paquete con número de rastreo [NÚMERO DE RASTREO] y se comunicará con usted a la mayor brevedad.\n\nLe recordamos que su solicitud tiene un plazo de respuesta de 24 horas hábiles, de conformidad con la normativa vigente. Si en ese lapso no recibe una actualización, puede escribirnos nuevamente citando su número de caso.\n\nAgradecemos su confianza y quedamos a su disposición para cualquier consulta adicional.\n\nAtentamente,\nEquipo de Atención Ciudadana\nCorreos de Costa Rica",
+      "analisisSentimiento": "Neutral/Informativo",
+      "accionesRecomendadas": [
+        "Asignar a analista de turno"
+      ],
+      "id": "OY6-1tiXCss"
+    },
+    {
+      "ticket": "PQ-2026-3667",
+      "usuario": "María Elena Rojas",
+      "correo": "m.rojas@gmail.com",
+      "categoria": "Consulta Chat IA",
+      "prioridad": "Media",
+      "prioridadOriginal": "Media",
+      "asunto": "que tal el clima en zapote",
+      "mensaje": "que tal el clima en zapote",
+      "estado": "En Investigación",
+      "fecha": "2026-09-29",
+      "hora": "9:26:27 a. m.",
+      "n8nProcessed": true,
+      "aiAgentProcessed": true,
+      "aiModel": "DeepSeek / AI Agent (LangChain)",
+      "n8nDepartment": "Soporte y Atención Ciudadana",
+      "slaHoras": "48 horas hábiles",
+      "resumenEjecutivo": "Breve descripción del caso basada en el asunto y mensaje",
+      "respuestaAlCiudadano": "Estimado(a) ciudadano(a), su gestión ha sido radicada bajo el código PQ-2026-3667.",
+      "analisisSentimiento": "Neutral/Informativo",
+      "accionesRecomendadas": [
+        "Asignar a analista de turno"
+      ],
+      "id": "cwCSQa7g-WI"
+    },
+    {
+      "ticket": "PQ-2026-6158",
+      "usuario": "María Elena Rojas",
+      "correo": "m.rojas@gmail.com",
+      "categoria": "Consulta Chat IA",
+      "prioridad": "Media",
+      "prioridadOriginal": "Media",
+      "asunto": "a que hora abren en zapote",
+      "mensaje": "a que hora abren en zapote",
+      "estado": "En Investigación",
+      "fecha": "2026-09-29",
+      "hora": "9:26:43 a. m.",
+      "n8nProcessed": true,
+      "aiAgentProcessed": true,
+      "aiModel": "DeepSeek / AI Agent (LangChain)",
+      "n8nDepartment": "Soporte y Atención Ciudadana",
+      "slaHoras": "48 horas hábiles",
+      "resumenEjecutivo": "El ciudadano {{ $json.body?.usuario || $json.usuario || 'Ciudadano' }} presenta una consulta general relacionada con el servicio postal, sin que se identifiquen elementos críticos como medicamentos, pérdidas, daños o amenazas legales en la información proporcionada.",
+      "respuestaAlCiudadano": "Estimado(a) {{ $json.body?.usuario || $json.usuario || 'Ciudadano' }}:\n\nReciba un cordial saludo de Correos de Costa Rica. Hemos recibido su mensaje con el asunto «{{ $json.body?.asunto || $json.asunto || 'Sin asunto' }}», correspondiente a la categoría «{{ $json.body?.categoria || $json.categoria || 'General' }}», y le agradecemos por contactarnos.\n\nSu solicitud ha sido registrada bajo el número de gestión interno y será atendida por nuestro equipo de Soporte y Atención Ciudadana. De acuerdo con nuestros niveles de servicio, recibirá una respuesta en un plazo máximo de 48 horas hábiles.\n\nSi su consulta requiere atención inmediata por tratarse de un envío con contenido perecedero, medicamentos o una posible pérdida, por favor responda a este correo indicándolo para reasignar su caso de manera prioritaria.\n\nAgradecemos su confianza en Correos de Costa Rica.\n\nAtentamente,\nEquipo de Atención Ciudadana\nCorreos de Costa Rica",
+      "analisisSentimiento": "Neutral/Informativo",
+      "accionesRecomendadas": [
+        "Asignar a analista de turno"
+      ],
+      "id": "-lMqJhbJVy8"
+    },
+    {
+      "ticket": "PQ-2026-8704",
+      "usuario": "María Elena Rojas",
+      "correo": "m.rojas@gmail.com",
+      "categoria": "Consulta Chat IA",
+      "prioridad": "Media",
+      "prioridadOriginal": "Media",
+      "asunto": "que es una variable",
+      "mensaje": "que es una variable",
+      "estado": "En Investigación",
+      "fecha": "2026-09-29",
+      "hora": "9:28:36 a. m.",
+      "n8nProcessed": true,
+      "aiAgentProcessed": true,
+      "aiModel": "DeepSeek / AI Agent (LangChain)",
+      "n8nDepartment": "Soporte y Atención Ciudadana",
+      "slaHoras": "24 horas hábiles",
+      "resumenEjecutivo": "Ciudadano reporta presunto extravío de paquete internacional con número de rastreo CR123456789CR, cuyo último escaneo fue el 10/05/2024 en el centro de distribución de Zapote. El envío contiene medicamentos de uso crónico, con riesgo para la salud del destinatario. Solicita investigación urgente e indemnización si se confirma la pérdida.",
+      "respuestaAlCiudadano": "Estimado/a Juan Pérez:\n\nReciba un cordial saludo de Correos de Costa Rica. Hemos recibido su solicitud relacionada con el presunto extravío de su envío internacional con número de rastreo CR123456789CR, el cual contiene medicamentos de uso crónico.\n\nLamentamos profundamente la situación que nos describe y entendemos la urgencia e importancia de este caso para su salud. Hemos clasificado su gestión con prioridad ALTA y la hemos trasladado de inmediato a la Unidad de Auditoría de Envíos y Seguros, área especializada en la investigación de envíos extraviados y en la gestión de indemnizaciones.\n\nUn especialista revisará el historial completo de su paquete, incluyendo los movimientos registrados y la coordinación con las áreas involucradas, con el objetivo de localizar su envío o, en caso de confirmarse la pérdida, activar el proceso de indemnización correspondiente. Nos pondremos en contacto con usted a la mayor brevedad posible.\n\nAgradecemos su paciencia y confianza. Quedamos a su disposición para cualquier consulta adicional a través de nuestros canales oficiales.\n\nAtentamente,\nOficina de Atención Ciudadana\nCorreos de Costa Rica",
+      "analisisSentimiento": "Neutral/Informativo",
+      "accionesRecomendadas": [
+        "Asignar a analista de turno"
+      ],
+      "id": "LYHkBt2A9_o"
+    },
+    {
+      "ticket": "PQ-2026-8767",
+      "usuario": "María Elena Rojas",
+      "correo": "m.rojas@gmail.com",
+      "categoria": "Consulta Chat IA",
+      "prioridad": "Media",
+      "prioridadOriginal": "Media",
+      "asunto": "que es la dos pinos",
+      "mensaje": "que es la dos pinos",
+      "estado": "En Investigación",
+      "fecha": "2026-09-29",
+      "hora": "9:29:11 a. m.",
+      "n8nProcessed": true,
+      "aiAgentProcessed": true,
+      "aiModel": "DeepSeek / AI Agent (LangChain)",
+      "n8nDepartment": "Soporte y Atención Ciudadana",
+      "slaHoras": "48 horas hábiles",
+      "resumenEjecutivo": "El ciudadano {{ $json.body?.usuario || $json.usuario || 'Ciudadano' }} (correo: {{ $json.body?.correo || $json.correo || 'No indicado' }}) reporta una gestión bajo la categoría '{{ $json.body?.categoria || $json.categoria || 'General' }}' con prioridad declarada '{{ $json.body?.prioridad || $json.prioridad || 'Media' }}'. El asunto es '{{ $json.body?.asunto || $json.asunto || 'Sin asunto' }}' y el detalle indica: '{{ $json.body?.mensaje || $json.mensaje || 'Sin mensaje' }}'. No se identifican elementos críticos que eleven la urgencia a Alta (medicamentos, pérdida evidente, daño, presunción de extravío o amenaza judicial), por lo que se clasifica como consulta general o rastreo simple, competencia de Soporte y Atención Ciudadana.",
+      "respuestaAlCiudadano": "Estimado(a) {{ $json.body?.usuario || $json.usuario || 'Ciudadano' }},\n\nReciba un cordial saludo de Correos de Costa Rica. Hemos recibido su mensaje con asunto '{{ $json.body?.asunto || $json.asunto || 'Sin asunto' }}' y categoría '{{ $json.body?.categoria || $json.categoria || 'General' }}'. Agradecemos sinceramente que se haya tomado el tiempo de contactarnos y lamentamos cualquier inconveniente que esta situación pueda haberle causado.\n\nSu solicitud ha sido registrada y será atendida por nuestro equipo de Soporte y Atención Ciudadana, quienes revisarán su caso y le brindarán una respuesta en un plazo máximo de 48 horas hábiles.\n\nSi requiere información adicional o desea dar seguimiento, puede comunicarse a nuestra línea de atención al cliente o responder a este correo.\n\nReiteramos nuestro compromiso con un servicio de calidad y oportuno.\n\nAtentamente,\nEquipo de Atención Ciudadana\nCorreos de Costa Rica",
+      "analisisSentimiento": "Neutral/Informativo",
+      "accionesRecomendadas": [
+        "Asignar a analista de turno"
+      ],
+      "id": "-YPX4nCY5oM"
+    },
+    {
+      "ticket": "PQ-2026-4249",
+      "usuario": "María Elena Rojas",
+      "correo": "m.rojas@gmail.com",
+      "categoria": "Consulta Chat IA",
+      "prioridad": "Alta",
+      "prioridadOriginal": "Media",
+      "asunto": "¿Cuáles son los horarios de las sucursales?",
+      "mensaje": "¿Cuáles son los horarios de las sucursales?",
+      "estado": "En Investigación",
+      "fecha": "2026-09-29",
+      "hora": "10:14:03 a. m.",
+      "n8nProcessed": true,
+      "aiAgentProcessed": true,
+      "aiModel": "DeepSeek / AI Agent (LangChain)",
+      "n8nDepartment": "Auditoría de Envíos y Seguros",
+      "slaHoras": "24 horas hábiles",
+      "resumenEjecutivo": "Ciudadano reporta extravío de paquete internacional con medicamentos esenciales para tratamiento crónico. El envío no ha sido entregado en los plazos establecidos, generando riesgo para la salud del destinatario. Se requiere intervención inmediata para localizar el envío o activar protocolo de indemnización.",
+      "respuestaAlCiudadano": "Estimado(a) ciudadano(a):\n\nReciba un cordial saludo de Correos de Costa Rica. Hemos recibido su reporte sobre la presunta pérdida de su envío internacional que contenía medicamentos de uso esencial, y comprendemos la gravedad e importancia de esta situación.\n\nSu caso ha sido clasificado con prioridad ALTA y asignado de inmediato a la Unidad de Auditoría de Envíos y Seguros, departamento especializado en la investigación de extravíos y daños, así como en la gestión de indemnizaciones. Un analista revisará su caso en un plazo máximo de 24 horas hábiles.\n\nLe solicitamos conservar copia de la factura, receta médica o documentos que acrediten el contenido y valor del envío, ya que serán necesarios para el proceso. Puede adjuntarlos respondiendo a este correo o presentarlos en cualquiera de nuestras sucursales citando el número de gestión que se le asignará.\n\nNos comprometemos a mantenerle informado sobre el avance de la investigación. Agradecemos su confianza y lamentamos profundamente los inconvenientes ocasionados.\n\nAtentamente,\nEquipo de Atención Ciudadana\nCorreos de Costa Rica",
+      "analisisSentimiento": "Neutral/Informativo",
+      "accionesRecomendadas": [
+        "Asignar a analista de turno"
+      ],
+      "id": "5rol_Oe8veQ"
+    },
+    {
+      "ticket": "PQ-2026-8706",
+      "usuario": "María Elena Rojas",
+      "correo": "m.rojas@gmail.com",
+      "categoria": "Consulta Chat IA",
+      "prioridad": "Media",
+      "prioridadOriginal": "Media",
+      "asunto": "cuales sedes hay en el pais",
+      "mensaje": "cuales sedes hay en el pais",
+      "estado": "En Investigación",
+      "fecha": "2026-09-29",
+      "hora": "10:14:25 a. m.",
+      "n8nProcessed": true,
+      "aiAgentProcessed": true,
+      "aiModel": "DeepSeek / AI Agent (LangChain)",
+      "n8nDepartment": "Soporte y Atención Ciudadana",
+      "slaHoras": "48 horas hábiles",
+      "resumenEjecutivo": "El ciudadano {{ $json.body?.usuario || $json.usuario || 'Ciudadano' }} ({{ $json.body?.correo || $json.correo || 'No indicado' }}) reporta una gestión bajo la categoría '{{ $json.body?.categoria || $json.categoria || 'General' }}' con prioridad declarada '{{ $json.body?.prioridad || $json.prioridad || 'Media' }}'. El asunto indica: '{{ $json.body?.asunto || $json.asunto || 'Sin asunto' }}'. El detalle proporcionado es: '{{ $json.body?.mensaje || $json.mensaje || 'Sin mensaje' }}'. No se identifican elementos de urgencia alta como medicamentos, pérdidas evidentes, daño de contenido, presunción de extravío o amenazas judiciales, por lo que se clasifica como urgencia media y se deriva a Soporte y Atención Ciudadana para consultas generales o rastreo simple, con un SLA de 48 horas hábiles.",
+      "respuestaAlCiudadano": "Estimado(a) {{ $json.body?.usuario || $json.usuario || 'Ciudadano' }},\n\nReciba un cordial saludo de Correos de Costa Rica. Hemos recibido su mensaje con asunto '{{ $json.body?.asunto || $json.asunto || 'Sin asunto' }}' y lamentamos cualquier inconveniente que haya motivado su contacto.\n\nSu solicitud ha sido registrada bajo la categoría '{{ $json.body?.categoria || $json.categoria || 'General' }}' y será atendida por nuestro equipo de Soporte y Atención Ciudadana. De acuerdo con nuestros niveles de servicio, le daremos respuesta en un plazo máximo de 48 horas hábiles.\n\nAgradecemos su confianza en nosotros y quedamos a su disposición para cualquier consulta adicional a través de nuestros canales oficiales.\n\nAtentamente,\nCorreos de Costa Rica",
+      "analisisSentimiento": "Neutral/Informativo",
+      "accionesRecomendadas": [
+        "Asignar a analista de turno"
+      ],
+      "id": "0srCQI19TuU"
+    },
+    {
+      "ticket": "PQ-2026-6061",
+      "usuario": "Ciudadano Web",
+      "correo": "usuario@correos.go.cr",
+      "categoria": "Consulta Chat IA",
+      "prioridad": "Media",
+      "prioridadOriginal": "Media",
+      "asunto": "¿Cuánto cuesta enviar un paquete de 2 kilos?",
+      "mensaje": "¿Cuánto cuesta enviar un paquete de 2 kilos?",
+      "estado": "En Investigación",
+      "fecha": "2026-09-29",
+      "hora": "10:17:47 a. m.",
+      "n8nProcessed": true,
+      "aiAgentProcessed": true,
+      "aiModel": "DeepSeek / AI Agent (LangChain)",
+      "n8nDepartment": "Soporte y Atención Ciudadana",
+      "slaHoras": "48 horas hábiles",
+      "resumenEjecutivo": "El ciudadano {{ $json.body?.usuario || $json.usuario || 'No especificado' }} presenta una consulta general relacionada con {{ $json.body?.asunto || $json.asunto || 'temas postales' }}. La prioridad declarada por el usuario es {{ $json.body?.prioridad || $json.prioridad || 'Media' }}. Se requiere dar seguimiento a la solicitud y brindar la información correspondiente.",
+      "respuestaAlCiudadano": "Estimado(a) {{ $json.body?.usuario || $json.usuario || 'Ciudadano(a)' }},\n\nReciba un cordial saludo de Correos de Costa Rica. Hemos recibido su mensaje con el asunto '{{ $json.body?.asunto || $json.asunto || 'Sin asunto' }}' y le agradecemos por contactarnos.\n\nSu solicitud ha sido registrada y será atendida por nuestro equipo de Soporte y Atención Ciudadana. Nos comprometemos a brindarle una respuesta en un plazo máximo de 48 horas hábiles.\n\nSi necesita información adicional, puede consultar nuestra página web o visitar cualquiera de nuestras sucursales.\n\nAtentamente,\nAtención al Ciudadano\nCorreos de Costa Rica",
+      "analisisSentimiento": "Neutral/Informativo",
+      "accionesRecomendadas": [
+        "Asignar a analista de turno"
+      ],
+      "id": "dO02dZkbDdk"
+    },
+    {
+      "ticket": "PQ-2026-9854",
+      "usuario": "Ciudadano Web",
+      "correo": "usuario@correos.go.cr",
+      "categoria": "Consulta Chat IA",
+      "prioridad": "Media",
+      "prioridadOriginal": "Media",
+      "asunto": "¿Cuál es el horario de la sucursal de Zapote?",
+      "mensaje": "¿Cuál es el horario de la sucursal de Zapote?",
+      "estado": "En Investigación",
+      "fecha": "2026-09-29",
+      "hora": "10:17:50 a. m.",
+      "n8nProcessed": true,
+      "aiAgentProcessed": true,
+      "aiModel": "DeepSeek / AI Agent (LangChain)",
+      "n8nDepartment": "Soporte y Atención Ciudadana",
+      "slaHoras": "24 horas hábiles",
+      "resumenEjecutivo": "El ciudadano Juan Pérez reporta la pérdida de un paquete con número de rastreo CR123456789CR, que contenía medicamentos para su tratamiento de quimioterapia. El paquete fue enviado desde San José a Limón y no ha llegado a su destino, incumpliendo el plazo de entrega. Se presume extravío y existe riesgo para la salud del destinatario por la falta de los medicamentos.",
+      "respuestaAlCiudadano": "Estimado Juan Pérez,\n\nReciba un cordial saludo de Correos de Costa Rica. Agradecemos que se haya comunicado con nosotros para informarnos sobre la situación con su envío CR123456789CR.\n\nLamentamos profundamente los inconvenientes ocasionados y comprendemos la urgencia de su caso, ya que el paquete contenía medicamentos esenciales para un tratamiento de quimioterapia. Le aseguramos que su solicitud ha sido clasificada como de máxima prioridad y ha sido trasladada de inmediato a la Unidad de Auditoría de Envíos y Seguros, encargada de investigar posibles extravíos, daños o robos, así como de gestionar las indemnizaciones correspondientes.\n\nNuestro equipo se pondrá en contacto con usted en un plazo máximo de 24 horas hábiles para informarle sobre el avance de la investigación y los pasos a seguir. Mientras tanto, puede comunicarse al teléfono 800-CORREOS o al correo auditoria@correos.go.cr citando su número de rastreo.\n\nReiteramos nuestro compromiso con la calidad del servicio y haremos todo lo posible por resolver su caso a la brevedad.\n\nAtentamente,\n\nEquipo de Atención al Ciudadano\nCorreos de Costa Rica",
+      "analisisSentimiento": "Neutral/Informativo",
+      "accionesRecomendadas": [
+        "Asignar a analista de turno"
+      ],
+      "id": "czSxBzhYNqY"
+    },
+    {
+      "ticket": "PQ-2026-8179",
+      "usuario": "Ciudadano Web",
+      "correo": "usuario@correos.go.cr",
+      "categoria": "Consulta Chat IA",
+      "prioridad": "Alta",
+      "prioridadOriginal": "Media",
+      "asunto": "¿Cómo puedo rastrear mi paquete?",
+      "mensaje": "¿Cómo puedo rastrear mi paquete?",
+      "estado": "En Investigación",
+      "fecha": "2026-09-29",
+      "hora": "10:17:53 a. m.",
+      "n8nProcessed": true,
+      "aiAgentProcessed": true,
+      "aiModel": "DeepSeek / AI Agent (LangChain)",
+      "n8nDepartment": "Soporte y Atención Ciudadana",
+      "slaHoras": "24 horas hábiles",
+      "resumenEjecutivo": "Ciudadano reporta posible extravío de paquete con medicamentos, daño en el contenido y amenaza de acción legal.",
+      "respuestaAlCiudadano": "Estimado(a) [Nombre del ciudadano],\n\nReciba un cordial saludo de Correos de Costa Rica. Hemos recibido su solicitud y lamentamos profundamente la situación que nos describe. Entendemos su preocupación por el posible extravío de su paquete que contenía medicamentos, así como el daño en el contenido y su mención de acciones legales.\n\nSu caso ha sido clasificado con urgencia Alta y ha sido trasladado de inmediato a la Unidad de Auditoría de Envíos y Seguros, quienes se encargarán de realizar las investigaciones pertinentes y dar seguimiento a su caso en un plazo máximo de 24 horas hábiles. Nuestro equipo se pondrá en contacto con usted a la brevedad para solicitar cualquier información adicional que necesite y para informarle sobre los pasos a seguir.\n\nAgradecemos su paciencia y confianza en nuestra institución. Estamos comprometidos en resolver su situación a la mayor brevedad posible.\n\nAtentamente,\nEquipo de Atención al Ciudadano\nCorreos de Costa Rica",
+      "analisisSentimiento": "Neutral/Informativo",
+      "accionesRecomendadas": [
+        "Asignar a analista de turno"
+      ],
+      "id": "zNig2jhPrE4"
+    },
+    {
+      "ticket": "PQ-2026-6200",
+      "usuario": "Ciudadano Web",
+      "correo": "usuario@correos.go.cr",
+      "categoria": "Consulta Chat IA",
+      "prioridad": "Media",
+      "prioridadOriginal": "Media",
+      "asunto": "Rastrear CR098421734CR",
+      "mensaje": "Rastrear CR098421734CR",
+      "estado": "En Investigación",
+      "fecha": "2026-09-29",
+      "hora": "10:17:56 a. m.",
+      "n8nProcessed": true,
+      "aiAgentProcessed": true,
+      "aiModel": "DeepSeek / AI Agent (LangChain)",
+      "n8nDepartment": "Soporte y Atención Ciudadana",
+      "slaHoras": "48 horas hábiles",
+      "resumenEjecutivo": "El ciudadano {{ $json.body?.usuario || $json.usuario || 'Ciudadano' }} reporta una consulta general sin detalle específico. La prioridad declarada es Media. No se identifican elementos de urgencia alta como medicamentos, pérdidas, daños o procesos judiciales.",
+      "respuestaAlCiudadano": "Estimado(a) {{ $json.body?.usuario || $json.usuario || 'Ciudadano' }}:\n\nReciba un cordial saludo de Correos de Costa Rica. Hemos recibido su mensaje con asunto \"{{ $json.body?.asunto || $json.asunto || 'Sin asunto' }}\" y le agradecemos por contactarnos.\n\nEn relación con su consulta, le informamos que ha sido registrada bajo el número de caso correspondiente y será atendida por nuestro equipo de Soporte y Atención Ciudadana. Estamos comprometidos en brindarle una respuesta oportuna y clara.\n\nLe recordamos que puede consultar el estado de su envío a través de nuestro sitio web www.correos.go.cr o comunicarse a nuestra línea de atención al cliente 800-CORREOS (800-267-7367).\n\nAgradecemos su confianza en nuestros servicios y quedamos atentos a cualquier consulta adicional.\n\nAtentamente,\nEquipo de Atención Ciudadana\nCorreos de Costa Rica",
+      "analisisSentimiento": "Neutral/Informativo",
+      "accionesRecomendadas": [
+        "Asignar a analista de turno"
+      ],
+      "id": "IH2EGrky9j8"
+    },
+    {
+      "ticket": "PQ-2026-6342",
+      "usuario": "Ciudadano Web",
+      "correo": "usuario@correos.go.cr",
+      "categoria": "Consulta Chat IA",
+      "prioridad": "Alta",
+      "prioridadOriginal": "Media",
+      "asunto": "Mi paquete llegó dañado y quiero poner un reclamo",
+      "mensaje": "Mi paquete llegó dañado y quiero poner un reclamo",
+      "estado": "En Investigación",
+      "fecha": "2026-09-29",
+      "hora": "10:17:58 a. m.",
+      "n8nProcessed": true,
+      "aiAgentProcessed": true,
+      "aiModel": "DeepSeek / AI Agent (LangChain)",
+      "n8nDepartment": "Soporte y Atención Ciudadana",
+      "slaHoras": "24 horas hábiles",
+      "resumenEjecutivo": "Ciudadano reporta presunto extravío de paquete internacional con número de rastreo CR123456789CR, cuyo estado no se actualiza desde hace 15 días. El envío contiene medicamentos de uso continuo para su madre, lo que agrava la situación. Se requiere verificación urgente e indemnización si procede.",
+      "respuestaAlCiudadano": "Estimado(a) ciudadano(a),\n\nReciba un cordial saludo del equipo de Correos de Costa Rica. Hemos recibido su reporte sobre el presunto extravío de su envío con número de rastreo CR123456789CR, el cual contiene medicamentos de uso continuo. Lamentamos profundamente la situación y la preocupación que esto le genera.\n\nLe informamos que su caso ha sido asignado con carácter de urgencia al departamento de Auditoría de Envíos y Seguros, quienes iniciarán de inmediato las gestiones para localizar su paquete y, de no ser posible, proceder según los protocolos establecidos para estos casos. Un asesor se comunicará con usted en un plazo máximo de 24 horas hábiles para brindarle una actualización detallada.\n\nAgradecemos su paciencia y confianza en nuestros servicios. Puede responder a este correo si requiere información adicional.\n\nAtentamente,\nEquipo de Atención Ciudadana\nCorreos de Costa Rica",
+      "analisisSentimiento": "Neutral/Informativo",
+      "accionesRecomendadas": [
+        "Asignar a analista de turno"
+      ],
+      "id": "ZxzQ_VxfNoc"
+    },
+    {
+      "ticket": "PQ-2026-8124",
+      "usuario": "Ciudadano Registrado",
+      "correo": "",
+      "categoria": "General",
+      "prioridad": "Media",
+      "prioridadOriginal": "Media",
+      "asunto": "Consulta sin asunto",
+      "mensaje": "",
+      "estado": "En Investigación",
+      "fecha": "2026-09-29",
+      "hora": "10:26:08 a. m.",
+      "n8nProcessed": true,
+      "aiAgentProcessed": true,
+      "aiModel": "DeepSeek / AI Agent (LangChain)",
+      "n8nDepartment": "Soporte y Atención Ciudadana",
+      "slaHoras": "48 horas hábiles",
+      "resumenEjecutivo": "El ciudadano {{ $json.body?.usuario || $json.usuario || 'Ciudadano' }} ha presentado una solicitud categorizada como {{ $json.body?.categoria || $json.categoria || 'General' }} con prioridad declarada {{ $json.body?.prioridad || $json.prioridad || 'Media' }}. El asunto es '{{ $json.body?.asunto || $json.asunto || 'Sin asunto' }}' y el detalle indica: {{ $json.body?.mensaje || $json.mensaje || 'Sin mensaje' }}. No se identifican elementos de alta criticidad, por lo que se canaliza al área de Soporte y Atención Ciudadana para su gestión.",
+      "respuestaAlCiudadano": "Estimado(a) ciudadano(a), su gestión ha sido radicada bajo el código PQ-2026-8124.",
+      "analisisSentimiento": "Neutral/Informativo",
+      "accionesRecomendadas": [
+        "Asignar a analista de turno"
+      ],
+      "id": "tPq81TNFuK4"
+    },
+    {
+      "ticket": "PQ-2026-7275",
+      "usuario": "Ciudadano",
+      "correo": "",
+      "categoria": "General",
+      "prioridad": "Media",
+      "prioridadOriginal": "Media",
+      "asunto": "Sucursales San José",
+      "mensaje": "¿Dónde quedan las sucursales de San José?",
+      "estado": "En Investigación",
+      "fecha": "2026-09-29",
+      "hora": "10:27:18 a. m.",
+      "n8nProcessed": true,
+      "aiAgentProcessed": true,
+      "aiModel": "DeepSeek / AI Agent (LangChain)",
+      "n8nDepartment": "Soporte y Atención Ciudadana",
+      "slaHoras": "48 horas hábiles",
+      "resumenEjecutivo": "El ciudadano {{ $json.body?.usuario || $json.usuario || 'Ciudadano' }} (correo: {{ $json.body?.correo || $json.correo || 'No indicado' }}) presenta una gestión clasificada como '{{ $json.body?.categoria || $json.categoria || 'General' }}' con prioridad declarada '{{ $json.body?.prioridad || $json.prioridad || 'Media' }}'. El asunto reportado es '{{ $json.body?.asunto || $json.asunto || 'Sin asunto' }}'. El detalle proporcionado es el siguiente: {{ $json.body?.mensaje || $json.mensaje || 'Sin mensaje' }}. Tras el análisis de la información, no se identifican elementos que indiquen una urgencia alta (como medicamentos, pérdidas evidentes o amenazas judiciales), por lo que se asigna una urgencia Media. La consulta será atendida por el departamento de Soporte y Atención Ciudadana.",
+      "respuestaAlCiudadano": "Estimado(a) {{ $json.body?.usuario || $json.usuario || 'Ciudadano' }},\n\nReciba un cordial saludo de parte de Correos de Costa Rica. Hemos recibido su mensaje con el asunto '{{ $json.body?.asunto || $json.asunto || 'Sin asunto' }}' y le agradecemos por contactarnos.\n\nSu solicitud ha sido registrada bajo la categoría '{{ $json.body?.categoria || $json.categoria || 'General' }}'. Nuestro equipo de Soporte y Atención Ciudadana se encuentra revisando su caso para brindarle una respuesta oportuna y personalizada. Puede estar seguro de que estamos trabajando para atender su requerimiento a la brevedad posible.\n\nSi necesita adjuntar información adicional o tiene alguna consulta inmediata, no dude en responder a este correo. Agradecemos su paciencia y confianza en nuestros servicios.\n\nAtentamente,\nEquipo de Atención al Ciudadano\nCorreos de Costa Rica",
+      "analisisSentimiento": "Neutral/Informativo",
+      "accionesRecomendadas": [
+        "Asignar a analista de turno"
+      ],
+      "id": "D-40CSSxTo4"
+    },
+    {
+      "ticket": "PQ-2026-5941",
+      "usuario": "Carlos Rodríguez",
+      "correo": "",
+      "categoria": "General",
+      "prioridad": "Media",
+      "prioridadOriginal": "Media",
+      "asunto": "Sucursales San José",
+      "mensaje": "¿Dónde quedan las sucursales de San José?",
+      "estado": "En Investigación",
+      "fecha": "2026-09-29",
+      "hora": "10:30:51 a. m.",
+      "n8nProcessed": true,
+      "aiAgentProcessed": true,
+      "aiModel": "DeepSeek / AI Agent (LangChain)",
+      "n8nDepartment": "Soporte y Atención Ciudadana",
+      "slaHoras": "48 horas hábiles",
+      "resumenEjecutivo": "Ciudadano reporta no haber recibido un paquete con medicamentos de alta importancia, el cual presenta un retraso de 5 días respecto a la fecha de entrega estimada. El envío está relacionado con un familiar enfermo y contiene medicinas. Se presume posible extravío o retención indebida, con alto impacto en la salud del destinatario.",
+      "respuestaAlCiudadano": "Estimado(a) [Nombre del ciudadano]:\n\nReciba un cordial saludo de Correos de Costa Rica. Hemos recibido su solicitud relacionada con el paquete que contiene medicamentos. Lamentamos profundamente la situación y entendemos la urgencia e importancia que tiene para usted y su familiar.\n\nHemos clasificado su caso con prioridad ALTA y lo hemos trasladado de inmediato a la Unidad de Auditoría de Envíos y Seguros, encargada de investigar posibles extravíos, retenciones o daños. Nuestro compromiso es darle una respuesta en un plazo máximo de 24 horas hábiles.\n\nMientras tanto, nuestro equipo realizará las verificaciones pertinentes con el centro de distribución y la oficina de destino para localizar su envío a la brevedad. Le solicitamos mantener su número de teléfono disponible para cualquier comunicación adicional.\n\nAgradecemos su confianza y paciencia. Estamos trabajando para resolver su caso con la celeridad que merece.\n\nAtentamente,\nEquipo de Atención Ciudadana\nCorreos de Costa Rica",
+      "analisisSentimiento": "Neutral/Informativo",
+      "accionesRecomendadas": [
+        "Asignar a analista de turno"
+      ],
+      "id": "uJZws4-T8jc"
+    },
+    {
+      "ticket": "PQ-2026-9298",
+      "usuario": "Ciudadano Registrado",
+      "correo": "",
+      "categoria": "General",
+      "prioridad": "Media",
+      "prioridadOriginal": "Media",
+      "asunto": "Consulta sin asunto",
+      "mensaje": "test",
+      "estado": "En Investigación",
+      "fecha": "2026-09-29",
+      "hora": "10:35:39 a. m.",
+      "n8nProcessed": true,
+      "aiAgentProcessed": true,
+      "aiModel": "DeepSeek / AI Agent (LangChain)",
+      "n8nDepartment": "Soporte y Atención Ciudadana",
+      "slaHoras": "48 horas hábiles",
+      "resumenEjecutivo": "El ciudadano Juan Pérez reporta un retraso en la entrega de un paquete con número de rastreo 123456789CR, que debía llegar el 10 de mayo y aún no ha sido recibido. No se especifica contenido ni gravedad.",
+      "respuestaAlCiudadano": "Estimado(a) Juan Pérez,\n\nGracias por comunicarse con Correos de Costa Rica. Hemos recibido su reporte sobre el retraso en la entrega de su paquete con número de rastreo 123456789CR.\n\nLamentamos los inconvenientes que esta situación pueda causarle. Su caso ha sido registrado y asignado a nuestro equipo de Soporte y Atención Ciudadana, quienes realizarán las verificaciones pertinentes con el área de distribución para determinar la ubicación de su envío y brindarle una pronta solución.\n\nLe solicitamos amablemente mantenerse atento a su correo electrónico y teléfono, ya que nos comunicaremos con usted a la brevedad posible.\n\nAgradecemos su paciencia y confianza en nuestros servicios.\n\nAtentamente,\nEquipo de Atención Ciudadana\nCorreos de Costa Rica",
+      "analisisSentimiento": "Neutral/Informativo",
+      "accionesRecomendadas": [
+        "Asignar a analista de turno"
+      ],
+      "id": "nDLmmrkBaac"
     }
   ],
   "ia_logs": [
@@ -1452,6 +2159,852 @@
       "resultado": "Resuelto",
       "hora": "10:29:06 a. m.",
       "id": "Op1CuhQw-Ls"
+    },
+    {
+      "usuario": "María Elena Rojas",
+      "consulta": "\"¿A qué hora abre la sucursal de Zapote y cómo agendo cita para pasaporte biométrico?",
+      "intencion": "consulta_sucursal_especifica",
+      "confianza": 98,
+      "resultado": "Sucursal encontrada",
+      "hora": "08:53:40 a. m.",
+      "id": "PqBkx3eJ6pA"
+    },
+    {
+      "usuario": "María Elena Rojas",
+      "consulta": "Hola, recibí mi paquete CR098421734CR pero la caja venía golpeada y con daño, ¿cómo puedo abrir un reclamo?\"",
+      "intencion": "Soporte y Atención Ciudadana",
+      "confianza": 99.5,
+      "resultado": "Resuelto por N8N",
+      "hora": "08:54:30 a. m.",
+      "id": "AdELLCMPyhc"
+    },
+    {
+      "usuario": "María Elena Rojas",
+      "consulta": "Hola, como estas",
+      "intencion": "Soporte y Atención Ciudadana",
+      "confianza": 99.5,
+      "resultado": "Resuelto por N8N",
+      "hora": "08:54:59 a. m.",
+      "id": "ABsqn2pjWJ0"
+    },
+    {
+      "usuario": "María Elena Rojas",
+      "consulta": "\"¿Cuánto me cuesta enviar un paquete de 2.5 kg desde San José hasta Cartago por EMS Courier?",
+      "intencion": "solicitud_rastreo",
+      "confianza": 98,
+      "resultado": "Solicitando código de guía",
+      "hora": "09:15:00 a. m.",
+      "id": "oV-Sj9uwNQU"
+    },
+    {
+      "usuario": "María Elena Rojas",
+      "consulta": "\"¿Cuánto me cuesta enviar un paquete de 2.5 kg desde San José hasta Cartago por EMS Courier?\"",
+      "intencion": "Soporte y Atención Ciudadana",
+      "confianza": 99.5,
+      "resultado": "Resuelto por N8N",
+      "hora": "09:24:11 a. m.",
+      "id": "EBVOlBhGHMo"
+    },
+    {
+      "usuario": "María Elena Rojas",
+      "consulta": "\"Tengo un paquete retenido en la aduana de Zapote que compré por internet, ¿qué requisitos me solicitan para liberarlo?\"",
+      "intencion": "Auditoría de Envíos y Seguros",
+      "confianza": 99.5,
+      "resultado": "Resuelto por N8N",
+      "hora": "09:24:47 a. m.",
+      "id": "EeLk9hG36h4"
+    },
+    {
+      "usuario": "María Elena Rojas",
+      "consulta": "que tal el clima en zapote",
+      "intencion": "Soporte y Atención Ciudadana",
+      "confianza": 99.5,
+      "resultado": "Resuelto por N8N",
+      "hora": "09:25:15 a. m.",
+      "id": "1WtHH6noB7Q"
+    },
+    {
+      "usuario": "María Elena Rojas",
+      "consulta": "\"Tengo un paquete retenido en la aduana de Zapote que compré por internet, ¿qué requisitos me solicitan para liberarlo?\"",
+      "intencion": "Auditoría de Envíos y Seguros",
+      "confianza": 99.5,
+      "resultado": "Resuelto por N8N",
+      "hora": "09:26:08 a. m.",
+      "id": "Y9720T1Wrtw"
+    },
+    {
+      "usuario": "María Elena Rojas",
+      "consulta": "que tal el clima en zapote",
+      "intencion": "Soporte y Atención Ciudadana",
+      "confianza": 99.5,
+      "resultado": "Resuelto por N8N",
+      "hora": "09:26:27 a. m.",
+      "id": "MjXCWle5irQ"
+    },
+    {
+      "usuario": "María Elena Rojas",
+      "consulta": "a que hora abren en zapote",
+      "intencion": "Soporte y Atención Ciudadana",
+      "confianza": 99.5,
+      "resultado": "Resuelto por N8N",
+      "hora": "09:26:43 a. m.",
+      "id": "xbt5tzg6OUQ"
+    },
+    {
+      "usuario": "María Elena Rojas",
+      "consulta": "que es una variable",
+      "intencion": "Soporte y Atención Ciudadana",
+      "confianza": 99.5,
+      "resultado": "Resuelto por N8N",
+      "hora": "09:28:36 a. m.",
+      "id": "55RmnXjO3ko"
+    },
+    {
+      "usuario": "María Elena Rojas",
+      "consulta": "que es la dos pinos",
+      "intencion": "Soporte y Atención Ciudadana",
+      "confianza": 99.5,
+      "resultado": "Resuelto por N8N",
+      "hora": "09:29:11 a. m.",
+      "id": "xH2YRFoFwJw"
+    },
+    {
+      "usuario": "María Elena Rojas",
+      "consulta": "\"¿qué es la dos pinos?\"",
+      "intencion": "conocimiento_contextual",
+      "confianza": 98,
+      "resultado": "Respuesta conforme a la pregunta",
+      "hora": "10:07:24 a. m.",
+      "id": "RW93Sw4YcLk"
+    },
+    {
+      "usuario": "María Elena Rojas",
+      "consulta": "que es la dos pinos",
+      "intencion": "fuera_de_contexto",
+      "confianza": 99,
+      "resultado": "Fuera de contexto institucional",
+      "hora": "10:12:15 a. m.",
+      "id": "exTFDGtYnWc"
+    },
+    {
+      "usuario": "María Elena Rojas",
+      "consulta": "que es una vaca",
+      "intencion": "fuera_de_contexto",
+      "confianza": 99,
+      "resultado": "Fuera de contexto institucional",
+      "hora": "10:13:45 a. m.",
+      "id": "AI1rJMDJ0Ok"
+    },
+    {
+      "usuario": "María Elena Rojas",
+      "consulta": "¿Cuáles son los horarios de las sucursales?",
+      "intencion": "Auditoría de Envíos y Seguros",
+      "confianza": 99.5,
+      "resultado": "Resuelto por N8N",
+      "hora": "10:14:03 a. m.",
+      "id": "Rd0EGDTyBJQ"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "¿Cuál es el horario de la sucursal de Zapote?",
+      "intencion": "Soporte y Atención Ciudadana",
+      "confianza": 99.5,
+      "resultado": "Resuelto por N8N",
+      "hora": "10:17:50 a. m.",
+      "id": "lyaBh3U29cg"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "¿Cómo puedo rastrear mi paquete?",
+      "intencion": "Soporte y Atención Ciudadana",
+      "confianza": 99.5,
+      "resultado": "Resuelto por N8N",
+      "hora": "10:17:53 a. m.",
+      "id": "1hQ1WDvZkNg"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "Rastrear CR098421734CR",
+      "intencion": "rastreo_envio",
+      "confianza": 99.2,
+      "resultado": "Envío encontrado",
+      "hora": "10:17:56 a. m.",
+      "id": "KH7r9-rhyKw"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "¿Cómo saco cita para el pasaporte?",
+      "intencion": "servicio_oficial_correos",
+      "confianza": 98,
+      "resultado": "Resuelto",
+      "hora": "10:17:56 a. m.",
+      "id": "A928NQoBnP4"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "¿Qué es pymexpress?",
+      "intencion": "servicio_oficial_correos",
+      "confianza": 98,
+      "resultado": "Resuelto",
+      "hora": "10:17:56 a. m.",
+      "id": "NCDx0qJINKA"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "¿Cómo funciona box correos?",
+      "intencion": "servicio_oficial_correos",
+      "confianza": 98,
+      "resultado": "Resuelto",
+      "hora": "10:17:56 a. m.",
+      "id": "cfIcgZq_cMM"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "Mi paquete llegó dañado y quiero poner un reclamo",
+      "intencion": "Soporte y Atención Ciudadana",
+      "confianza": 99.5,
+      "resultado": "Resuelto por N8N",
+      "hora": "10:17:58 a. m.",
+      "id": "jslkg8O4uts"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "¿Qué es la Dos Pinos?",
+      "intencion": "fuera_de_contexto",
+      "confianza": 99,
+      "resultado": "Fuera de contexto institucional",
+      "hora": "10:17:58 a. m.",
+      "id": "sDodnjJPRPs"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "¿Cuánto cuesta enviar un paquete de 2 kilos?",
+      "intencion": "cotizar_tarifa",
+      "confianza": 98,
+      "resultado": "Tarifa calculada",
+      "hora": "10:18:41 a. m.",
+      "id": "lNfKhYPge8I"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "¿Cuál es el horario de la sucursal de Zapote?",
+      "intencion": "consulta_sucursal_especifica",
+      "confianza": 98.5,
+      "resultado": "Sucursal identificada",
+      "hora": "10:18:41 a. m.",
+      "id": "nldq0l3wpQs"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "Rastrear CR098421734CR",
+      "intencion": "rastreo_envio",
+      "confianza": 99.2,
+      "resultado": "Envío encontrado",
+      "hora": "10:18:41 a. m.",
+      "id": "VG9rc3hFJ2s"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "¿Cómo saco cita para el pasaporte?",
+      "intencion": "citas_ves_pasaportes",
+      "confianza": 98.5,
+      "resultado": "Orientación VES",
+      "hora": "10:18:41 a. m.",
+      "id": "LOVkW_Bqqw8"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "¿Qué es la Dos Pinos?",
+      "intencion": "fuera_de_contexto",
+      "confianza": 99,
+      "resultado": "Fuera de contexto institucional",
+      "hora": "10:18:41 a. m.",
+      "id": "cmVjzxXEGlM"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "¿Cuánto cuesta enviar un paquete de 2 kilos?",
+      "intencion": "cotizar_tarifa",
+      "confianza": 98,
+      "resultado": "Tarifa calculada",
+      "hora": "10:19:03 a. m.",
+      "id": "bWGmwKhKd4c"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "¿Cuál es el horario de la sucursal de Zapote?",
+      "intencion": "consulta_sucursal_especifica",
+      "confianza": 98.5,
+      "resultado": "Sucursal identificada",
+      "hora": "10:19:03 a. m.",
+      "id": "lDAE3XA14fw"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "Rastrear CR098421734CR",
+      "intencion": "rastreo_envio",
+      "confianza": 99.2,
+      "resultado": "Envío encontrado",
+      "hora": "10:19:03 a. m.",
+      "id": "Inv4wi8LtYI"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "¿Cómo saco cita para el pasaporte?",
+      "intencion": "citas_ves_pasaportes",
+      "confianza": 98.5,
+      "resultado": "Orientación VES",
+      "hora": "10:19:03 a. m.",
+      "id": "HCw82gEhQhE"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "¿Qué es la Dos Pinos?",
+      "intencion": "fuera_de_contexto",
+      "confianza": 99,
+      "resultado": "Fuera de contexto institucional",
+      "hora": "10:19:03 a. m.",
+      "id": "QfUfEt_wj2c"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "¿Cuánto cuesta enviar un paquete de 2 kilos?",
+      "intencion": "cotizar_tarifa",
+      "confianza": 98,
+      "resultado": "Tarifa calculada",
+      "hora": "10:19:16 a. m.",
+      "id": "roJulVrWGF4"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "¿Cuál es el horario de la sucursal de Zapote?",
+      "intencion": "consulta_sucursal_especifica",
+      "confianza": 98.5,
+      "resultado": "Sucursal identificada",
+      "hora": "10:19:16 a. m.",
+      "id": "YFNgCkzTR1E"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "Rastrear CR098421734CR",
+      "intencion": "rastreo_envio",
+      "confianza": 99.2,
+      "resultado": "Envío encontrado",
+      "hora": "10:19:16 a. m.",
+      "id": "L-UdKnrTL6E"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "¿Cómo saco cita para el pasaporte?",
+      "intencion": "citas_ves_pasaportes",
+      "confianza": 98.5,
+      "resultado": "Orientación VES",
+      "hora": "10:19:16 a. m.",
+      "id": "6d1PiYKq8QI"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "¿Qué es la Dos Pinos?",
+      "intencion": "fuera_de_contexto",
+      "confianza": 99,
+      "resultado": "Fuera de contexto institucional",
+      "hora": "10:19:16 a. m.",
+      "id": "Mq6wjwmvoWA"
+    },
+    {
+      "usuario": "María Elena Rojas",
+      "consulta": "Horario de Zapote",
+      "intencion": "consulta_sucursal_especifica",
+      "confianza": 98.5,
+      "resultado": "Sucursal identificada",
+      "hora": "10:20:02 a. m.",
+      "id": "gJzGOmmqbtw"
+    },
+    {
+      "usuario": "María Elena Rojas",
+      "consulta": "san jose",
+      "intencion": "fuera_de_contexto",
+      "confianza": 99,
+      "resultado": "Fuera de contexto institucional",
+      "hora": "10:20:40 a. m.",
+      "id": "BJfsBs8PXQo"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "¿Cuánto cuesta enviar un paquete de 2 kilos?",
+      "intencion": "cotizar_tarifa",
+      "confianza": 98,
+      "resultado": "Tarifa calculada",
+      "hora": "10:23:38 a. m.",
+      "id": "gWh8fGDuf2k"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "¿Cuál es el horario de la sucursal de Zapote?",
+      "intencion": "consulta_sucursal_especifica",
+      "confianza": 98.5,
+      "resultado": "Sucursal identificada",
+      "hora": "10:23:39 a. m.",
+      "id": "ufYm05PUIdw"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "Rastrear CR098421734CR",
+      "intencion": "rastreo_envio",
+      "confianza": 99.2,
+      "resultado": "Envío encontrado",
+      "hora": "10:23:39 a. m.",
+      "id": "gtip3cd9UE0"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "¿Cómo saco cita para el pasaporte?",
+      "intencion": "citas_ves_pasaportes",
+      "confianza": 98.5,
+      "resultado": "Orientación VES",
+      "hora": "10:23:39 a. m.",
+      "id": "tcvkl2QDYb4"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "¿Qué es la Dos Pinos?",
+      "intencion": "fuera_de_contexto",
+      "confianza": 99,
+      "resultado": "Fuera de contexto institucional",
+      "hora": "10:23:39 a. m.",
+      "id": "jG29wbcEyqc"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "san jose",
+      "intencion": "consulta_sucursales_provincia",
+      "confianza": 99,
+      "resultado": "Sucursales en San José",
+      "hora": "10:29:52 a. m.",
+      "id": "fbcOjij03ZY"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "alajuela",
+      "intencion": "consulta_sucursales_provincia",
+      "confianza": 99,
+      "resultado": "Sucursales en Alajuela",
+      "hora": "10:29:52 a. m.",
+      "id": "VQeRpjq1ZpA"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "¿Cuánto cuesta enviar un paquete de 2 kilos?",
+      "intencion": "cotizar_tarifa",
+      "confianza": 98,
+      "resultado": "Tarifa calculada",
+      "hora": "10:29:52 a. m.",
+      "id": "zxgXJQTWuqo"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "¿Cuál es el horario de la sucursal de Zapote?",
+      "intencion": "consulta_sucursal_especifica",
+      "confianza": 98.5,
+      "resultado": "Sucursal identificada",
+      "hora": "10:29:52 a. m.",
+      "id": "8pT6E2Iw8ys"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "Rastrear CR098421734CR",
+      "intencion": "rastreo_envio",
+      "confianza": 99.2,
+      "resultado": "Envío encontrado",
+      "hora": "10:29:52 a. m.",
+      "id": "6VH91PKOnVQ"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "¿Cómo saco cita para el pasaporte biométrico?",
+      "intencion": "citas_ves_pasaportes",
+      "confianza": 98.5,
+      "resultado": "Orientación VES",
+      "hora": "10:29:52 a. m.",
+      "id": "KM9qz5yxvuI"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "¿Qué es la Dos Pinos?",
+      "intencion": "fuera_de_contexto",
+      "confianza": 99,
+      "resultado": "Fuera de contexto institucional",
+      "hora": "10:29:52 a. m.",
+      "id": "Evn6h7e-msg"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "san jose",
+      "intencion": "consulta_sucursales_provincia",
+      "confianza": 99,
+      "resultado": "Sucursales en San José",
+      "hora": "10:33:03 a. m.",
+      "id": "S4f2P9YLcuo"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "alajuela",
+      "intencion": "consulta_sucursales_provincia",
+      "confianza": 99,
+      "resultado": "Sucursales en Alajuela",
+      "hora": "10:33:03 a. m.",
+      "id": "8UM9RycjG1w"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "¿Cuánto cuesta enviar un paquete de 2 kilos?",
+      "intencion": "cotizar_tarifa",
+      "confianza": 98,
+      "resultado": "Tarifa calculada",
+      "hora": "10:33:03 a. m.",
+      "id": "h0hSi_HgDyE"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "¿Cuál es el horario de la sucursal de Zapote?",
+      "intencion": "consulta_sucursal_especifica",
+      "confianza": 98.5,
+      "resultado": "Sucursal identificada",
+      "hora": "10:33:03 a. m.",
+      "id": "kr2bgI89T2E"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "Rastrear CR098421734CR",
+      "intencion": "rastreo_envio",
+      "confianza": 99.2,
+      "resultado": "Envío encontrado",
+      "hora": "10:33:03 a. m.",
+      "id": "ZOIfdRzxmuE"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "¿Cómo saco cita para el pasaporte biométrico?",
+      "intencion": "citas_ves_pasaportes",
+      "confianza": 98.5,
+      "resultado": "Orientación VES",
+      "hora": "10:33:03 a. m.",
+      "id": "vlx2kNbqy1w"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "¿Qué es la Dos Pinos?",
+      "intencion": "fuera_de_contexto",
+      "confianza": 99,
+      "resultado": "Fuera de contexto institucional",
+      "hora": "10:33:03 a. m.",
+      "id": "YnMkreZq6AM"
+    },
+    {
+      "usuario": "María Elena Rojas",
+      "consulta": "me gustaria saber de la provincia de sam jose",
+      "intencion": "fuera_de_contexto",
+      "confianza": 99,
+      "resultado": "Fuera de contexto institucional",
+      "hora": "10:35:02 a. m.",
+      "id": "4v1BgHOJIdU"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "me gustaria saber de la provincia de sam jose",
+      "intencion": "sucursal_provincia_especifica",
+      "confianza": 99,
+      "resultado": "Sucursal en San José",
+      "hora": "10:39:05 a. m.",
+      "id": "pV-RfvpntZw"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "haz que me pueda decir de cada provincia de costa rica cual es la socursal mas cercana donde queda",
+      "intencion": "sucursales_todas_las_provincias",
+      "confianza": 99.5,
+      "resultado": "Desglose oficial de las 7 provincias",
+      "hora": "10:39:05 a. m.",
+      "id": "I-UfdjPLZoM"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "¿Dónde queda la sucursal de Alajuela?",
+      "intencion": "sucursal_provincia_especifica",
+      "confianza": 99,
+      "resultado": "Sucursal en Alajuela",
+      "hora": "10:39:05 a. m.",
+      "id": "dEILNulldmw"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "Heredia",
+      "intencion": "sucursal_provincia_especifica",
+      "confianza": 99,
+      "resultado": "Sucursal en Heredia",
+      "hora": "10:39:05 a. m.",
+      "id": "J2oQZL3gKHw"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "Cartago",
+      "intencion": "sucursal_provincia_especifica",
+      "confianza": 99,
+      "resultado": "Sucursal en Cartago",
+      "hora": "10:39:05 a. m.",
+      "id": "hZUYbt_H0PQ"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "Guanacaste",
+      "intencion": "sucursal_provincia_especifica",
+      "confianza": 99,
+      "resultado": "Sucursal en Guanacaste",
+      "hora": "10:39:05 a. m.",
+      "id": "-X1MfLhA7vY"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "Puntarenas",
+      "intencion": "sucursal_provincia_especifica",
+      "confianza": 99,
+      "resultado": "Sucursal en Puntarenas",
+      "hora": "10:39:05 a. m.",
+      "id": "i4wErHT6I4o"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "Limón",
+      "intencion": "sucursal_provincia_especifica",
+      "confianza": 99,
+      "resultado": "Sucursal en Limón",
+      "hora": "10:39:05 a. m.",
+      "id": "cASQBrC1ALg"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "¿Cuánto cuesta enviar un paquete de 2 kilos?",
+      "intencion": "cotizar_tarifa",
+      "confianza": 98,
+      "resultado": "Tarifa calculada",
+      "hora": "10:39:05 a. m.",
+      "id": "bRTisycaVQI"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "Rastrear CR098421734CR",
+      "intencion": "rastreo_envio",
+      "confianza": 99.2,
+      "resultado": "Envío encontrado",
+      "hora": "10:39:05 a. m.",
+      "id": "RnT_LymWE-A"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "¿Qué es la Dos Pinos?",
+      "intencion": "fuera_de_contexto",
+      "confianza": 99,
+      "resultado": "Fuera de contexto institucional",
+      "hora": "10:39:05 a. m.",
+      "id": "SBriGadIOzA"
+    },
+    {
+      "usuario": "María Elena Rojas",
+      "consulta": "dime cual es la sucursal mas cercana en san jose",
+      "intencion": "sucursal_provincia_especifica",
+      "confianza": 99,
+      "resultado": "Sucursal en San José",
+      "hora": "10:41:07 a. m.",
+      "id": "CMhQYsN41JA"
+    },
+    {
+      "usuario": "María Elena Rojas",
+      "consulta": "Cotizar 1 kg",
+      "intencion": "cotizar_tarifa",
+      "confianza": 98,
+      "resultado": "Tarifa calculada",
+      "hora": "10:42:00 a. m.",
+      "id": "KZ_hzoab3Yo"
+    },
+    {
+      "usuario": "María Elena Rojas",
+      "consulta": "Cotizar 5 kg",
+      "intencion": "cotizar_tarifa",
+      "confianza": 98,
+      "resultado": "Tarifa calculada",
+      "hora": "10:42:13 a. m.",
+      "id": "h6tQwVCSjDc"
+    },
+    {
+      "usuario": "María Elena Rojas",
+      "consulta": "¿Cómo agendar una cita para pasaporte VES?",
+      "intencion": "citas_ves_pasaportes",
+      "confianza": 98.5,
+      "resultado": "Orientación VES",
+      "hora": "10:42:35 a. m.",
+      "id": "03x8GIHRFPw"
+    },
+    {
+      "usuario": "María Elena Rojas",
+      "consulta": "que es la dos pinos",
+      "intencion": "fuera_de_contexto",
+      "confianza": 99,
+      "resultado": "Fuera de contexto institucional",
+      "hora": "10:43:13 a. m.",
+      "id": "_r3879H7vsw"
+    },
+    {
+      "usuario": "María Elena Rojas",
+      "consulta": "Rastrear CR098421734CR",
+      "intencion": "rastreo_envio",
+      "confianza": 99.2,
+      "resultado": "Envío encontrado",
+      "hora": "10:45:34 a. m.",
+      "id": "OOEJo3_rL9M"
+    },
+    {
+      "usuario": "María Elena Rojas",
+      "consulta": "Sucursales en San José",
+      "intencion": "sucursal_provincia_especifica",
+      "confianza": 99,
+      "resultado": "Sucursal en San José",
+      "hora": "10:45:57 a. m.",
+      "id": "4JBaDot4lzc"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "me gustaria saber de la provincia de sam jose",
+      "intencion": "sucursal_provincia_especifica",
+      "confianza": 99,
+      "resultado": "Sucursal en San José",
+      "hora": "10:49:28 a. m.",
+      "id": "bF2BwQutD1A"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "haz que me pueda decir de cada provincia de costa rica cual es la socursal mas cercana donde queda",
+      "intencion": "sucursales_todas_las_provincias",
+      "confianza": 99.5,
+      "resultado": "Desglose oficial de las 7 provincias",
+      "hora": "10:49:28 a. m.",
+      "id": "Xq5qnQ4vYT0"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "¿Dónde queda la sucursal de Alajuela?",
+      "intencion": "sucursal_provincia_especifica",
+      "confianza": 99,
+      "resultado": "Sucursal en Alajuela",
+      "hora": "10:49:28 a. m.",
+      "id": "tRpqeFziswA"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "Heredia",
+      "intencion": "sucursal_provincia_especifica",
+      "confianza": 99,
+      "resultado": "Sucursal en Heredia",
+      "hora": "10:49:28 a. m.",
+      "id": "SjCyEicb9TQ"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "Cartago",
+      "intencion": "sucursal_provincia_especifica",
+      "confianza": 99,
+      "resultado": "Sucursal en Cartago",
+      "hora": "10:49:28 a. m.",
+      "id": "D8oE7FCcLRI"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "Guanacaste",
+      "intencion": "sucursal_provincia_especifica",
+      "confianza": 99,
+      "resultado": "Sucursal en Guanacaste",
+      "hora": "10:49:28 a. m.",
+      "id": "g8K8P74YncE"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "Puntarenas",
+      "intencion": "sucursal_provincia_especifica",
+      "confianza": 99,
+      "resultado": "Sucursal en Puntarenas",
+      "hora": "10:49:28 a. m.",
+      "id": "k0Z7gtHD7SE"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "Limón",
+      "intencion": "sucursal_provincia_especifica",
+      "confianza": 99,
+      "resultado": "Sucursal en Limón",
+      "hora": "10:49:28 a. m.",
+      "id": "bX32YY9FjFI"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "¿Cuánto cuesta enviar un paquete de 2 kilos?",
+      "intencion": "cotizar_tarifa",
+      "confianza": 98,
+      "resultado": "Tarifa calculada",
+      "hora": "10:49:28 a. m.",
+      "id": "cgkekxzXZ6c"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "Rastrear CR098421734CR",
+      "intencion": "rastreo_envio",
+      "confianza": 99.2,
+      "resultado": "Envío encontrado",
+      "hora": "10:49:28 a. m.",
+      "id": "lrbJpjC3ApQ"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "¿Qué es la Dos Pinos?",
+      "intencion": "fuera_de_contexto",
+      "confianza": 99,
+      "resultado": "Fuera de contexto institucional",
+      "hora": "10:49:28 a. m.",
+      "id": "Lp26ATIGylI"
+    },
+    {
+      "usuario": "María Elena Rojas",
+      "consulta": "Sucursales de cada provincia",
+      "intencion": "sucursales_todas_las_provincias",
+      "confianza": 99.5,
+      "resultado": "Desglose oficial de las 7 provincias",
+      "hora": "10:52:28 a. m.",
+      "id": "MbobZMyO0ns"
+    },
+    {
+      "usuario": "María Elena Rojas",
+      "consulta": "Sucursales de cada provincia",
+      "intencion": "sucursales_todas_las_provincias",
+      "confianza": 99.5,
+      "resultado": "Desglose oficial de las 7 provincias",
+      "hora": "10:53:20 a. m.",
+      "id": "1IWg3JzNxiI"
+    },
+    {
+      "usuario": "María Elena Rojas",
+      "consulta": "Sucursales de cada provincia",
+      "intencion": "sucursales_todas_las_provincias",
+      "confianza": 99.5,
+      "resultado": "Desglose oficial de las 7 provincias",
+      "hora": "10:57:24 a. m.",
+      "id": "C_ooQ5MaOVc"
+    },
+    {
+      "usuario": "María Elena Rojas",
+      "consulta": "Sucursales de cada provincia",
+      "intencion": "sucursales_todas_las_provincias",
+      "confianza": 99.5,
+      "resultado": "Desglose oficial de las 7 provincias",
+      "hora": "10:57:24 a. m.",
+      "id": "v2PUvume24I"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

@@ -1,4 +1,5 @@
 import { fetchCollection, fetchItemById, createItem, updateItem, deleteItem } from './api';
+import { n8nService } from './n8nService';
 
 const COLLECTION = 'consultas';
 
@@ -6,7 +7,7 @@ export const consultasService = {
   getAll: () => fetchCollection(COLLECTION),
   getById: (id) => fetchItemById(COLLECTION, id),
   create: async (consulta) => {
-    // Generate official ticket format PQ-2025-XXXX
+    // Generate official ticket format PQ-YYYY-XXXX
     const randomTicketNum = Math.floor(1000 + Math.random() * 9000);
     const year = new Date().getFullYear();
     const newTicket = {
@@ -15,20 +16,20 @@ export const consultasService = {
       fecha: consulta.fecha || new Date().toISOString().split('T')[0],
       estado: consulta.estado || 'Pendiente',
       prioridad: consulta.prioridad || 'Media',
-      // Metadata representing N8N automatic categorization
       n8nProcessed: true,
-      n8nDepartment: consulta.categoria === 'Aduanas' ? 'Unidad de Aforo Postal' :
-                     consulta.categoria === 'Reclamos' ? 'Auditoría de Envíos y Seguros' :
-                     consulta.categoria === 'Solicitudes' ? 'Atención Comercial Pymes' : 'Soporte Ciudadano'
+      n8nDepartment: consulta.departamento || (consulta.categoria ? `Área de ${consulta.categoria}` : 'Soporte Ciudadano')
     };
 
-    // Notificar al Webhook de N8N Cloud en tiempo real
+    // Notificar al Webhook de N8N Cloud configurado
     try {
-      fetch('https://johandyblitan.app.n8n.cloud/webhook/pqrs-ciudadana', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newTicket)
-      }).catch((e) => console.warn('N8N Webhook notice:', e));
+      const webhookUrl = n8nService.getWebhookUrl();
+      if (webhookUrl) {
+        fetch(webhookUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(newTicket)
+        }).catch((e) => console.warn('N8N Webhook notice:', e));
+      }
     } catch {}
 
     return createItem(COLLECTION, newTicket);
