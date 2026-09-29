@@ -20,9 +20,9 @@ export const AssistantChatModal = ({ onClose, isFloating = false }) => {
     {
       id: 2,
       sender: 'bot',
-      text: 'Puedes escribirme de forma natural. Por ejemplo: "¿Dónde está mi paquete CR098421734CR?", "¿A qué hora abre la sucursal de Zapote?" o "¿Cuánto cuesta enviar 2 kg?".',
+      text: 'Puedes escribirme de forma natural. Por ejemplo: "¿Cuáles son los horarios de las sucursales?", "¿Dónde está mi paquete CR098421734CR?" o "¿Cuánto cuesta enviar 2 kg?".',
       time: 'Ahora',
-      quickSuggestions: ['Rastrear CR098421734CR', 'Horario de Zapote', 'Cotizar 2 kg EMS', 'Cita Pasaporte VES']
+      quickSuggestions: ['Horarios de sucursales', 'Rastrear CR098421734CR', 'Horario de Zapote', 'Cotizar 2 kg EMS']
     }
   ]);
   const [inputValue, setInputValue] = useState('');
@@ -372,29 +372,41 @@ export const AssistantChatModal = ({ onClose, isFloating = false }) => {
           </p>
 
           <div className="space-y-2 text-xs">
-            <div className="p-2.5 rounded-xl bg-gray-50 border border-gray-200 flex items-start gap-2.5">
+            <button
+              type="button"
+              onClick={() => handleSend('Rastrear CR098421734CR')}
+              className="w-full text-left p-2.5 rounded-xl bg-gray-50 hover:bg-emerald-50/70 border border-gray-200 hover:border-emerald-300 flex items-start gap-2.5 transition cursor-pointer"
+            >
               <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" />
               <div>
                 <p className="font-semibold text-gris-oscuro">Rastreo de Envíos en Vivo</p>
                 <p className="text-[11px] text-gray-500">Consulta en tiempo real con números de guía CR</p>
               </div>
-            </div>
+            </button>
 
-            <div className="p-2.5 rounded-xl bg-gray-50 border border-gray-200 flex items-start gap-2.5">
+            <button
+              type="button"
+              onClick={() => handleSend('¿Cuáles son los horarios de las sucursales?')}
+              className="w-full text-left p-2.5 rounded-xl bg-gray-50 hover:bg-sky-50/70 border border-gray-200 hover:border-sky-300 flex items-start gap-2.5 transition cursor-pointer"
+            >
               <Calendar className="w-4 h-4 text-azul-primario flex-shrink-0 mt-0.5" />
               <div>
                 <p className="font-semibold text-gris-oscuro">Red de Sucursales y Citas</p>
                 <p className="text-[11px] text-gray-500">Horarios, teléfonos y trámites VES oficiales</p>
               </div>
-            </div>
+            </button>
 
-            <div className="p-2.5 rounded-xl bg-gray-50 border border-gray-200 flex items-start gap-2.5">
+            <button
+              type="button"
+              onClick={() => handleSend('¿Cuánto cuesta un envío de 1 kilo?')}
+              className="w-full text-left p-2.5 rounded-xl bg-gray-50 hover:bg-amber-50/70 border border-gray-200 hover:border-amber-300 flex items-start gap-2.5 transition cursor-pointer"
+            >
               <Calculator className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
               <div>
                 <p className="font-semibold text-gris-oscuro">Cotizador Dinámico</p>
                 <p className="text-[11px] text-gray-500">Cálculo de tarifas EMS y Pymexpress</p>
               </div>
-            </div>
+            </button>
           </div>
         </div>
 

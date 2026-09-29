@@ -88,4 +88,66 @@ describe('aiAssistantService - Sucursales por provincia y tolerancia a errores t
     expect(res.text).toContain('No dispongo de esa información');
     expect(res.text).toContain('Esa consulta se sale de mis conocimientos y está fuera del contexto institucional de Correos de Costa Rica. 🚫');
   });
+
+  it('responde con precisión institucional a "¿Cuáles son los horarios de las sucursales?"', async () => {
+    const res = await aiAssistantService.processMessage({ message: '¿Cuáles son los horarios de las sucursales?' });
+    expect(res.text).toContain('Horarios oficiales de las sucursales de Correos de Costa Rica');
+    expect(res.text).toContain('Lunes a Viernes (Jornada Continua Nacional)');
+    expect(res.text).toContain('8:00 a.m. a 5:00 p.m.');
+    expect(res.text).toContain('Sábados (Ventanillas Principales y Cabeceras)');
+    expect(res.text).toContain('8:00 a.m. a 12:00 m.d.');
+    expect(res.text).toContain('City Mall Alajuela');
+    expect(res.text).toContain('Domingos y Feriados Nacionales');
+    expect(res.actionLink).toBe('/oficinas');
+  });
+
+  it('responde a botón de sugerencia "Horarios de sucursales"', async () => {
+    const res = await aiAssistantService.processMessage({ message: 'Horarios de sucursales' });
+    expect(res.text).toContain('Horarios oficiales de las sucursales');
+    expect(res.text).toContain('8:00 a.m. a 5:00 p.m.');
+    expect(res.quickSuggestions).toContain('Horario en San José');
+  });
+
+  it('responde con horario específico de Alajuela incluyendo City Mall y Alajuela Centro', async () => {
+    const res = await aiAssistantService.processMessage({ message: '¿Cuál es el horario en Alajuela?' });
+    expect(res.text).toContain('Alajuela');
+    expect(res.text).toContain('Sucursal Alajuela Centro');
+    expect(res.text).toContain('Sucursal City Mall Alajuela');
+    expect(res.text).toContain('8:00 a.m. a 5:00 p.m.');
+    expect(res.text).toContain('10:00 a.m. a 7:00 p.m.');
+    expect(res.actionLink).toBe('/oficinas');
+  });
+
+  it('responde con horario específico de la Sucursal Central Zapote', async () => {
+    const res = await aiAssistantService.processMessage({ message: '¿A qué hora abre la sucursal de Zapote?' });
+    expect(res.text).toContain('Sucursal Central Zapote');
+    expect(res.text).toContain('Casa Presidencial, Zapote');
+    expect(res.text).toContain('8:00 a.m. a 5:00 p.m.');
+    expect(res.text).toContain('Sábados');
+    expect(res.text).toContain('8:00 a.m. a 12:00 m.d.');
+  });
+
+  it('responde con horario extendido de City Mall Alajuela', async () => {
+    const res = await aiAssistantService.processMessage({ message: 'Horario City Mall' });
+    expect(res.text).toContain('City Mall Alajuela');
+    expect(res.text).toContain('10:00 a.m. a 7:00 p.m.');
+    expect(res.text).toContain('Domingos');
+    expect(res.text).toContain('11:00 a.m. a 5:00 p.m.');
+  });
+
+  it('responde con sedes abiertas y horarios de los sábados', async () => {
+    const res = await aiAssistantService.processMessage({ message: '¿Abren los sábados?' });
+    expect(res.text).toContain('Horarios de atención los sábados');
+    expect(res.text).toContain('8:00 a.m. a 12:00 m.d.');
+    expect(res.text).toContain('Central Zapote');
+    expect(res.text).toContain('Alajuela Centro');
+  });
+
+  it('responde con política y excepción dominical de City Mall', async () => {
+    const res = await aiAssistantService.processMessage({ message: '¿Abren los domingos?' });
+    expect(res.text).toContain('domingos');
+    expect(res.text).toContain('Ventanillas Regulares Cerradas');
+    expect(res.text).toContain('City Mall Alajuela');
+    expect(res.text).toContain('11:00 a.m. a 5:00 p.m.');
+  });
 });

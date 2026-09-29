@@ -67,7 +67,7 @@ export const PROVINCIAS_MAP = {
     name: 'Alajuela',
     aliases: [
       'alajuela', 'alajuel', 'alajuela centro', 'san ramon', 'grecia',
-      'palmares', 'san carlos', 'ciudad quesada', 'atenas', 'orotina', 'naranjo', 'poas', 'upala'
+      'palmares', 'san carlos', 'ciudad quesada', 'atenas', 'orotina', 'naranjo', 'poas', 'upala', 'city mall'
     ],
     closestBranch: {
       nombre: 'Sucursal Alajuela Centro',
@@ -191,6 +191,7 @@ const CORREOS_DOMAIN_TERMS = new Set([
   // Sedes y atención
   'sucursal', 'sucursales', 'oficina', 'oficinas', 'agencia', 'agencias', 'ventanilla', 'ventanillas',
   'horario', 'horarios', 'abren', 'abre', 'cierran', 'cierra', 'hora', 'horas', 'atienden', 'atencion',
+  'apertura', 'cierre', 'jornada', 'laboral', 'atender', 'city mall',
   'direccion', 'ubicacion', 'telefono', 'sede', 'sedes',
   'sabado', 'sabados', 'domingo', 'domingos', 'lunes', 'viernes', 'feriado', 'feriados', 'fin de semana',
 
@@ -420,6 +421,293 @@ export const aiAssistantService = {
     }
 
     // =========================================================================
+    // INTENCIÓN: HORARIOS DE ATENCIÓN DE SUCURSALES (GENERAL, PROVINCIAL Y FIN DE SEMANA)
+    // Responde consultas directas sobre horas de apertura, cierre, sábados y domingos
+    // =========================================================================
+    const isBranchScheduleIntent =
+      normalized.includes('horario') ||
+      normalized.includes('horarios') ||
+      normalized.includes('a que hora') ||
+      normalized.includes('a que horas') ||
+      normalized.includes('que hora abre') ||
+      normalized.includes('que hora abren') ||
+      normalized.includes('que hora cierra') ||
+      normalized.includes('que hora cierran') ||
+      normalized.includes('hora abren') ||
+      normalized.includes('hora cierran') ||
+      normalized.includes('hora de atencion') ||
+      normalized.includes('horario de atencion') ||
+      normalized.includes('horarios de atencion') ||
+      normalized.includes('hora apertura') ||
+      normalized.includes('hora cierre') ||
+      normalized.includes('abren hoy') ||
+      normalized.includes('cierran hoy') ||
+      normalized.includes('atienden hoy') ||
+      normalized.includes('abren los sabados') ||
+      normalized.includes('abren sabados') ||
+      normalized.includes('abren los domingos') ||
+      normalized.includes('abren domingos') ||
+      normalized.includes('sabado') ||
+      normalized.includes('sabados') ||
+      normalized.includes('domingo') ||
+      normalized.includes('domingos') ||
+      normalized.includes('fin de semana') ||
+      normalized.includes('fines de semana') ||
+      normalized.includes('dias de atencion') ||
+      normalized.includes('dias abren') ||
+      (tokens.some((t) => ['horario', 'horarios', 'hora', 'horas'].includes(t)) &&
+       tokens.some((t) => ['sucursal', 'sucursales', 'oficina', 'oficinas', 'atencion', 'apertura', 'cierre', 'abren', 'abre', 'cierran', 'cierra'].includes(t)));
+
+    if (isBranchScheduleIntent) {
+      const scheduleProvData = detectProvincia(rawQuery) || detectProvincia(normalized);
+
+      await iaLogsService.createLog({
+        usuario: user?.nombre || 'Ciudadano Web',
+        consulta: rawQuery,
+        intencion: 'horarios_sucursales',
+        confianza: 99.5,
+        resultado: scheduleProvData ? `Horarios en ${scheduleProvData.name}` : 'Horarios oficiales de sucursales'
+      }).catch(() => {});
+
+      // Subcaso A: Consulta puntual sobre Sucursal Central Zapote
+      if (normalized.includes('zapote')) {
+        return {
+          text: `🕒 **Horario oficial de atención de la Sucursal Central Zapote (Ventanilla Principal)**:\n\n` +
+            `• 📍 **Dirección**: Costado este de Casa Presidencial, Zapote, San José\n` +
+            `• 🕒 **Lunes a Viernes**: **8:00 a.m. a 5:00 p.m.** (Jornada continua sin interrupción al mediodía)\n` +
+            `• 📅 **Sábados**: **8:00 a.m. a 12:00 m.d.**\n` +
+            `• 🚫 **Domingos y Feriados**: Cerrado\n` +
+            `• ☎️ **Teléfono**: (+506) 2257-8888\n` +
+            `• 🌟 **Servicios disponibles**: Pasaportes y Cédulas VES, Pymexpress Hub, Casilleros y Retiro de Envíos.\n\n` +
+            `¿Deseas verificar la ruta en el mapa o consultar los requisitos para retirar un paquete?`,
+          actionLink: '/oficinas',
+          actionText: 'Ver Sucursal Zapote en el mapa',
+          quickSuggestions: ['¿Abren los sábados?', 'Requisitos para retirar', 'Horario en Alajuela', 'Sucursales de cada provincia']
+        };
+      }
+
+      // Subcaso B: Consulta puntual sobre City Mall Alajuela (Horario Extendido)
+      if (normalized.includes('city mall')) {
+        return {
+          text: `🕒 **Horario oficial de la Sucursal City Mall Alajuela** (Horario Extendido):\n\n` +
+            `• 📍 **Dirección**: Centro Comercial City Mall, Sótano 1, diagonal al BCR (Local LC-112-A2), Alajuela\n` +
+            `• 🕒 **Lunes a Sábado**: **10:00 a.m. a 7:00 p.m.** (Jornada continua especial)\n` +
+            `• 🛍️ **Domingos**: **11:00 a.m. a 5:00 p.m.** (Única sede abierta los domingos para retiro y entrega)\n` +
+            `• ☎️ **Teléfono**: (+506) 2430-8812\n` +
+            `• 🌟 **Servicios**: Envíos EMS Courier, Pymexpress, Box Correos Miami y retiro de paquetería.\n\n` +
+            `¿Deseas ubicar la sucursal en el mapa interactivo?`,
+          actionLink: '/oficinas',
+          actionText: 'Ver City Mall en el mapa',
+          quickSuggestions: ['Horario de Alajuela Centro', '¿Abren los domingos?', 'Cotizar tarifas EMS', 'Sucursales de cada provincia']
+        };
+      }
+
+      // Subcaso C: Consulta puntual sobre Escazú Village
+      if (normalized.includes('escazu')) {
+        return {
+          text: `🕒 **Horario oficial de la Sucursal Escazú Village** (Horario Extendido):\n\n` +
+            `• 📍 **Dirección**: Centro Comercial Escazú Village, Escazú, San José\n` +
+            `• 🕒 **Lunes a Sábado**: **10:00 a.m. a 7:00 p.m.** (Jornada continua extendida)\n` +
+            `• 🚫 **Domingos**: Cerrado\n` +
+            `• ☎️ **Teléfono**: (+506) 2202-2900\n` +
+            `• 🌟 **Servicios**: Envíos nacionales e internacionales, Pymexpress y casillero.\n\n` +
+            `¿Deseas consultar otras sucursales de San José?`,
+          actionLink: '/oficinas',
+          actionText: 'Ver sucursales de San José en el mapa',
+          quickSuggestions: ['Horario de Zapote', 'Horario de San Pedro', '¿Abren los sábados?', 'Sucursales de cada provincia']
+        };
+      }
+
+      // Subcaso D: Consulta puntual de horarios por provincia específica
+      if (scheduleProvData) {
+        const provKey = scheduleProvData.key;
+
+        if (provKey === 'alajuela') {
+          return {
+            text: `🕒 **Horarios oficiales de sucursales de Correos de Costa Rica en la provincia de Alajuela**:\n\n` +
+              `• 🏢 **Sucursal Alajuela Centro** (costado norte del Parque Central):\n` +
+              `  - **Lunes a Viernes**: **8:00 a.m. a 5:00 p.m.** (Jornada continua sin interrupción al mediodía)\n` +
+              `  - **Sábados**: **8:00 a.m. a 12:00 m.d.**\n` +
+              `  - ☎️ Tel: (+506) 2441-0355\n\n` +
+              `• 🛍️ **Sucursal City Mall Alajuela** (Sótano 1, diagonal al BCR):\n` +
+              `  - **Lunes a Sábado**: **10:00 a.m. a 7:00 p.m.** (Horario extendido)\n` +
+              `  - **Domingos**: **11:00 a.m. a 5:00 p.m.** (Abierto en jornada dominical)\n` +
+              `  - ☎️ Tel: (+506) 2430-8812\n\n` +
+              `• 🏢 **Sedes Cantonales de Alajuela** (San Ramón, Grecia, Atenas, Ciudad Quesada, Palmares, Naranjo, Orotina):\n` +
+              `  - **Lunes a Viernes**: **8:00 a.m. a 5:00 p.m.**\n` +
+              `  - *San Ramón* también abre **sábados de 8:00 a.m. a 12:00 m.d.**\n\n` +
+              `🚫 *Domingos y Feriados: Ventanillas regulares cerradas (excepto City Mall). La plataforma virtual y el rastreo están disponibles 24/7.*`,
+            actionLink: '/oficinas',
+            actionText: 'Ver sucursales de Alajuela en el mapa',
+            quickSuggestions: ['Horario de City Mall', 'Horario en San José', '¿Abren los sábados?', 'Sucursales de cada provincia']
+          };
+        }
+
+        if (provKey === 'san jose') {
+          return {
+            text: `🕒 **Horarios oficiales de sucursales de Correos de Costa Rica en la provincia de San José**:\n\n` +
+              `• 🏢 **Sucursal Central Zapote (Ventanilla Principal)** (Costado este de Casa Presidencial):\n` +
+              `  - **Lunes a Viernes**: **8:00 a.m. a 5:00 p.m.** (Jornada continua)\n` +
+              `  - **Sábados**: **8:00 a.m. a 12:00 m.d.**\n` +
+              `  - ☎️ Tel: (+506) 2257-8888\n\n` +
+              `• 🏛️ **Edificio Histórico Central** (Calle 2, Avenidas 1 y 3):\n` +
+              `  - **Lunes a Viernes**: **8:00 a.m. a 5:00 p.m.**\n` +
+              `  - **Sábados**: **8:00 a.m. a 12:00 m.d.**\n\n` +
+              `• 🛍️ **Sucursal Escazú Village**:\n` +
+              `  - **Lunes a Sábado**: **10:00 a.m. a 7:00 p.m.** (Horario extendido)\n\n` +
+              `• 🏢 **Sedes Cantonales** (San Pedro, Desamparados, Curridabat, Tibás, Moravia, Guadalupe, Santa Ana, Pérez Zeledón):\n` +
+              `  - **Lunes a Viernes**: **8:00 a.m. a 5:00 p.m.**\n` +
+              `  - *San Pedro (Los Yoses)* también abre **sábados de 8:00 a.m. a 12:00 m.d.**\n\n` +
+              `🚫 *Domingos y Feriados: Ventanillas físicas regulares cerradas. Plataforma web activa 24/7.*`,
+            actionLink: '/oficinas',
+            actionText: 'Ver sucursales de San José en el mapa',
+            quickSuggestions: ['Horario de Zapote', 'Horario en Alajuela', '¿Abren los sábados?', 'Sucursales de cada provincia']
+          };
+        }
+
+        if (provKey === 'heredia') {
+          return {
+            text: `🕒 **Horarios oficiales de sucursales de Correos de Costa Rica en la provincia de Heredia**:\n\n` +
+              `• 🏢 **Sucursal Heredia Central** (Calle Central, Avenidas 0 y 2, frente a Parroquia La Inmaculada):\n` +
+              `  - **Lunes a Viernes**: **8:00 a.m. a 5:00 p.m.** (Jornada continua sin interrupción al mediodía)\n` +
+              `  - **Sábados**: **8:00 a.m. a 12:00 m.d.**\n` +
+              `  - ☎️ Tel: (+506) 2260-0344\n\n` +
+              `• 🏢 **Otras sedes cantonales** (Belén, Santo Domingo, Barva, San Rafael, San Isidro, Sarapiquí):\n` +
+              `  - **Lunes a Viernes**: **8:00 a.m. a 5:00 p.m.**\n\n` +
+              `🚫 *Domingos y Feriados: Ventanillas cerradas. Plataforma virtual disponible 24/7.*`,
+            actionLink: '/oficinas',
+            actionText: 'Ver sucursales de Heredia en el mapa',
+            quickSuggestions: ['Horario en San José', '¿Abren los sábados?', 'Requisitos para retirar', 'Sucursales de cada provincia']
+          };
+        }
+
+        if (provKey === 'cartago') {
+          return {
+            text: `🕒 **Horarios oficiales de sucursales de Correos de Costa Rica en la provincia de Cartago**:\n\n` +
+              `• 🏢 **Sucursal Cartago Los Ángeles** (300m oeste de la Basílica de Los Ángeles):\n` +
+              `  - **Lunes a Viernes**: **8:00 a.m. a 5:00 p.m.** (Jornada continua sin interrupción al mediodía)\n` +
+              `  - **Sábados**: **8:00 a.m. a 12:00 m.d.**\n` +
+              `  - ☎️ Tel: (+506) 2551-0422\n\n` +
+              `• 🏢 **Otras sedes en Cartago** (Paraíso, Tres Ríos / La Unión, Turrialba):\n` +
+              `  - **Lunes a Viernes**: **8:00 a.m. a 5:00 p.m.**\n\n` +
+              `🚫 *Domingos y Feriados: Ventanillas cerradas. Plataforma virtual disponible 24/7.*`,
+            actionLink: '/oficinas',
+            actionText: 'Ver sucursales de Cartago en el mapa',
+            quickSuggestions: ['Horario en San José', '¿Abren los sábados?', 'Requisitos para retirar', 'Sucursales de cada provincia']
+          };
+        }
+
+        if (provKey === 'guanacaste') {
+          return {
+            text: `🕒 **Horarios oficiales de sucursales de Correos de Costa Rica en la provincia de Guanacaste**:\n\n` +
+              `• 🏢 **Sucursal Liberia Centro** (Avenida 1, Calle 2, contiguo a la Gobernación):\n` +
+              `  - **Lunes a Viernes**: **8:00 a.m. a 4:30 p.m.** (Jornada continua)\n` +
+              `  - **Sábados**: **8:00 a.m. a 12:00 m.d.**\n` +
+              `  - ☎️ Tel: (+506) 2666-0244\n\n` +
+              `• 🏢 **Otras sedes cantonales** (Nicoya, Santa Cruz, Cañas, Bagaces, Tilarán, Playas del Coco):\n` +
+              `  - **Lunes a Viernes**: **8:00 a.m. a 4:30 p.m.**\n\n` +
+              `🚫 *Domingos y Feriados: Ventanillas cerradas. Plataforma web activa 24/7.*`,
+            actionLink: '/oficinas',
+            actionText: 'Ver sucursales de Guanacaste en el mapa',
+            quickSuggestions: ['Horario en San José', '¿Abren los sábados?', 'Requisitos para retirar', 'Sucursales de cada provincia']
+          };
+        }
+
+        if (provKey === 'puntarenas') {
+          return {
+            text: `🕒 **Horarios oficiales de sucursales de Correos de Costa Rica en la provincia de Puntarenas**:\n\n` +
+              `• 🏢 **Sucursal Puntarenas Puerto** (Paseo de los Turistas, frente al Muelle Principal de Cruceros):\n` +
+              `  - **Lunes a Viernes**: **8:00 a.m. a 4:30 p.m.** (Jornada continua)\n` +
+              `  - ☎️ Tel: (+506) 2661-0155\n\n` +
+              `• 🏢 **Otras sedes cantonales** (Quepos, Jacó, Golfito, Esparza, Palmar Norte, Coto Brus, Buenos Aires):\n` +
+              `  - **Lunes a Viernes**: **8:00 a.m. a 4:30 p.m.**\n\n` +
+              `🚫 *Sábados, Domingos y Feriados: Ventanillas regulares cerradas. Plataforma web activa 24/7.*`,
+            actionLink: '/oficinas',
+            actionText: 'Ver sucursales de Puntarenas en el mapa',
+            quickSuggestions: ['Horario en San José', '¿Abren los sábados?', 'Requisitos para retirar', 'Sucursales de cada provincia']
+          };
+        }
+
+        if (provKey === 'limon') {
+          return {
+            text: `🕒 **Horarios oficiales de sucursales de Correos de Costa Rica en la provincia de Limón**:\n\n` +
+              `• 🏢 **Sucursal Limón Centro** (Avenida 2, Calles 3 y 4, frente al Parque Vargas):\n` +
+              `  - **Lunes a Viernes**: **8:00 a.m. a 4:30 p.m.** (Jornada continua)\n` +
+              `  - ☎️ Tel: (+506) 2758-0122\n\n` +
+              `• 🏢 **Otras sedes cantonales** (Guápiles / Pococí, Siquirres, Talamanca / Puerto Viejo, Bataan, Matina):\n` +
+              `  - **Lunes a Viernes**: **8:00 a.m. a 4:30 p.m.**\n\n` +
+              `🚫 *Sábados, Domingos y Feriados: Ventanillas regulares cerradas. Plataforma web activa 24/7.*`,
+            actionLink: '/oficinas',
+            actionText: 'Ver sucursales de Limón en el mapa',
+            quickSuggestions: ['Horario en San José', '¿Abren los sábados?', 'Requisitos para retirar', 'Sucursales de cada provincia']
+          };
+        }
+      }
+
+      // Subcaso E: Consulta específica sobre Sábados
+      if (normalized.includes('sabado') || normalized.includes('sabados')) {
+        return {
+          text: `🗓️ **Horarios de atención los sábados en Correos de Costa Rica**:\n\n` +
+            `• 🏢 **Sedes Principales y Cabeceras de Provincia**:\n` +
+            `  Abren los sábados en jornada matutina de **8:00 a.m. a 12:00 m.d.**:\n` +
+            `  ✓ **San José**: Sucursal Central Zapote (Ventanilla Principal), Edificio Histórico Central (Calle 2) y San Pedro de Montes de Oca.\n` +
+            `  ✓ **Alajuela**: Sucursal Alajuela Centro y Sucursal San Ramón.\n` +
+            `  ✓ **Heredia**: Sucursal Heredia Central.\n` +
+            `  ✓ **Cartago**: Sucursal Cartago Los Ángeles.\n` +
+            `  ✓ **Guanacaste**: Sucursal Liberia Centro.\n\n` +
+            `• 🛍️ **Centros Comerciales (Horario Especial Extendido)**:\n` +
+            `  - **City Mall Alajuela**: Sábados de **10:00 a.m. a 7:00 p.m.**\n` +
+            `  - **Escazú Village**: Sábados de **10:00 a.m. a 7:00 p.m.**\n\n` +
+            `• 🚫 **Sedes cantonales menores**: Permanecen cerradas los sábados.\n` +
+            `• 🕒 **Lunes a Viernes**: Horario habitual de **8:00 a.m. a 5:00 p.m.** en toda la red nacional.`,
+          actionLink: '/oficinas',
+          actionText: 'Directorio completo de sucursales',
+          quickSuggestions: ['Horario en San José', 'Horario en Alajuela', '¿A qué hora abren entre semana?', 'Sucursales de cada provincia']
+        };
+      }
+
+      // Subcaso F: Consulta específica sobre Domingos
+      if (normalized.includes('domingo') || normalized.includes('domingos')) {
+        return {
+          text: `🚫 **Horarios de atención los domingos en Correos de Costa Rica**:\n\n` +
+            `• 🏢 **Ventanillas Regulares Cerradas**: Todas las oficinas postales estándar a nivel nacional permanecen cerradas los domingos y feriados nacionales de ley.\n` +
+            `• 🛍️ **Única Sede Abierta los Domingos**:\n` +
+            `  - **Sucursal City Mall Alajuela**: Abierta los domingos de **11:00 a.m. a 5:00 p.m.** (Sótano 1, diagonal al BCR) para retiros y depósitos.\n` +
+            `• 🌐 **Autogestión Web 24/7**: Rastreo de guías, cálculo de tarifas y consultas disponibles en línea.\n` +
+            `• 🕒 **Reapertura General**: Lunes a partir de las **8:00 a.m.** en toda la red nacional.`,
+          actionLink: '/oficinas',
+          actionText: 'Ver sucursales en el mapa',
+          quickSuggestions: ['¿Abren los sábados?', 'Horarios de sucursales', 'Horario en San José', 'Horario en Alajuela']
+        };
+      }
+
+      // Subcaso G: Consulta general de horarios a nivel nacional (ej. "¿Cuáles son los horarios de las sucursales?", "Horarios de sucursales", "¿A qué hora abren?")
+      return {
+        text: `🕒 **Horarios oficiales de las sucursales de Correos de Costa Rica**:\n\n` +
+          `• 🏢 **Lunes a Viernes (Jornada Continua Nacional)**:\n` +
+          `  - **8:00 a.m. a 5:00 p.m.** en toda la red de sucursales principales y cabeceras de provincia (jornada continua sin interrupción al mediodía).\n` +
+          `  - *Sedes cantonales y rurales menores*: **8:00 a.m. a 4:30 p.m.**\n\n` +
+          `• 📅 **Sábados (Ventanillas Principales y Cabeceras)**:\n` +
+          `  - **8:00 a.m. a 12:00 m.d.** en ventanillas centrales autorizadas:\n` +
+          `    ✓ **San José**: Central Zapote (Ventanilla Principal), Edificio Histórico Central (Calle 2) y San Pedro.\n` +
+          `    ✓ **Alajuela**: Alajuela Centro y San Ramón.\n` +
+          `    ✓ **Heredia**: Heredia Central.\n` +
+          `    ✓ **Cartago**: Cartago Los Ángeles.\n` +
+          `    ✓ **Guanacaste**: Liberia Centro.\n\n` +
+          `• 🛍️ **Horario Especial Extendido en Centros Comerciales**:\n` +
+          `  - **City Mall Alajuela**: Lunes a Sábado de **10:00 a.m. a 7:00 p.m.** / Domingos de **11:00 a.m. a 5:00 p.m.**\n` +
+          `  - **Escazú Village**: Lunes a Sábado de **10:00 a.m. a 7:00 p.m.**\n\n` +
+          `• 🚫 **Domingos y Feriados Nacionales**:\n` +
+          `  - Las ventanillas físicas regulares permanecen cerradas (excepto City Mall).\n` +
+          `  - Nuestra **Sucursal Virtual** y el rastreo de envíos están disponibles 24/7 en la plataforma web.\n\n` +
+          `¿Deseas consultar el horario o ubicación de alguna provincia o sede en particular?`,
+        actionLink: '/oficinas',
+        actionText: 'Ver directorio completo de sucursales',
+        quickSuggestions: ['Horario en San José', 'Horario en Alajuela', '¿Abren los sábados?', 'Sucursales de cada provincia']
+      };
+    }
+
+    // =========================================================================
     // INTENCIÓN 1: SUCURSALES POR PROVINCIA ESPECÍFICA (SAN JOSÉ, ALAJUELA, HEREDIA, ETC.)
     // Tolera errores como 'sam jose', 'san joce', 'chepe', etc.
     // =========================================================================
@@ -596,26 +884,6 @@ export const aiAssistantService = {
       };
     }
 
-    // =========================================================================
-    // INTENCIÓN 7: SÁBADOS, FINES DE SEMANA Y HORARIOS
-    // =========================================================================
-    const isWeekendIntent =
-      normalized.includes('sabado') ||
-      normalized.includes('sabados') ||
-      normalized.includes('fin de semana') ||
-      normalized.includes('fines de semana') ||
-      normalized.includes('domingo') ||
-      normalized.includes('abren hoy') ||
-      normalized.includes('atienden hoy');
-
-    if (isWeekendIntent) {
-      return {
-        text: `🗓️ **Horarios de fin de semana en Correos de Costa Rica**:\n\n• 🏢 **Sábados (Sedes Principales)**: Abren de **8:00 a.m. a 12:00 m.d.** en jornada matutina:\n  - Sucursal Central Zapote (Ventanilla Principal)\n  - Edificio Histórico Central San José (Calle 2)\n  - Sucursal San Pedro de Montes de Oca\n  - Sucursal Alajuela Centro\n  - Sucursal Heredia Centro\n  - Sucursal Liberia Centro\n• 🚫 **Domingos y Feriados Nacionales**: Todas las sucursales permanecen cerradas.\n• 🕒 **Lunes a Viernes**: Horario habitual continuo de **8:00 a.m. a 5:00 p.m.**`,
-        actionLink: '/oficinas',
-        actionText: 'Directorio de sucursales',
-        quickSuggestions: ['Sucursales de cada provincia', 'Sucursales en San José', 'Sucursal Alajuela', 'Cita Pasaporte VES']
-      };
-    }
 
     // =========================================================================
     // INTENCIÓN 8: TARIFAS, COTIZACIONES Y PRECIOS
