@@ -239,3 +239,25 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #94A3B8;
 }
+
+/* Google Fonts Material Symbols Support */
+.material-symbols-rounded,
+.material-symbols-outlined {
+  font-family: 'Material Symbols Rounded', 'Material Symbols Outlined', sans-serif;
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'liga';
+}
+

@@ -4,6 +4,7 @@ import { AdminSidebar } from './AdminSidebar';
 import { Lock, Cpu, Bot, Sparkles } from 'lucide-react';
 import { AccessibilityModal } from '../common/AccessibilityModal';
 import { AdminAiChatModal } from './AdminAiChatModal';
+import { GoogleIcon } from '../common/GoogleIcon';
 
 export const AdminLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -39,11 +40,11 @@ export const AdminLayout = () => {
         {/* Official UPU / Terminal Footer */}
         <footer className="bg-white border-t border-gray-100 px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-400">
           <div className="flex items-center gap-2 text-center sm:text-left">
-            <Lock className="w-4 h-4 text-emerald-500 flex-shrink-0" />
-            <span>🔒 Sesión segura SSL 256-bit · Normativa UPU y Ley Postal Costarricense</span>
+            <GoogleIcon name="lock" size={16} className="text-emerald-500 shrink-0" />
+            <span>Sesión segura SSL 256-bit · Normativa UPU y Ley Postal Costarricense</span>
           </div>
           <div className="flex items-center gap-2 font-mono text-[11px] text-slate-400 bg-slate-50 px-3 py-1.5 rounded-lg border border-gray-100">
-            <Cpu className="w-4 h-4 text-blue-500 flex-shrink-0" />
+            <GoogleIcon name="memory" size={15} className="text-blue-500 shrink-0" />
             <span>Terminal: ZAP-04 · SIP-CR v5.0.0-PRO</span>
           </div>
         </footer>
@@ -56,13 +57,13 @@ export const AdminLayout = () => {
         className="fixed bottom-6 right-6 z-40 flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-azul-oscuro hover:bg-azul-primario text-white font-bold shadow-2xl border border-sky-400/40 hover:border-sky-300 transition-all duration-300 hover:scale-105 group cursor-pointer"
         title="Abrir Copiloto IA de Administración"
       >
-        <div className="relative">
+        <div className="relative flex items-center justify-center">
           <div className="w-2 h-2 rounded-full bg-verde-principal absolute -top-0.5 -right-0.5 animate-ping" />
           <div className="w-2 h-2 rounded-full bg-verde-principal absolute -top-0.5 -right-0.5" />
-          <Bot className="w-5 h-5 text-sky-200 group-hover:rotate-12 transition-transform" />
+          <GoogleIcon name="smart_toy" size={20} className="text-sky-200 group-hover:rotate-12 transition-transform" />
         </div>
         <span className="text-xs font-semibold tracking-wide">Copiloto IA Admin</span>
-        <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+        <GoogleIcon name="auto_awesome" size={15} filled className="text-amber-300" />
       </button>
 
       {/* Modal / Drawer del Copiloto IA de Administración */}

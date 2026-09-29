@@ -1,35 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { 
-  Bot, Send, X, RefreshCw, Volume2, Download, User, CheckCircle2, 
-  Sparkles, ArrowRight, Activity, Cpu, ShieldCheck,
-  Package, Users, MapPin, MessageSquare, Zap
-} from 'lucide-react';
 import { adminAiService } from '../../services/adminAiService';
 import { Link } from 'react-router-dom';
-
-/**
- * Renderiza texto enriquecido con formato institucional
- * Convierte **negrita** en etiquetas <strong> con el color azul corporativo
- */
-const renderFormattedText = (content = '') => {
-  return content.split('\n').map((line, idx) => {
-    const parts = line.split(/(\*\*.*?\*\*)/g);
-    return (
-      <span key={idx} className="block leading-relaxed">
-        {parts.map((part, pIdx) => {
-          if (part.startsWith('**') && part.endsWith('**')) {
-            return (
-              <strong key={pIdx} className="font-bold text-azul-oscuro">
-                {part.slice(2, -2)}
-              </strong>
-            );
-          }
-          return part;
-        })}
-      </span>
-    );
-  });
-};
+import { GoogleIcon } from '../common/GoogleIcon';
+import { formatAiTextWithGoogleFonts } from '../common/aiTextFormatter';
 
 export const AdminAiChatModal = ({ 
   isOpen = false, 
@@ -184,11 +157,11 @@ export const AdminAiChatModal = ({
         aria-modal="true"
         aria-labelledby="admin-ai-modal-title"
       >
-        {/* Cabecera Oficial Institucional (Azul Oscuro de Correos) */}
+        {/* Cabecera Oficial Institucional con Google Fonts Icons */}
         <div className="bg-azul-oscuro text-white px-5 py-3.5 flex items-center justify-between shadow-sm">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-azul-primario flex items-center justify-center text-white border border-sky-400/30 shadow-xs">
-              <Bot className="w-5 h-5" />
+              <GoogleIcon name="smart_toy" size={24} className="text-white" />
             </div>
             <div>
               <div className="flex items-center gap-2">
@@ -200,12 +173,13 @@ export const AdminAiChatModal = ({
                 </h3>
               </div>
               <p className="text-[11px] text-sky-200 flex items-center gap-1.5">
-                <Activity className="w-3 h-3 text-sky-300 animate-pulse" />
+                <GoogleIcon name="sensors" size={14} className="text-sky-300 animate-pulse" />
                 <span>Telemetría en tiempo real: <strong className="text-white">{currentBranch}</strong></span>
               </p>
             </div>
           </div>
 
+          {/* Controles de Cabecera con Iconos de Google Fonts */}
           <div className="flex items-center gap-1">
             <button
               type="button"
@@ -213,7 +187,7 @@ export const AdminAiChatModal = ({
               className="p-1.5 rounded-lg text-sky-200 hover:text-white hover:bg-azul-primario transition cursor-pointer"
               title="Escuchar última respuesta en voz alta"
             >
-              <Volume2 className="w-4 h-4" />
+              <GoogleIcon name="volume_up" size={20} />
             </button>
             <button
               type="button"
@@ -221,7 +195,7 @@ export const AdminAiChatModal = ({
               className="p-1.5 rounded-lg text-sky-200 hover:text-white hover:bg-azul-primario transition cursor-pointer"
               title="Descargar registro de auditoría"
             >
-              <Download className="w-4 h-4" />
+              <GoogleIcon name="download" size={20} />
             </button>
             <button
               type="button"
@@ -229,7 +203,7 @@ export const AdminAiChatModal = ({
               className="p-1.5 rounded-lg text-sky-200 hover:text-white hover:bg-azul-primario transition cursor-pointer"
               title="Reiniciar conversación"
             >
-              <RefreshCw className="w-4 h-4" />
+              <GoogleIcon name="refresh" size={20} />
             </button>
             <button
               type="button"
@@ -237,7 +211,7 @@ export const AdminAiChatModal = ({
               className="p-1.5 rounded-lg text-sky-200 hover:text-white hover:bg-rose-600 transition ml-1 cursor-pointer"
               title="Cerrar copiloto"
             >
-              <X className="w-5 h-5" />
+              <GoogleIcon name="close" size={22} />
             </button>
           </div>
         </div>
@@ -254,61 +228,68 @@ export const AdminAiChatModal = ({
               Período: {periodLabel}
             </span>
           </div>
-          <span className="hidden sm:inline text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+          <span className="hidden sm:inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+            <GoogleIcon name="check_circle" size={13} filled className="text-emerald-600" />
             Sincronizado en Vivo
           </span>
         </div>
 
-        {/* Atajos Rápidos de Gestión */}
+        {/* Atajos Rápidos de Gestión con Iconos de Google Fonts (Sin emojis) */}
         <div className="px-4 py-2 bg-white border-b border-gray-200 flex items-center gap-1.5 overflow-x-auto text-[11px] scrollbar-hide">
           <span className="text-gray-400 font-bold uppercase tracking-wider text-[10px] mr-1 flex items-center gap-1">
-            <Zap className="w-3 h-3 text-amber-500" /> Atajos:
+            <GoogleIcon name="bolt" size={14} className="text-amber-500" filled /> Atajos:
           </span>
           <button
             type="button"
             onClick={() => handleSend('Resumen operativo general')}
-            className="px-2.5 py-1 rounded-lg bg-gray-50 hover:bg-sky-50 text-gray-700 hover:text-azul-oscuro border border-gray-200 hover:border-sky-300 font-medium transition whitespace-nowrap cursor-pointer"
+            className="px-2.5 py-1 rounded-lg bg-gray-50 hover:bg-sky-50 text-gray-700 hover:text-azul-oscuro border border-gray-200 hover:border-sky-300 font-medium transition whitespace-nowrap cursor-pointer inline-flex items-center gap-1"
           >
-            📊 Resumen Ejecutivo
+            <GoogleIcon name="bar_chart" size={15} className="text-azul-primario" />
+            <span>Resumen Ejecutivo</span>
           </button>
           <button
             type="button"
             onClick={() => handleSend('¿Cuáles envíos presentan incidencias o demoras?')}
-            className="px-2.5 py-1 rounded-lg bg-rose-50/80 hover:bg-rose-100 text-rose-700 border border-rose-200 font-medium transition whitespace-nowrap cursor-pointer"
+            className="px-2.5 py-1 rounded-lg bg-rose-50/80 hover:bg-rose-100 text-rose-700 border border-rose-200 font-medium transition whitespace-nowrap cursor-pointer inline-flex items-center gap-1"
           >
-            ⚠️ Incidencias
+            <GoogleIcon name="warning" size={15} className="text-rose-600" filled />
+            <span>Incidencias</span>
           </button>
           <button
             type="button"
             onClick={() => handleSend('Rendimiento de la Sede Alajuela')}
-            className="px-2.5 py-1 rounded-lg bg-sky-50 hover:bg-sky-100 text-azul-primario border border-sky-200 font-medium transition whitespace-nowrap cursor-pointer"
+            className="px-2.5 py-1 rounded-lg bg-sky-50 hover:bg-sky-100 text-azul-primario border border-sky-200 font-medium transition whitespace-nowrap cursor-pointer inline-flex items-center gap-1"
           >
-            🏢 Sede Alajuela
+            <GoogleIcon name="domain" size={15} className="text-azul-primario" />
+            <span>Sede Alajuela</span>
           </button>
           <button
             type="button"
             onClick={() => handleSend('Auditoría de usuarios y personal')}
-            className="px-2.5 py-1 rounded-lg bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-200 font-medium transition whitespace-nowrap cursor-pointer"
+            className="px-2.5 py-1 rounded-lg bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-200 font-medium transition whitespace-nowrap cursor-pointer inline-flex items-center gap-1"
           >
-            👥 Usuarios
+            <GoogleIcon name="group" size={15} className="text-purple-600" />
+            <span>Usuarios</span>
           </button>
           <button
             type="button"
             onClick={() => handleSend('Estado de reclamos y tickets PQRS')}
-            className="px-2.5 py-1 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 font-medium transition whitespace-nowrap cursor-pointer"
+            className="px-2.5 py-1 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 font-medium transition whitespace-nowrap cursor-pointer inline-flex items-center gap-1"
           >
-            📋 PQRS
+            <GoogleIcon name="assignment" size={15} className="text-amber-600" />
+            <span>PQRS</span>
           </button>
           <button
             type="button"
             onClick={() => handleSend('Recomendaciones de optimización IA')}
-            className="px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 font-medium transition whitespace-nowrap cursor-pointer"
+            className="px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 font-medium transition whitespace-nowrap cursor-pointer inline-flex items-center gap-1"
           >
-            🧠 Optimización IA
+            <GoogleIcon name="psychology" size={15} className="text-emerald-700" />
+            <span>Optimización IA</span>
           </button>
         </div>
 
-        {/* Flujo de Conversación (Fondo Gris Claro Oficial) */}
+        {/* Flujo de Conversación (Fondo Gris Claro Oficial con Iconos y Tipografía Google) */}
         <div className="flex-1 p-4 sm:p-5 overflow-y-auto space-y-4 bg-gris-claro text-xs sm:text-sm">
           {messages.map((msg) => {
             const isBot = msg.sender === 'bot';
@@ -320,7 +301,7 @@ export const AdminAiChatModal = ({
               >
                 {isBot && (
                   <div className="w-8 h-8 rounded-xl bg-azul-primario text-white flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
-                    <Bot className="w-4 h-4" />
+                    <GoogleIcon name="smart_toy" size={18} className="text-white" />
                   </div>
                 )}
 
@@ -331,17 +312,17 @@ export const AdminAiChatModal = ({
                       : 'bg-azul-primario text-white rounded-tr-none shadow-sm'
                   }`}
                 >
-                  {/* Badge de fuente si aplica */}
+                  {/* Badge de telemetría / origen con Google Icon */}
                   {isBot && msg.dataBadge && (
                     <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-sky-50 text-azul-primario border border-sky-200 text-[10px] font-bold uppercase tracking-wider mb-1">
-                      <Cpu className="w-3 h-3 text-azul-primario" />
+                      <GoogleIcon name="memory" size={13} className="text-azul-primario" />
                       <span>{msg.dataBadge}</span>
                     </div>
                   )}
 
-                  {/* Cuerpo del mensaje formateado en negritas limpias */}
+                  {/* Cuerpo del mensaje procesado con Google Fonts (Emojis e Iconografía Vectorial) */}
                   <div className="space-y-1">
-                    {renderFormattedText(msg.text)}
+                    {formatAiTextWithGoogleFonts(msg.text, { isUser: !isBot })}
                   </div>
 
                   {/* Mini-Stat Cards en tonos claros institucionales */}
@@ -365,7 +346,7 @@ export const AdminAiChatModal = ({
                         className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-azul-primario hover:bg-azul-oscuro text-white font-semibold text-xs transition shadow-xs group"
                       >
                         <span>{msg.actionText || 'Ver en el panel'}</span>
-                        <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+                        <GoogleIcon name="arrow_forward" size={15} className="group-hover:translate-x-0.5 transition-transform" />
                       </Link>
                     </div>
                   )}
@@ -378,9 +359,10 @@ export const AdminAiChatModal = ({
                           key={idx}
                           type="button"
                           onClick={() => handleSend(sug)}
-                          className="text-[11px] px-2.5 py-1 rounded-full bg-gray-50 hover:bg-sky-50 text-gray-700 hover:text-azul-primario border border-gray-200 hover:border-sky-300 font-medium transition cursor-pointer"
+                          className="text-[11px] px-2.5 py-1 rounded-full bg-gray-50 hover:bg-sky-50 text-gray-700 hover:text-azul-primario border border-gray-200 hover:border-sky-300 font-medium transition cursor-pointer inline-flex items-center gap-1 group"
                         >
-                          {sug}
+                          <GoogleIcon name="search" size={12} className="text-gray-400 group-hover:text-azul-primario transition-colors" />
+                          <span>{sug}</span>
                         </button>
                       ))}
                     </div>
@@ -393,7 +375,7 @@ export const AdminAiChatModal = ({
 
                 {!isBot && (
                   <div className="w-8 h-8 rounded-xl bg-azul-oscuro text-white flex items-center justify-center shrink-0 mb-0.5 shadow-2xs">
-                    <User className="w-4 h-4" />
+                    <GoogleIcon name="person" size={18} className="text-white" />
                   </div>
                 )}
               </div>
@@ -403,7 +385,7 @@ export const AdminAiChatModal = ({
           {isTyping && (
             <div className="flex gap-3 items-start animate-pulse">
               <div className="w-8 h-8 rounded-xl bg-azul-primario text-white flex items-center justify-center shrink-0">
-                <Bot className="w-4 h-4" />
+                <GoogleIcon name="smart_toy" size={18} className="text-white" />
               </div>
               <div className="p-3.5 rounded-2xl bg-white border border-gray-200 text-gray-500 text-xs flex items-center gap-2 shadow-2xs">
                 <div className="w-2 h-2 rounded-full bg-azul-primario animate-bounce" />
@@ -417,7 +399,7 @@ export const AdminAiChatModal = ({
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Barra de Entrada (Blanco con Borde Institucional) */}
+        {/* Barra de Entrada (Blanco con Borde Institucional y Botón Google Fonts) */}
         <div className="p-3 sm:p-4 bg-white border-t border-gray-200">
           <form
             onSubmit={(e) => {
@@ -438,7 +420,7 @@ export const AdminAiChatModal = ({
               disabled={!inputValue.trim() || isTyping}
               className="px-4 py-2.5 bg-azul-primario hover:bg-azul-oscuro disabled:opacity-40 text-white font-bold rounded-xl transition flex items-center gap-1.5 shadow-sm cursor-pointer"
             >
-              <Send className="w-4 h-4" />
+              <GoogleIcon name="send" size={16} className="text-white" />
               <span className="hidden sm:inline text-xs">Enviar</span>
             </button>
           </form>

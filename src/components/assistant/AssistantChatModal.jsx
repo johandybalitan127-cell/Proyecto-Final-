@@ -1,12 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import {
-  Bot, Send, X, RefreshCw, Volume2, Download, User, CheckCircle2,
-  HelpCircle, Headphones, Lock, Calendar, Calculator, Sparkles, ExternalLink
-} from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import { aiAssistantService } from '../../services/aiAssistantService';
 import { n8nService } from '../../services/n8nService';
 import { TrackingCardBubble } from './TrackingCardBubble';
+import { GoogleIcon } from '../common/GoogleIcon';
+import { formatAiTextWithGoogleFonts } from '../common/aiTextFormatter';
 
 export const AssistantChatModal = ({ onClose, isFloating = false }) => {
   const { user } = useAuth();
@@ -103,7 +101,8 @@ export const AssistantChatModal = ({ onClose, isFloating = false }) => {
       const lastBotMsg = [...messages].reverse().find((m) => m.sender === 'bot');
       if (lastBotMsg) {
         window.speechSynthesis.cancel();
-        const utterance = new SpeechSynthesisUtterance(lastBotMsg.text);
+        const cleanText = lastBotMsg.text.replace(/[*#_`•]/g, '');
+        const utterance = new SpeechSynthesisUtterance(cleanText);
         utterance.lang = 'es-CR';
         window.speechSynthesis.speak(utterance);
       }
@@ -112,33 +111,36 @@ export const AssistantChatModal = ({ onClose, isFloating = false }) => {
 
   const handleDownload = () => {
     const textLog = messages
-      .map((m) => `[${m.time}] ${m.sender === 'bot' ? 'Asistente IA' : 'Usuario'}: ${m.text}`)
-      .join('\n\n');
+      .map((m) => `[${m.time}] ${m.sender === 'bot' ? 'Asistente Postal IA' : 'Usuario'}:\n${m.text}`)
+      .join('\n\n----------------------------------------\n\n');
     const blob = new Blob([textLog], { type: 'text/plain;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `chat-correos-cr-${new Date().toISOString().slice(0, 10)}.txt`;
+    a.download = `conversacion-asistente-${new Date().toISOString().slice(0, 10)}.txt`;
     a.click();
     URL.revokeObjectURL(url);
   };
 
   const content = (
     <div
-      className={`bg-white flex flex-col md:flex-row overflow-hidden shadow-2xl border border-gray-200 ${
+      className={`bg-white rounded-2xl shadow-2xl flex flex-col md:flex-row overflow-hidden border border-gray-200 transition-all ${
         isFloating
-          ? 'w-[94vw] max-w-4xl h-[85vh] max-h-[720px] rounded-2xl fixed bottom-24 right-4 sm:right-6 z-50'
-          : 'w-full rounded-2xl min-h-[720px]'
+          ? 'w-full max-w-4xl h-[92vh] sm:h-[650px]'
+          : 'w-full max-w-5xl h-[700px]'
       }`}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Ventana de Asistente Postal Inteligente"
     >
-      {/* Columna Principal del Chat */}
+      {/* Columna Principal: Chat Interactivo */}
       <div className="flex-1 flex flex-col h-full bg-gris-claro border-r border-gray-200">
         
-        {/* Cabecera del Chat */}
+        {/* Cabecera del Chat con Iconos de Google Fonts */}
         <div className="bg-azul-oscuro text-white px-5 py-3.5 flex items-center justify-between shadow-sm">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-azul-primario flex items-center justify-center text-white border border-sky-400/30">
-              <Bot className="w-6 h-6" />
+              <GoogleIcon name="smart_toy" size={24} className="text-white" />
             </div>
             <div>
               <div className="flex items-center gap-2">
@@ -156,32 +158,32 @@ export const AssistantChatModal = ({ onClose, isFloating = false }) => {
           <div className="flex items-center gap-1">
             <button
               onClick={handleAudio}
-              className="p-1.5 rounded-lg text-sky-200 hover:text-white hover:bg-azul-primario transition"
+              className="p-1.5 rounded-lg text-sky-200 hover:text-white hover:bg-azul-primario transition cursor-pointer"
               title="Escuchar última respuesta en voz alta"
             >
-              <Volume2 className="w-4 h-4" />
+              <GoogleIcon name="volume_up" size={18} />
             </button>
             <button
               onClick={handleDownload}
-              className="p-1.5 rounded-lg text-sky-200 hover:text-white hover:bg-azul-primario transition"
+              className="p-1.5 rounded-lg text-sky-200 hover:text-white hover:bg-azul-primario transition cursor-pointer"
               title="Descargar historial de conversación"
             >
-              <Download className="w-4 h-4" />
+              <GoogleIcon name="download" size={18} />
             </button>
             <button
               onClick={handleReset}
-              className="p-1.5 rounded-lg text-sky-200 hover:text-white hover:bg-azul-primario transition"
+              className="p-1.5 rounded-lg text-sky-200 hover:text-white hover:bg-azul-primario transition cursor-pointer"
               title="Reiniciar conversación"
             >
-              <RefreshCw className="w-4 h-4" />
+              <GoogleIcon name="refresh" size={18} />
             </button>
             {onClose && (
               <button
                 onClick={onClose}
-                className="p-1.5 rounded-lg text-sky-200 hover:text-white hover:bg-red-500 transition ml-1"
+                className="p-1.5 rounded-lg text-sky-200 hover:text-white hover:bg-rose-600 transition ml-1 cursor-pointer"
                 title="Cerrar ventana"
               >
-                <X className="w-5 h-5" />
+                <GoogleIcon name="close" size={22} />
               </button>
             )}
           </div>
@@ -196,12 +198,13 @@ export const AssistantChatModal = ({ onClose, isFloating = false }) => {
               localhost:5678/webhook/pqrs-ciudadana
             </span>
           </div>
-          <span className="hidden sm:inline text-[11px] text-gray-500 font-medium">
+          <span className="hidden sm:inline-flex items-center gap-1 text-[11px] text-gray-500 font-medium">
+            <GoogleIcon name="check_circle" size={13} filled className="text-emerald-600" />
             Conectado en Vivo
           </span>
         </div>
 
-        {/* Cuerpo de Mensajes */}
+        {/* Cuerpo de Mensajes con Iconos y Formateador Google Fonts */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4">
           {messages.map((msg) => (
             <div
@@ -209,13 +212,17 @@ export const AssistantChatModal = ({ onClose, isFloating = false }) => {
               className={`flex items-start gap-3 ${msg.sender === 'user' ? 'flex-row-reverse' : ''}`}
             >
               <div
-                className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold ${
+                className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 text-xs font-bold ${
                   msg.sender === 'user'
                     ? 'bg-azul-oscuro text-white'
                     : 'bg-azul-primario text-white'
                 }`}
               >
-                {msg.sender === 'user' ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
+                {msg.sender === 'user' ? (
+                  <GoogleIcon name="person" size={16} className="text-white" />
+                ) : (
+                  <GoogleIcon name="smart_toy" size={16} className="text-white" />
+                )}
               </div>
 
               <div className={`max-w-[85%] space-y-2 ${msg.sender === 'user' ? 'text-right' : 'text-left'}`}>
@@ -226,14 +233,16 @@ export const AssistantChatModal = ({ onClose, isFloating = false }) => {
                       : 'bg-white text-gris-oscuro rounded-tl-none border border-gray-200'
                   }`}
                 >
-                  <p className="whitespace-pre-line">{msg.text}</p>
+                  <div className="space-y-1">
+                    {formatAiTextWithGoogleFonts(msg.text, { isUser: msg.sender === 'user' })}
+                  </div>
 
                   {/* Metadatos N8N si provienen de webhook */}
                   {msg.isN8n && msg.n8nMeta && (
                     <div className="mt-2.5 pt-2 border-t border-sky-200/50 text-[10px] space-y-1">
                       <div className="flex flex-wrap items-center gap-1.5 font-semibold text-azul-oscuro">
                         <span className="bg-sky-100 text-azul-primario px-2 py-0.5 rounded-full font-bold flex items-center gap-1">
-                          <span>🤖</span>
+                          <GoogleIcon name="smart_toy" size={13} className="text-azul-primario" />
                           <span>AI Agent N8N</span>
                         </span>
                         {msg.n8nMeta.departamento && (
@@ -261,10 +270,10 @@ export const AssistantChatModal = ({ onClose, isFloating = false }) => {
                   {msg.actionLink && (
                     <a
                       href={msg.actionLink}
-                      className="mt-2.5 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-sky-50 text-azul-primario font-semibold text-xs border border-sky-200 hover:bg-sky-100 transition"
+                      className="mt-2.5 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-sky-50 text-azul-primario font-semibold text-xs border border-sky-200 hover:bg-sky-100 transition group"
                     >
                       <span>{msg.actionText || 'Ver trámite'}</span>
-                      <span>→</span>
+                      <GoogleIcon name="arrow_forward" size={14} className="group-hover:translate-x-0.5 transition-transform" />
                     </a>
                   )}
                 </div>
@@ -276,9 +285,10 @@ export const AssistantChatModal = ({ onClose, isFloating = false }) => {
                       <button
                         key={idx}
                         onClick={() => handleSend(sug)}
-                        className="text-[11px] font-medium px-2.5 py-1 bg-white text-azul-primario rounded-full border border-sky-200 hover:bg-sky-50 hover:border-azul-primario transition shadow-2xs"
+                        className="text-[11px] font-medium px-2.5 py-1 bg-white text-azul-primario rounded-full border border-sky-200 hover:bg-sky-50 hover:border-azul-primario transition shadow-2xs cursor-pointer inline-flex items-center gap-1"
                       >
-                        {sug}
+                        <GoogleIcon name="search" size={12} className="text-azul-primario" />
+                        <span>{sug}</span>
                       </button>
                     ))}
                   </div>
@@ -294,7 +304,7 @@ export const AssistantChatModal = ({ onClose, isFloating = false }) => {
           {isTyping && (
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-full bg-azul-primario text-white flex items-center justify-center">
-                <Bot className="w-4 h-4" />
+                <GoogleIcon name="smart_toy" size={16} className="text-white" />
               </div>
               <div className="bg-white border border-gray-200 px-4 py-3 rounded-2xl rounded-tl-none flex items-center gap-1.5 shadow-sm">
                 <span className="w-2 h-2 rounded-full bg-azul-primario animate-bounce"></span>
@@ -307,27 +317,27 @@ export const AssistantChatModal = ({ onClose, isFloating = false }) => {
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Botones de Acción Rápida */}
+        {/* Botones de Acción Rápida con Iconos Google Fonts */}
         <div className="px-4 py-2 bg-white border-t border-gray-100 flex flex-wrap items-center gap-2">
           <button
             onClick={() => handleSend('¿Cómo abro un reclamo formal?')}
-            className="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 transition flex items-center gap-1"
+            className="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 transition flex items-center gap-1 cursor-pointer"
           >
-            <HelpCircle className="w-3.5 h-3.5 text-azul-primario" />
+            <GoogleIcon name="help" size={15} className="text-azul-primario" />
             <span>Ayuda y Reclamos</span>
           </button>
           <button
             onClick={() => handleSend('Quiero hablar con un asesor')}
-            className="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-sky-50 text-azul-primario hover:bg-sky-100 transition flex items-center gap-1"
+            className="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-sky-50 text-azul-primario hover:bg-sky-100 transition flex items-center gap-1 cursor-pointer"
           >
-            <Headphones className="w-3.5 h-3.5 text-azul-primario" />
+            <GoogleIcon name="support_agent" size={15} className="text-azul-primario" />
             <span>Hablar con un asesor</span>
           </button>
           <button
             onClick={() => handleSend('¿Cuáles son los horarios de las sucursales?')}
-            className="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-800 hover:bg-emerald-100 transition flex items-center gap-1"
+            className="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-800 hover:bg-emerald-100 transition flex items-center gap-1 cursor-pointer"
           >
-            <Lock className="w-3.5 h-3.5 text-emerald-600" />
+            <GoogleIcon name="schedule" size={15} className="text-emerald-600" />
             <span>Horarios de Sucursales</span>
           </button>
         </div>
@@ -350,19 +360,19 @@ export const AssistantChatModal = ({ onClose, isFloating = false }) => {
           <button
             type="submit"
             disabled={!inputValue.trim() || isTyping}
-            className="btn-primario py-2.5 px-4 rounded-xl text-xs sm:text-sm disabled:opacity-40"
+            className="btn-primario py-2.5 px-4 rounded-xl text-xs sm:text-sm disabled:opacity-40 flex items-center gap-1.5 cursor-pointer"
           >
             <span>Enviar</span>
-            <Send className="w-4 h-4" />
+            <GoogleIcon name="send" size={16} />
           </button>
         </form>
       </div>
 
-      {/* Columna Derecha: Capacidades y Autoservicio Dinámico */}
+      {/* Columna Derecha: Capacidades y Autoservicio Dinámico con Google Fonts */}
       <div className="hidden lg:flex w-80 bg-white flex-col p-5 space-y-6 overflow-y-auto">
         <div className="space-y-3">
           <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-azul-primario" />
+            <GoogleIcon name="auto_awesome" size={18} className="text-azul-primario" />
             <h3 className="text-xs font-bold uppercase tracking-wider text-azul-oscuro">
               Capacidades Inteligentes
             </h3>
@@ -377,7 +387,7 @@ export const AssistantChatModal = ({ onClose, isFloating = false }) => {
               onClick={() => handleSend('Rastrear CR098421734CR')}
               className="w-full text-left p-2.5 rounded-xl bg-gray-50 hover:bg-emerald-50/70 border border-gray-200 hover:border-emerald-300 flex items-start gap-2.5 transition cursor-pointer"
             >
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" />
+              <GoogleIcon name="verified" size={18} className="text-emerald-600 shrink-0 mt-0.5" filled />
               <div>
                 <p className="font-semibold text-gris-oscuro">Rastreo de Envíos en Vivo</p>
                 <p className="text-[11px] text-gray-500">Consulta en tiempo real con números de guía CR</p>
@@ -389,7 +399,7 @@ export const AssistantChatModal = ({ onClose, isFloating = false }) => {
               onClick={() => handleSend('¿Cuáles son los horarios de las sucursales?')}
               className="w-full text-left p-2.5 rounded-xl bg-gray-50 hover:bg-sky-50/70 border border-gray-200 hover:border-sky-300 flex items-start gap-2.5 transition cursor-pointer"
             >
-              <Calendar className="w-4 h-4 text-azul-primario flex-shrink-0 mt-0.5" />
+              <GoogleIcon name="calendar_month" size={18} className="text-azul-primario shrink-0 mt-0.5" />
               <div>
                 <p className="font-semibold text-gris-oscuro">Red de Sucursales y Citas</p>
                 <p className="text-[11px] text-gray-500">Horarios, teléfonos y trámites VES oficiales</p>
@@ -401,7 +411,7 @@ export const AssistantChatModal = ({ onClose, isFloating = false }) => {
               onClick={() => handleSend('¿Cuánto cuesta un envío de 1 kilo?')}
               className="w-full text-left p-2.5 rounded-xl bg-gray-50 hover:bg-amber-50/70 border border-gray-200 hover:border-amber-300 flex items-start gap-2.5 transition cursor-pointer"
             >
-              <Calculator className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
+              <GoogleIcon name="calculate" size={18} className="text-amber-600 shrink-0 mt-0.5" />
               <div>
                 <p className="font-semibold text-gris-oscuro">Cotizador Dinámico</p>
                 <p className="text-[11px] text-gray-500">Cálculo de tarifas EMS y Pymexpress</p>
@@ -418,9 +428,9 @@ export const AssistantChatModal = ({ onClose, isFloating = false }) => {
           </p>
           <button
             onClick={() => handleSend('Quiero hablar con un asesor')}
-            className="w-full btn-neutro text-xs py-2 justify-center"
+            className="w-full btn-neutro text-xs py-2 justify-center flex items-center gap-1.5 cursor-pointer"
           >
-            <Headphones className="w-3.5 h-3.5" />
+            <GoogleIcon name="support_agent" size={16} className="text-azul-oscuro" />
             <span>Solicitar Contacto Humano</span>
           </button>
         </div>
@@ -433,24 +443,24 @@ export const AssistantChatModal = ({ onClose, isFloating = false }) => {
           <div className="space-y-1.5 text-xs">
             <button
               onClick={() => handleSend('¿Cuáles son los horarios de las sucursales?')}
-              className="w-full text-left p-2 rounded-lg hover:bg-gray-100 text-gray-700 font-medium flex items-center justify-between"
+              className="w-full text-left p-2 rounded-lg hover:bg-gray-100 text-gray-700 font-medium flex items-center justify-between cursor-pointer group"
             >
               <span>Horarios de Sucursales</span>
-              <span className="text-gray-400">→</span>
+              <GoogleIcon name="arrow_forward" size={14} className="text-gray-400 group-hover:translate-x-0.5 transition-transform" />
             </button>
             <button
               onClick={() => handleSend('¿Cuánto cuesta un envío de 1 kilo?')}
-              className="w-full text-left p-2 rounded-lg hover:bg-gray-100 text-gray-700 font-medium flex items-center justify-between"
+              className="w-full text-left p-2 rounded-lg hover:bg-gray-100 text-gray-700 font-medium flex items-center justify-between cursor-pointer group"
             >
               <span>Cotizar Paquete 1 Kg</span>
-              <span className="text-gray-400">→</span>
+              <GoogleIcon name="arrow_forward" size={14} className="text-gray-400 group-hover:translate-x-0.5 transition-transform" />
             </button>
             <button
               onClick={() => handleSend('¿Cómo agendar una cita para pasaporte VES?')}
-              className="w-full text-left p-2 rounded-lg hover:bg-gray-100 text-gray-700 font-medium flex items-center justify-between"
+              className="w-full text-left p-2 rounded-lg hover:bg-gray-100 text-gray-700 font-medium flex items-center justify-between cursor-pointer group"
             >
               <span>Citas de Pasaporte VES</span>
-              <span className="text-gray-400">→</span>
+              <GoogleIcon name="arrow_forward" size={14} className="text-gray-400 group-hover:translate-x-0.5 transition-transform" />
             </button>
           </div>
         </div>
