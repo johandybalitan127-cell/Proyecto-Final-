@@ -53,16 +53,16 @@ export const AdminLayout = () => {
       <button
         type="button"
         onClick={() => openCopilot('')}
-        className="fixed bottom-6 right-6 z-40 flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-bold shadow-2xl border border-sky-400/50 hover:border-sky-400 transition-all duration-300 hover:scale-105 group cursor-pointer"
+        className="fixed bottom-6 right-6 z-40 flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-azul-oscuro hover:bg-azul-primario text-white font-bold shadow-2xl border border-sky-400/40 hover:border-sky-300 transition-all duration-300 hover:scale-105 group cursor-pointer"
         title="Abrir Copiloto IA de Administración"
       >
         <div className="relative">
-          <div className="w-2 h-2 rounded-full bg-emerald-400 absolute -top-0.5 -right-0.5 animate-ping" />
-          <div className="w-2 h-2 rounded-full bg-emerald-400 absolute -top-0.5 -right-0.5" />
-          <Bot className="w-5 h-5 text-sky-400 group-hover:rotate-12 transition-transform" />
+          <div className="w-2 h-2 rounded-full bg-verde-principal absolute -top-0.5 -right-0.5 animate-ping" />
+          <div className="w-2 h-2 rounded-full bg-verde-principal absolute -top-0.5 -right-0.5" />
+          <Bot className="w-5 h-5 text-sky-200 group-hover:rotate-12 transition-transform" />
         </div>
         <span className="text-xs font-semibold tracking-wide">Copiloto IA Admin</span>
-        <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+        <Sparkles className="w-3.5 h-3.5 text-amber-300" />
       </button>
 
       {/* Modal / Drawer del Copiloto IA de Administración */}

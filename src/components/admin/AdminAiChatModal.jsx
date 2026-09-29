@@ -1,11 +1,35 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
   Bot, Send, X, RefreshCw, Volume2, Download, User, CheckCircle2, 
-  Sparkles, ExternalLink, ArrowRight, Activity, Cpu, ShieldAlert,
-  BarChart3, Package, Users, MapPin, Clock, MessageSquare, Tag, Zap, ChevronRight
+  Sparkles, ArrowRight, Activity, Cpu, ShieldCheck,
+  Package, Users, MapPin, MessageSquare, Zap
 } from 'lucide-react';
 import { adminAiService } from '../../services/adminAiService';
 import { Link } from 'react-router-dom';
+
+/**
+ * Renderiza texto enriquecido con formato institucional
+ * Convierte **negrita** en etiquetas <strong> con el color azul corporativo
+ */
+const renderFormattedText = (content = '') => {
+  return content.split('\n').map((line, idx) => {
+    const parts = line.split(/(\*\*.*?\*\*)/g);
+    return (
+      <span key={idx} className="block leading-relaxed">
+        {parts.map((part, pIdx) => {
+          if (part.startsWith('**') && part.endsWith('**')) {
+            return (
+              <strong key={pIdx} className="font-bold text-azul-oscuro">
+                {part.slice(2, -2)}
+              </strong>
+            );
+          }
+          return part;
+        })}
+      </span>
+    );
+  });
+};
 
 export const AdminAiChatModal = ({ 
   isOpen = false, 
@@ -14,11 +38,13 @@ export const AdminAiChatModal = ({
   currentPeriod = '30d',
   initialQuery = ''
 }) => {
+  const periodLabel = typeof currentPeriod === 'object' ? currentPeriod.label : currentPeriod;
+
   const [messages, setMessages] = useState([
     {
       id: 1,
       sender: 'bot',
-      text: `👋 **¡Bienvenido al Copiloto Ejecutivo Postal IA (SIP-CR)!**\n\nEstoy conectado en tiempo real a la telemetría operativa de **${currentBranch}** (${typeof currentPeriod === 'object' ? currentPeriod.label : currentPeriod}). Puedo asistirte en la toma de decisiones, análisis de rendimiento, detección de incidencias o gestión de personal y reclamos.`,
+      text: `👋 **¡Bienvenido al Copiloto Ejecutivo Postal IA (SIP-CR)!**\n\nEstoy conectado en tiempo real a la telemetría operativa de **${currentBranch}** (${periodLabel}). Puedo asistirte en la toma de decisiones, análisis de rendimiento, detección de incidencias o gestión de personal y reclamos.`,
       time: 'Ahora',
       metrics: [
         { label: 'Sedes Conectadas', value: '110' },
@@ -47,7 +73,6 @@ export const AdminAiChatModal = ({
     }
   }, [messages, isTyping, isOpen]);
 
-  // Si se abre con una consulta inicial predeterminada
   useEffect(() => {
     if (isOpen && initialQuery) {
       handleSend(initialQuery);
@@ -97,7 +122,7 @@ export const AdminAiChatModal = ({
         {
           id: Date.now() + 1,
           sender: 'bot',
-          text: 'Disculpa, ocurrió un error temporal al consultar los registros del servidor. Por favor intenta de nuevo.',
+          text: 'Disculpa, ocurrió un error temporal al consultar los registros del servidor. Por favor intenta de nuevo en unos instantes.',
           time: new Date().toLocaleTimeString('es-CR', { hour: '2-digit', minute: '2-digit' })
         }
       ]);
@@ -128,7 +153,6 @@ export const AdminAiChatModal = ({
       const lastBotMsg = [...messages].reverse().find((m) => m.sender === 'bot');
       if (lastBotMsg) {
         window.speechSynthesis.cancel();
-        // Quitar caracteres markdown para audio limpio
         const cleanText = lastBotMsg.text.replace(/[*#_`•]/g, '');
         const utterance = new SpeechSynthesisUtterance(cleanText);
         utterance.lang = 'es-CR';
@@ -153,31 +177,31 @@ export const AdminAiChatModal = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-slate-950/70 backdrop-blur-xs animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/40 backdrop-blur-xs animate-in fade-in duration-200">
       <div 
-        className="w-full max-w-4xl h-[90vh] max-h-[800px] bg-slate-900 border border-slate-700/80 rounded-2xl shadow-2xl flex flex-col overflow-hidden text-slate-100"
+        className="w-full max-w-4xl h-[90vh] max-h-[780px] bg-white border border-gray-200 rounded-2xl shadow-2xl flex flex-col overflow-hidden text-gris-oscuro"
         role="dialog"
         aria-modal="true"
         aria-labelledby="admin-ai-modal-title"
       >
-        {/* Header Ejecutivo */}
-        <div className="px-5 py-3.5 bg-slate-950 border-b border-slate-800 flex items-center justify-between">
+        {/* Cabecera Oficial Institucional (Azul Oscuro de Correos) */}
+        <div className="bg-azul-oscuro text-white px-5 py-3.5 flex items-center justify-between shadow-sm">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-600 to-indigo-600 flex items-center justify-center text-white shadow-md border border-sky-400/30">
+            <div className="w-10 h-10 rounded-xl bg-azul-primario flex items-center justify-center text-white border border-sky-400/30 shadow-xs">
               <Bot className="w-5 h-5" />
             </div>
             <div>
               <div className="flex items-center gap-2">
                 <h3 id="admin-ai-modal-title" className="text-sm sm:text-base font-bold text-white flex items-center gap-1.5">
                   <span>Copiloto Ejecutivo Postal IA</span>
-                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-semibold tracking-wider uppercase">
-                    SIP-CR Pro
+                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-verde-principal text-white uppercase tracking-wider">
+                    SIP-CR PRO
                   </span>
                 </h3>
               </div>
-              <p className="text-[11px] text-slate-400 flex items-center gap-1.5">
-                <Activity className="w-3 h-3 text-sky-400 animate-pulse" />
-                <span>Telemetría en tiempo real: <span className="text-slate-200 font-semibold">{currentBranch}</span></span>
+              <p className="text-[11px] text-sky-200 flex items-center gap-1.5">
+                <Activity className="w-3 h-3 text-sky-300 animate-pulse" />
+                <span>Telemetría en tiempo real: <strong className="text-white">{currentBranch}</strong></span>
               </p>
             </div>
           </div>
@@ -186,15 +210,15 @@ export const AdminAiChatModal = ({
             <button
               type="button"
               onClick={handleAudio}
-              className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition"
-              title="Escuchar última respuesta"
+              className="p-1.5 rounded-lg text-sky-200 hover:text-white hover:bg-azul-primario transition cursor-pointer"
+              title="Escuchar última respuesta en voz alta"
             >
               <Volume2 className="w-4 h-4" />
             </button>
             <button
               type="button"
               onClick={handleDownload}
-              className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition"
+              className="p-1.5 rounded-lg text-sky-200 hover:text-white hover:bg-azul-primario transition cursor-pointer"
               title="Descargar registro de auditoría"
             >
               <Download className="w-4 h-4" />
@@ -202,7 +226,7 @@ export const AdminAiChatModal = ({
             <button
               type="button"
               onClick={handleReset}
-              className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition"
+              className="p-1.5 rounded-lg text-sky-200 hover:text-white hover:bg-azul-primario transition cursor-pointer"
               title="Reiniciar conversación"
             >
               <RefreshCw className="w-4 h-4" />
@@ -210,7 +234,7 @@ export const AdminAiChatModal = ({
             <button
               type="button"
               onClick={onClose}
-              className="p-2 text-slate-400 hover:text-rose-400 hover:bg-slate-800 rounded-lg transition ml-1"
+              className="p-1.5 rounded-lg text-sky-200 hover:text-white hover:bg-rose-600 transition ml-1 cursor-pointer"
               title="Cerrar copiloto"
             >
               <X className="w-5 h-5" />
@@ -218,57 +242,74 @@ export const AdminAiChatModal = ({
           </div>
         </div>
 
-        {/* Quick Topics Bar */}
-        <div className="px-4 py-2 bg-slate-950/60 border-b border-slate-800/80 flex items-center gap-1.5 overflow-x-auto text-[11px] scrollbar-hide">
-          <span className="text-slate-500 font-semibold uppercase tracking-wider text-[10px] mr-1 flex items-center gap-1">
-            <Zap className="w-3 h-3 text-amber-400" /> Atajos:
+        {/* Ticker de Estado y Contexto de la Sede */}
+        <div className="bg-sky-50/80 px-4 py-2 border-b border-sky-100 flex items-center justify-between text-xs text-azul-oscuro">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="font-bold">Base de Datos Conectada:</span>
+            <span className="font-semibold text-[11px] text-azul-primario bg-white px-2.5 py-0.5 rounded-full border border-sky-200 shadow-2xs">
+              {currentBranch}
+            </span>
+            <span className="text-[11px] text-gray-500 bg-white px-2 py-0.5 rounded-full border border-gray-200">
+              Período: {periodLabel}
+            </span>
+          </div>
+          <span className="hidden sm:inline text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+            Sincronizado en Vivo
+          </span>
+        </div>
+
+        {/* Atajos Rápidos de Gestión */}
+        <div className="px-4 py-2 bg-white border-b border-gray-200 flex items-center gap-1.5 overflow-x-auto text-[11px] scrollbar-hide">
+          <span className="text-gray-400 font-bold uppercase tracking-wider text-[10px] mr-1 flex items-center gap-1">
+            <Zap className="w-3 h-3 text-amber-500" /> Atajos:
           </span>
           <button
             type="button"
             onClick={() => handleSend('Resumen operativo general')}
-            className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition whitespace-nowrap cursor-pointer border border-slate-700/50"
+            className="px-2.5 py-1 rounded-lg bg-gray-50 hover:bg-sky-50 text-gray-700 hover:text-azul-oscuro border border-gray-200 hover:border-sky-300 font-medium transition whitespace-nowrap cursor-pointer"
           >
             📊 Resumen Ejecutivo
           </button>
           <button
             type="button"
             onClick={() => handleSend('¿Cuáles envíos presentan incidencias o demoras?')}
-            className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-rose-950/60 text-slate-300 hover:text-rose-300 transition whitespace-nowrap cursor-pointer border border-slate-700/50"
+            className="px-2.5 py-1 rounded-lg bg-rose-50/80 hover:bg-rose-100 text-rose-700 border border-rose-200 font-medium transition whitespace-nowrap cursor-pointer"
           >
             ⚠️ Incidencias
           </button>
           <button
             type="button"
             onClick={() => handleSend('Rendimiento de la Sede Alajuela')}
-            className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-sky-950/60 text-slate-300 hover:text-sky-300 transition whitespace-nowrap cursor-pointer border border-slate-700/50"
+            className="px-2.5 py-1 rounded-lg bg-sky-50 hover:bg-sky-100 text-azul-primario border border-sky-200 font-medium transition whitespace-nowrap cursor-pointer"
           >
             🏢 Sede Alajuela
           </button>
           <button
             type="button"
             onClick={() => handleSend('Auditoría de usuarios y personal')}
-            className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition whitespace-nowrap cursor-pointer border border-slate-700/50"
+            className="px-2.5 py-1 rounded-lg bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-200 font-medium transition whitespace-nowrap cursor-pointer"
           >
             👥 Usuarios
           </button>
           <button
             type="button"
             onClick={() => handleSend('Estado de reclamos y tickets PQRS')}
-            className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-amber-950/60 text-slate-300 hover:text-amber-300 transition whitespace-nowrap cursor-pointer border border-slate-700/50"
+            className="px-2.5 py-1 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 font-medium transition whitespace-nowrap cursor-pointer"
           >
             📋 PQRS
           </button>
           <button
             type="button"
             onClick={() => handleSend('Recomendaciones de optimización IA')}
-            className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-purple-950/60 text-slate-300 hover:text-purple-300 transition whitespace-nowrap cursor-pointer border border-slate-700/50"
+            className="px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 font-medium transition whitespace-nowrap cursor-pointer"
           >
             🧠 Optimización IA
           </button>
         </div>
 
-        {/* Message Stream */}
-        <div className="flex-1 p-4 sm:p-5 overflow-y-auto space-y-4 bg-slate-900/90 text-xs sm:text-sm">
+        {/* Flujo de Conversación (Fondo Gris Claro Oficial) */}
+        <div className="flex-1 p-4 sm:p-5 overflow-y-auto space-y-4 bg-gris-claro text-xs sm:text-sm">
           {messages.map((msg) => {
             const isBot = msg.sender === 'bot';
 
@@ -278,38 +319,38 @@ export const AdminAiChatModal = ({
                 className={`flex gap-3 ${isBot ? 'items-start' : 'items-end justify-end'}`}
               >
                 {isBot && (
-                  <div className="w-8 h-8 rounded-lg bg-indigo-600/30 border border-indigo-500/40 flex items-center justify-center text-indigo-400 shrink-0 mt-0.5">
+                  <div className="w-8 h-8 rounded-xl bg-azul-primario text-white flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
                     <Bot className="w-4 h-4" />
                   </div>
                 )}
 
                 <div
-                  className={`max-w-[85%] sm:max-w-[78%] rounded-2xl p-4 shadow-sm space-y-2.5 leading-relaxed ${
+                  className={`max-w-[85%] sm:max-w-[78%] rounded-2xl p-4 shadow-xs space-y-2.5 leading-relaxed ${
                     isBot
-                      ? 'bg-slate-800/90 border border-slate-700/70 text-slate-200'
-                      : 'bg-gradient-to-r from-sky-600 to-azul-primario text-white ml-auto'
+                      ? 'bg-white text-gris-oscuro rounded-tl-none border border-gray-200'
+                      : 'bg-azul-primario text-white rounded-tr-none shadow-sm'
                   }`}
                 >
                   {/* Badge de fuente si aplica */}
                   {isBot && msg.dataBadge && (
-                    <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 text-[10px] font-bold uppercase tracking-wider mb-1">
-                      <Cpu className="w-3 h-3" />
+                    <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-sky-50 text-azul-primario border border-sky-200 text-[10px] font-bold uppercase tracking-wider mb-1">
+                      <Cpu className="w-3 h-3 text-azul-primario" />
                       <span>{msg.dataBadge}</span>
                     </div>
                   )}
 
-                  {/* Cuerpo del mensaje formateado */}
-                  <div className="whitespace-pre-line space-y-1">
-                    {msg.text}
+                  {/* Cuerpo del mensaje formateado en negritas limpias */}
+                  <div className="space-y-1">
+                    {renderFormattedText(msg.text)}
                   </div>
 
-                  {/* Mini-Stat Cards si la respuesta incluye métricas */}
+                  {/* Mini-Stat Cards en tonos claros institucionales */}
                   {isBot && msg.metrics && msg.metrics.length > 0 && (
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 border-t border-slate-700/60">
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 border-t border-gray-100">
                       {msg.metrics.map((m, idx) => (
-                        <div key={idx} className="p-2 rounded-lg bg-slate-900/80 border border-slate-700/50 text-center">
-                          <div className="text-[10px] text-slate-400 font-semibold">{m.label}</div>
-                          <div className="text-sm font-bold text-sky-400">{m.value}</div>
+                        <div key={idx} className="p-2 rounded-xl bg-sky-50/70 border border-sky-100 text-center">
+                          <div className="text-[10px] text-gray-500 font-semibold">{m.label}</div>
+                          <div className="text-sm font-bold text-azul-oscuro">{m.value}</div>
                         </div>
                       ))}
                     </div>
@@ -321,7 +362,7 @@ export const AdminAiChatModal = ({
                       <Link
                         to={msg.actionLink}
                         onClick={onClose}
-                        className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-semibold text-xs transition shadow-sm group"
+                        className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-azul-primario hover:bg-azul-oscuro text-white font-semibold text-xs transition shadow-xs group"
                       >
                         <span>{msg.actionText || 'Ver en el panel'}</span>
                         <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
@@ -331,13 +372,13 @@ export const AdminAiChatModal = ({
 
                   {/* Sugerencias Rápidas */}
                   {isBot && msg.quickSuggestions && msg.quickSuggestions.length > 0 && (
-                    <div className="pt-2 border-t border-slate-700/40 flex flex-wrap gap-1.5">
+                    <div className="pt-2 border-t border-gray-100 flex flex-wrap gap-1.5">
                       {msg.quickSuggestions.map((sug, idx) => (
                         <button
                           key={idx}
                           type="button"
                           onClick={() => handleSend(sug)}
-                          className="text-[11px] px-2.5 py-1 rounded-full bg-slate-900/80 hover:bg-sky-950 hover:text-sky-300 text-slate-400 border border-slate-700 transition cursor-pointer"
+                          className="text-[11px] px-2.5 py-1 rounded-full bg-gray-50 hover:bg-sky-50 text-gray-700 hover:text-azul-primario border border-gray-200 hover:border-sky-300 font-medium transition cursor-pointer"
                         >
                           {sug}
                         </button>
@@ -345,13 +386,13 @@ export const AdminAiChatModal = ({
                     </div>
                   )}
 
-                  <div className={`text-[10px] ${isBot ? 'text-slate-500' : 'text-sky-200'} text-right mt-1`}>
+                  <div className={`text-[10px] ${isBot ? 'text-gray-400' : 'text-sky-100'} text-right mt-1`}>
                     {msg.time}
                   </div>
                 </div>
 
                 {!isBot && (
-                  <div className="w-8 h-8 rounded-lg bg-sky-700 flex items-center justify-center text-white shrink-0 mb-0.5">
+                  <div className="w-8 h-8 rounded-xl bg-azul-oscuro text-white flex items-center justify-center shrink-0 mb-0.5 shadow-2xs">
                     <User className="w-4 h-4" />
                   </div>
                 )}
@@ -361,14 +402,14 @@ export const AdminAiChatModal = ({
 
           {isTyping && (
             <div className="flex gap-3 items-start animate-pulse">
-              <div className="w-8 h-8 rounded-lg bg-indigo-600/30 border border-indigo-500/40 flex items-center justify-center text-indigo-400 shrink-0">
+              <div className="w-8 h-8 rounded-xl bg-azul-primario text-white flex items-center justify-center shrink-0">
                 <Bot className="w-4 h-4" />
               </div>
-              <div className="p-3.5 rounded-2xl bg-slate-800/90 border border-slate-700/70 text-slate-300 text-xs flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-sky-400 animate-bounce" />
-                <div className="w-2 h-2 rounded-full bg-sky-400 animate-bounce [animation-delay:0.2s]" />
-                <div className="w-2 h-2 rounded-full bg-sky-400 animate-bounce [animation-delay:0.4s]" />
-                <span className="text-slate-400 text-xs ml-1">Consultando base de datos institucional...</span>
+              <div className="p-3.5 rounded-2xl bg-white border border-gray-200 text-gray-500 text-xs flex items-center gap-2 shadow-2xs">
+                <div className="w-2 h-2 rounded-full bg-azul-primario animate-bounce" />
+                <div className="w-2 h-2 rounded-full bg-azul-primario animate-bounce [animation-delay:0.2s]" />
+                <div className="w-2 h-2 rounded-full bg-azul-primario animate-bounce [animation-delay:0.4s]" />
+                <span className="text-gray-500 text-xs ml-1">Consultando base de datos institucional...</span>
               </div>
             </div>
           )}
@@ -376,8 +417,8 @@ export const AdminAiChatModal = ({
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Input Bar */}
-        <div className="p-3 sm:p-4 bg-slate-950 border-t border-slate-800">
+        {/* Barra de Entrada (Blanco con Borde Institucional) */}
+        <div className="p-3 sm:p-4 bg-white border-t border-gray-200">
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -390,12 +431,12 @@ export const AdminAiChatModal = ({
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               placeholder="Pregunta sobre envíos, sedes, personal, PQRS o escribe una guía..."
-              className="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-sky-500/40 focus:border-sky-500 transition"
+              className="flex-1 bg-gray-50 border border-gray-300 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-gris-oscuro placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-azul-primario focus:bg-white transition"
             />
             <button
               type="submit"
               disabled={!inputValue.trim() || isTyping}
-              className="px-4 py-2.5 bg-gradient-to-r from-sky-600 to-azul-primario hover:from-sky-500 hover:to-azul-oscuro disabled:opacity-40 text-white font-bold rounded-xl transition flex items-center gap-1.5 shadow-md cursor-pointer"
+              className="px-4 py-2.5 bg-azul-primario hover:bg-azul-oscuro disabled:opacity-40 text-white font-bold rounded-xl transition flex items-center gap-1.5 shadow-sm cursor-pointer"
             >
               <Send className="w-4 h-4" />
               <span className="hidden sm:inline text-xs">Enviar</span>

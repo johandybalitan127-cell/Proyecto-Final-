@@ -74,10 +74,10 @@ export const AdminDashboardPage = () => {
             <button
               type="button"
               onClick={() => openCopilot && openCopilot('')}
-              className="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white border border-sky-400/50 text-xs font-semibold flex items-center gap-1.5 shadow-sm transition cursor-pointer"
+              className="px-3 py-1.5 rounded-xl bg-azul-oscuro hover:bg-azul-primario text-white border border-sky-400/40 text-xs font-semibold flex items-center gap-1.5 shadow-xs transition cursor-pointer"
               title="Abrir Copiloto IA de Administración"
             >
-              <Bot className="w-3.5 h-3.5 text-sky-400" />
+              <Bot className="w-3.5 h-3.5 text-sky-200" />
               <span className="hidden sm:inline">Copiloto IA</span>
             </button>
             <button onClick={exportCSV} className="btn-neutro text-xs py-1.5 px-3">
