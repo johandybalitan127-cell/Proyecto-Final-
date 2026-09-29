@@ -17,6 +17,7 @@ import { getBranchDashboardData } from '../../data/branchDashboardData';
 export const AdminDashboardPage = () => {
   const [envios, setEnvios] = useState([]);
   const [selectedBranch, setSelectedBranch] = useState('Sucursal Central San José');
+  const [selectedPeriod, setSelectedPeriod] = useState('30d');
 
   useEffect(() => {
     const load = async () => {
@@ -26,13 +27,17 @@ export const AdminDashboardPage = () => {
     load();
   }, []);
 
-  // Obtenemos los datos dinámicos y porcentajes exclusivos de la sede seleccionada
-  const branchData = getBranchDashboardData(selectedBranch);
+  // Obtenemos los datos dinámicos y porcentajes exclusivos de la sede y período seleccionado
+  const branchData = getBranchDashboardData(selectedBranch, selectedPeriod);
   const { 
     stats, 
     estados: estadosData, 
     servicios: serviciosData, 
     enviosPorMes, 
+    chartData,
+    chartTitulo,
+    periodoBadge,
+    periodLabel,
     actividadReciente, 
     picoMesTexto, 
     subtitulo, 
@@ -40,24 +45,27 @@ export const AdminDashboardPage = () => {
   } = branchData;
 
   const exportCSV = () => {
-    const headers = 'ID,Guia,Remitente,Destinatario,Servicio,Estado,Fecha\n';
-    const rows = envios.map(e => `${e.id},${e.guia},"${e.remitente}","${e.destinatario}","${e.servicio}",${e.estado},${e.fecha}`).join('\n');
+    const periodSlug = typeof selectedPeriod === 'object' ? 'personalizado' : selectedPeriod;
+    const headers = 'ID,Guia,Remitente,Destinatario,Servicio,Estado,Fecha,Sede\n';
+    const rows = envios.map(e => `${e.id},${e.guia},"${e.remitente}","${e.destinatario}","${e.servicio}",${e.estado},${e.fecha},"${selectedBranch}"`).join('\n');
     const blob = new Blob([headers + rows], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
-    link.download = `envios-sip-cr-${new Date().toISOString().slice(0, 10)}.csv`;
+    link.download = `envios-sip-cr-${nombreCorto.replace(/[^a-z0-9]/gi, '-').toLowerCase()}-${periodSlug}-${new Date().toISOString().slice(0, 10)}.csv`;
     link.click();
   };
 
   return (
     <div className="space-y-6">
       
-      {/* Topbar con selector de sede conectado */}
+      {/* Topbar con selector de sede y selector de período activo */}
       <AdminTopbar
         currentSection="Dashboard Ejecutivo"
         showDatePicker={true}
         selectedBranch={selectedBranch}
         onBranchChange={setSelectedBranch}
+        selectedPeriod={selectedPeriod}
+        onPeriodChange={setSelectedPeriod}
         actionButton={
           <button onClick={exportCSV} className="btn-neutro text-xs py-1.5 px-3">
             <Download className="w-3.5 h-3.5" />
@@ -77,13 +85,17 @@ export const AdminDashboardPage = () => {
             <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-sky-100 text-azul-primario border border-sky-200">
               {nombreCorto}
             </span>
+            <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-center gap-1.5">
+              <Calendar className="w-3 h-3 text-emerald-600" />
+              <span>{periodLabel || 'Últimos 30 días'}</span>
+            </span>
           </div>
           <p className="text-xs text-gray-500 mt-1">
             {subtitulo}
           </p>
         </div>
 
-        {/* 4 Stat Cards con valores y porcentajes dinámicos por sede */}
+        {/* 4 Stat Cards con valores y porcentajes dinámicos por sede y período */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <StatCard
             label="Envíos Registrados"
@@ -119,22 +131,22 @@ export const AdminDashboardPage = () => {
           />
         </div>
 
-        {/* Charts Row: Monthly Shipments & Distribution */}
+        {/* Charts Row: Monthly / Temporal Trend & Distribution */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           
-          {/* Monthly Trend (8 cols) */}
+          {/* Trend Chart adaptado al período (8 cols) */}
           <div className="lg:col-span-8 bg-white p-5 rounded-2xl border border-gray-200/80 shadow-2xs space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-sm font-bold text-azul-oscuro">Envíos por Mes — Evolución 2024</h3>
+                <h3 className="text-sm font-bold text-azul-oscuro">{chartTitulo || 'Evolución de Envíos'}</h3>
                 <p className="text-[11px] text-gray-500">{picoMesTexto}</p>
               </div>
-              <span className="badge-azul text-[10px]">Anual</span>
+              <span className="badge-azul text-[10px]">{periodoBadge || '30 días'}</span>
             </div>
 
             <div className="h-64 w-full">
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={enviosPorMes} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                <LineChart data={chartData || enviosPorMes} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" />
                   <XAxis dataKey="mes" tick={{ fontSize: 11, fill: '#64748B' }} />
                   <YAxis tick={{ fontSize: 11, fill: '#64748B' }} />

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { SEDES_DASHBOARD_DATA, getBranchDashboardData } from '../data/branchDashboardData';
+import { SEDES_DASHBOARD_DATA, getBranchDashboardData, DATE_PERIOD_OPTIONS } from '../data/branchDashboardData';
 
 describe('branchDashboardData - Métricas y porcentajes diferenciados por sede', () => {
   it('contiene las 9 sedes operativas registradas', () => {
@@ -71,4 +71,50 @@ describe('branchDashboardData - Métricas y porcentajes diferenciados por sede',
     const fallback = getBranchDashboardData('Sede Inexistente');
     expect(fallback.nombreCorto).toBe('Central San José');
   });
+
+  it('DATE_PERIOD_OPTIONS contiene las opciones esperadas', () => {
+    const ids = DATE_PERIOD_OPTIONS.map(p => p.id);
+    expect(ids).toEqual(['hoy', '7d', '30d', '90d', 'ano']);
+  });
+
+  it('getBranchDashboardData adapta métricas y gráficos según el período seleccionado', () => {
+    // Hoy
+    const dataHoy = getBranchDashboardData('Sucursal Central San José', 'hoy');
+    expect(dataHoy.periodId).toBe('hoy');
+    expect(dataHoy.periodLabel).toBe('Hoy');
+    expect(dataHoy.chartData).toHaveLength(6); // 08:00 a 18:00
+    expect(dataHoy.chartData[0].mes).toBe('08:00');
+
+    // 7 días
+    const data7d = getBranchDashboardData('Sucursal Central San José', '7d');
+    expect(data7d.periodId).toBe('7d');
+    expect(data7d.periodLabel).toBe('Últimos 7 días');
+    expect(data7d.chartData).toHaveLength(7); // Lun a Dom
+    expect(data7d.chartData[0].mes).toBe('Lun');
+
+    // 30 días
+    const data30d = getBranchDashboardData('Sucursal Central San José', '30d');
+    expect(data30d.periodId).toBe('30d');
+    expect(data30d.periodLabel).toBe('Últimos 30 días');
+    expect(data30d.chartData).toHaveLength(4); // 4 semanas
+
+    // Trimestre (90 días)
+    const data90d = getBranchDashboardData('Sucursal Central San José', '90d');
+    expect(data90d.periodId).toBe('90d');
+    expect(data90d.periodLabel).toBe('Último trimestre');
+    expect(data90d.chartData).toHaveLength(3); // Oct, Nov, Dic
+
+    // Anual 2024
+    const dataAno = getBranchDashboardData('Sucursal Central San José', 'ano');
+    expect(dataAno.periodId).toBe('ano');
+    expect(dataAno.periodLabel).toBe('Año 2024');
+    expect(dataAno.chartData).toHaveLength(12); // Ene a Dic
+
+    // Rango personalizado
+    const dataCustom = getBranchDashboardData('Sucursal Central San José', { from: '2024-09-01', to: '2024-09-15' });
+    expect(dataCustom.periodId).toBe('custom');
+    expect(dataCustom.periodLabel).toBe('2024-09-01 al 2024-09-15');
+    expect(dataCustom.chartData).toHaveLength(3);
+  });
 });
+

@@ -418,9 +418,189 @@ export const SEDES_DASHBOARD_DATA = {
   }
 };
 
+export const DATE_PERIOD_OPTIONS = [
+  { id: 'hoy', label: 'Hoy', shortLabel: 'Hoy', description: 'Últimas 24 horas', badge: 'Diario' },
+  { id: '7d', label: 'Últimos 7 días', shortLabel: '7 días', description: 'Semana en curso', badge: 'Semanal' },
+  { id: '30d', label: 'Últimos 30 días', shortLabel: '30 días', description: 'Mes actual estándar', badge: '30 días' },
+  { id: '90d', label: 'Último trimestre', shortLabel: 'Trimestre', description: 'Últimos 90 días', badge: 'Trimestral' },
+  { id: 'ano', label: 'Año actual (2024)', shortLabel: 'Año 2024', description: 'Histórico anual', badge: 'Anual' }
+];
+
 /**
- * Obtiene los datos correspondientes a la sede solicitada con fallback a Central San José
+ * Obtiene los datos correspondientes a la sede solicitada y los adapta al período de tiempo seleccionado
+ * con fallback seguro a Central San José y período de 30 días.
  */
-export const getBranchDashboardData = (branchName) => {
-  return SEDES_DASHBOARD_DATA[branchName] || SEDES_DASHBOARD_DATA['Sucursal Central San José'];
+export const getBranchDashboardData = (branchName, period = '30d') => {
+  const base = SEDES_DASHBOARD_DATA[branchName] || SEDES_DASHBOARD_DATA['Sucursal Central San José'];
+
+  const rawRegistrados = parseInt(String(base.stats.registrados.valor).replace(/,/g, ''), 10) || 14820;
+  const rawTransito = parseInt(String(base.stats.transito.valor).replace(/,/g, ''), 10) || 3415;
+  const rawEntregados = parseInt(String(base.stats.entregados.valor).replace(/,/g, ''), 10) || 11180;
+  const rawConsultas = parseInt(String(base.stats.consultas.valor).replace(/,/g, ''), 10) || 1290;
+
+  // Hoy: Últimas 24 horas (desglose por horas)
+  if (period === 'hoy' || period === 'Hoy') {
+    const regHoy = Math.max(25, Math.round(rawRegistrados / 28));
+    const transHoy = Math.max(10, Math.round(rawTransito / 18));
+    const entHoy = Math.max(20, Math.round(rawEntregados / 28));
+    const consHoy = Math.max(5, Math.round(rawConsultas / 25));
+
+    return {
+      ...base,
+      periodId: 'hoy',
+      periodLabel: 'Hoy',
+      periodoBadge: 'Hoy (24h)',
+      chartTitulo: 'Envíos por Hora — Jornada de Hoy',
+      picoMesTexto: 'Mayor afluencia hoy entre las 13:00 y las 15:00 con despachos VES y Pymexpress',
+      stats: {
+        registrados: { valor: regHoy.toLocaleString(), delta: '+4.2% vs ayer', deltaType: 'positive' },
+        transito: { valor: transHoy.toLocaleString(), delta: 'En ruta activa', deltaType: 'neutral' },
+        entregados: { valor: entHoy.toLocaleString(), delta: '98.5% en horario', deltaType: 'positive' },
+        consultas: { valor: consHoy.toLocaleString(), delta: '96% IA resueltas', deltaType: 'positive' }
+      },
+      chartData: [
+        { mes: '08:00', envios: Math.round(regHoy * 0.08) },
+        { mes: '10:00', envios: Math.round(regHoy * 0.18) },
+        { mes: '12:00', envios: Math.round(regHoy * 0.22) },
+        { mes: '14:00', envios: Math.round(regHoy * 0.28) },
+        { mes: '16:00', envios: Math.round(regHoy * 0.16) },
+        { mes: '18:00', envios: Math.round(regHoy * 0.08) }
+      ]
+    };
+  }
+
+  // Últimos 7 días: Semana en curso (desglose de Lun a Dom)
+  if (period === '7d' || period === 'Últimos 7 días') {
+    const reg7 = Math.round(rawRegistrados * 0.24);
+    const trans7 = Math.round(rawTransito * 0.35);
+    const ent7 = Math.round(rawEntregados * 0.24);
+    const cons7 = Math.round(rawConsultas * 0.24);
+
+    return {
+      ...base,
+      periodId: '7d',
+      periodLabel: 'Últimos 7 días',
+      periodoBadge: 'Semanal (7d)',
+      chartTitulo: 'Envíos por Día — Últimos 7 Días',
+      picoMesTexto: 'Pico semanal registrado el día Viernes con consolidación de carga nacional',
+      stats: {
+        registrados: { valor: reg7.toLocaleString(), delta: '+6.1% vs semana ant.', deltaType: 'positive' },
+        transito: { valor: trans7.toLocaleString(), delta: 'Rutas activas', deltaType: 'neutral' },
+        entregados: { valor: ent7.toLocaleString(), delta: '98.1% a tiempo', deltaType: 'positive' },
+        consultas: { valor: cons7.toLocaleString(), delta: '95% IA resueltas', deltaType: 'positive' }
+      },
+      chartData: [
+        { mes: 'Lun', envios: Math.round(reg7 * 0.16) },
+        { mes: 'Mar', envios: Math.round(reg7 * 0.17) },
+        { mes: 'Mié', envios: Math.round(reg7 * 0.18) },
+        { mes: 'Jue', envios: Math.round(reg7 * 0.19) },
+        { mes: 'Vie', envios: Math.round(reg7 * 0.21) },
+        { mes: 'Sáb', envios: Math.round(reg7 * 0.07) },
+        { mes: 'Dom', envios: Math.round(reg7 * 0.02) }
+      ]
+    };
+  }
+
+  // Último trimestre: 90 días (desglose de 3 meses)
+  if (period === '90d' || period === 'Último trimestre' || period === 'Último trimestre (90 días)') {
+    const reg90 = Math.round(rawRegistrados * 2.92);
+    const trans90 = Math.round(rawTransito * 1.8);
+    const ent90 = Math.round(rawEntregados * 2.9);
+    const cons90 = Math.round(rawConsultas * 2.85);
+
+    const m9 = base.enviosPorMes[9]?.envios || Math.round(rawRegistrados * 0.95);
+    const m10 = base.enviosPorMes[10]?.envios || Math.round(rawRegistrados * 0.98);
+    const m11 = base.enviosPorMes[11]?.envios || Math.round(rawRegistrados * 1.02);
+
+    return {
+      ...base,
+      periodId: '90d',
+      periodLabel: 'Último trimestre',
+      periodoBadge: 'Trimestral',
+      chartTitulo: 'Envíos por Mes — Último Trimestre',
+      picoMesTexto: 'Crecimiento sostenido del 8.4% durante el último trimestre operacional',
+      stats: {
+        registrados: { valor: reg90.toLocaleString(), delta: '+8.4% trimestral', deltaType: 'positive' },
+        transito: { valor: trans90.toLocaleString(), delta: 'Flujo promedio', deltaType: 'neutral' },
+        entregados: { valor: ent90.toLocaleString(), delta: '98.3% efectividad', deltaType: 'positive' },
+        consultas: { valor: cons90.toLocaleString(), delta: '94% IA resueltas', deltaType: 'positive' }
+      },
+      chartData: [
+        { mes: 'Octubre', envios: m9 },
+        { mes: 'Noviembre', envios: m10 },
+        { mes: 'Diciembre', envios: m11 }
+      ]
+    };
+  }
+
+  // Año actual 2024: Acumulado anual completo (desglose de 12 meses)
+  if (period === 'ano' || period === 'Año actual (2024)' || period === 'Año 2024') {
+    const totalAnualRegistrados = base.enviosPorMes.reduce((acc, curr) => acc + curr.envios, 0);
+    const totalAnualEntregados = Math.round(totalAnualRegistrados * 0.978);
+    const totalAnualConsultas = Math.round(rawConsultas * 11.8);
+
+    return {
+      ...base,
+      periodId: 'ano',
+      periodLabel: 'Año 2024',
+      periodoBadge: 'Anual (2024)',
+      chartTitulo: 'Envíos por Mes — Evolución Anual 2024',
+      picoMesTexto: base.picoMesTexto,
+      stats: {
+        registrados: { valor: totalAnualRegistrados.toLocaleString(), delta: '+14.2% interanual', deltaType: 'positive' },
+        transito: { valor: rawTransito.toLocaleString(), delta: 'En ruta actual', deltaType: 'neutral' },
+        entregados: { valor: totalAnualEntregados.toLocaleString(), delta: '98.2% acumulado', deltaType: 'positive' },
+        consultas: { valor: totalAnualConsultas.toLocaleString(), delta: '95% IA resueltas', deltaType: 'positive' }
+      },
+      chartData: base.enviosPorMes
+    };
+  }
+
+  // Rango personalizado de fechas
+  if (typeof period === 'object' && period.from && period.to) {
+    const d1 = new Date(period.from);
+    const d2 = new Date(period.to);
+    const diffMs = Math.abs(d2.getTime() - d1.getTime());
+    const daysDiff = Math.max(1, Math.round(diffMs / (1000 * 60 * 60 * 24))) + 1;
+    const factor = Math.min(12, Math.max(0.05, daysDiff / 30));
+
+    const customReg = Math.round(rawRegistrados * factor);
+    const customEnt = Math.round(rawEntregados * factor);
+    const customCons = Math.round(rawConsultas * factor);
+
+    return {
+      ...base,
+      periodId: 'custom',
+      periodLabel: `${period.from} al ${period.to}`,
+      periodoBadge: `${daysDiff} días`,
+      chartTitulo: `Envíos — Rango Personalizado (${daysDiff} días)`,
+      picoMesTexto: `Visualizando período personalizado de ${daysDiff} días operacionales`,
+      stats: {
+        registrados: { valor: customReg.toLocaleString(), delta: `${daysDiff} días`, deltaType: 'neutral' },
+        transito: { valor: rawTransito.toLocaleString(), delta: 'En tránsito', deltaType: 'neutral' },
+        entregados: { valor: customEnt.toLocaleString(), delta: '98.0% efectividad', deltaType: 'positive' },
+        consultas: { valor: customCons.toLocaleString(), delta: 'Atendidas', deltaType: 'positive' }
+      },
+      chartData: [
+        { mes: 'Tramo Inicial', envios: Math.round(customReg * 0.28) },
+        { mes: 'Tramo Medio', envios: Math.round(customReg * 0.44) },
+        { mes: 'Tramo Final', envios: Math.round(customReg * 0.28) }
+      ]
+    };
+  }
+
+  // Predeterminado: Últimos 30 días (4 semanas del mes)
+  return {
+    ...base,
+    periodId: '30d',
+    periodLabel: 'Últimos 30 días',
+    periodoBadge: '30 días',
+    chartTitulo: 'Envíos por Semana — Últimos 30 Días',
+    chartData: [
+      { mes: 'Semana 1', envios: Math.round(rawRegistrados * 0.22) },
+      { mes: 'Semana 2', envios: Math.round(rawRegistrados * 0.26) },
+      { mes: 'Semana 3', envios: Math.round(rawRegistrados * 0.28) },
+      { mes: 'Semana 4', envios: Math.round(rawRegistrados * 0.24) }
+    ]
+  };
 };

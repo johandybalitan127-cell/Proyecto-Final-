@@ -13,6 +13,22 @@ import { useToast } from '../../context/ToastContext';
 
 export const AdminReportesPage = () => {
   const { addToast } = useToast();
+  const [selectedPeriod, setSelectedPeriod] = useState('30d');
+
+  const periodMetrics = {
+    hoy: { total: '529', delta: '+4.2% vs ayer', label: 'Hoy (Últimas 24 horas)' },
+    '7d': { total: '3,556', delta: '+6.1% vs semana anterior', label: 'Últimos 7 días' },
+    '30d': { total: '14,820', delta: 'Junio pico mensual', label: 'Últimos 30 días' },
+    '90d': { total: '43,270', delta: '+8.4% trimestral', label: 'Último trimestre (90 días)' },
+    ano: { total: '168,490', delta: '+14.2% interanual', label: 'Año actual (2024)' }
+  };
+
+  const currentPeriodKey = typeof selectedPeriod === 'object' ? 'custom' : selectedPeriod;
+  const currentMetric = periodMetrics[currentPeriodKey] || {
+    total: typeof selectedPeriod === 'object' ? '12,400' : '14,820',
+    delta: typeof selectedPeriod === 'object' ? 'Rango personalizado' : '30 días',
+    label: typeof selectedPeriod === 'object' ? `${selectedPeriod.from} al ${selectedPeriod.to}` : 'Últimos 30 días'
+  };
 
   const enviosPorMes = [
     { mes: 'Ene', envios: 10200 },
@@ -48,11 +64,12 @@ export const AdminReportesPage = () => {
   const downloadReport = (format) => {
     addToast(`Generando reporte ${format.toUpperCase()} del Sistema Integral Postal (SIP-CR)...`, 'info');
     setTimeout(() => {
-      const content = `REPORTE OFICIAL DE RENDIMIENTO POSTAL - CORREOS DE COSTA RICA\nPeríodo: 2024-2025\nTotal Envíos: 14,820\nEfectividad: 98.2%\nTiempo Retención Aduanas: 3.2 días\nGenerado: ${new Date().toLocaleString()}`;
+      const periodLabel = currentMetric.label;
+      const content = `REPORTE OFICIAL DE RENDIMIENTO POSTAL - CORREOS DE COSTA RICA\nPeríodo: ${periodLabel}\nTotal Envíos: ${currentMetric.total}\nEfectividad: 98.2%\nTiempo Retención Aduanas: 3.2 días\nGenerado: ${new Date().toLocaleString()}`;
       const blob = new Blob([content], { type: 'text/plain' });
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
-      a.download = `reporte-ejecutivo-correos-cr.${format === 'pdf' ? 'pdf' : 'xlsx'}`;
+      a.download = `reporte-ejecutivo-correos-cr-${currentPeriodKey}.${format === 'pdf' ? 'pdf' : 'xlsx'}`;
       a.click();
       addToast(`Descarga de reporte ${format.toUpperCase()} completada`, 'success');
     }, 800);
@@ -60,14 +77,25 @@ export const AdminReportesPage = () => {
 
   return (
     <div className="space-y-6">
-      <AdminTopbar currentSection="Reportes y Estadísticas" showDatePicker={true} />
+      <AdminTopbar 
+        currentSection="Reportes y Estadísticas" 
+        showDatePicker={true} 
+        selectedPeriod={selectedPeriod}
+        onPeriodChange={setSelectedPeriod}
+      />
 
       <div className="px-6 space-y-6">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold text-azul-oscuro">
-            Reportes Ejecutivos y Métricas Operacionales
-          </h1>
-          <p className="text-xs text-gray-500">
+          <div className="flex flex-wrap items-center gap-2">
+            <h1 className="text-xl sm:text-2xl font-bold text-azul-oscuro">
+              Reportes Ejecutivos y Métricas Operacionales
+            </h1>
+            <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-center gap-1.5">
+              <Calendar className="w-3 h-3 text-emerald-600" />
+              <span>{currentMetric.label}</span>
+            </span>
+          </div>
+          <p className="text-xs text-gray-500 mt-1">
             Inteligencia de negocios, trazabilidad de entregas y volumen logístico en las 7 provincias.
           </p>
         </div>
@@ -76,8 +104,8 @@ export const AdminReportesPage = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <StatCard
             label="Envíos del Período"
-            value="14,820"
-            delta="Junio pico máximo"
+            value={currentMetric.total}
+            delta={currentMetric.delta}
             deltaType="positive"
             icon={Package}
             iconBg="bg-sky-100 text-azul-primario"

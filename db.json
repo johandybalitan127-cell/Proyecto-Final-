@@ -3302,6 +3302,204 @@
       "resultado": "Fuera de contexto institucional",
       "hora": "01:10:59 p. m.",
       "id": "TXrzQYgcLv0"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "me gustaria saber de la provincia de sam jose",
+      "intencion": "sucursal_provincia_especifica",
+      "confianza": 99,
+      "resultado": "Sucursal en San José",
+      "hora": "01:17:08 p. m.",
+      "id": "w1OghSa0vOc"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "haz que me pueda decir de cada provincia de costa rica cual es la socursal mas cercana donde queda",
+      "intencion": "sucursales_todas_las_provincias",
+      "confianza": 99.5,
+      "resultado": "Desglose oficial de las 7 provincias",
+      "hora": "01:17:08 p. m.",
+      "id": "WRBECW3iL1g"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "¿Dónde queda la sucursal de Alajuela?",
+      "intencion": "sucursal_provincia_especifica",
+      "confianza": 99,
+      "resultado": "Sucursal en Alajuela",
+      "hora": "01:17:08 p. m.",
+      "id": "SMxISXJV9gk"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "Heredia",
+      "intencion": "sucursal_provincia_especifica",
+      "confianza": 99,
+      "resultado": "Sucursal en Heredia",
+      "hora": "01:17:08 p. m.",
+      "id": "_9iriwIkfS4"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "Cartago",
+      "intencion": "sucursal_provincia_especifica",
+      "confianza": 99,
+      "resultado": "Sucursal en Cartago",
+      "hora": "01:17:08 p. m.",
+      "id": "TXgRKRDTRYY"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "Guanacaste",
+      "intencion": "sucursal_provincia_especifica",
+      "confianza": 99,
+      "resultado": "Sucursal en Guanacaste",
+      "hora": "01:17:08 p. m.",
+      "id": "kaErG-k9gpY"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "Puntarenas",
+      "intencion": "sucursal_provincia_especifica",
+      "confianza": 99,
+      "resultado": "Sucursal en Puntarenas",
+      "hora": "01:17:08 p. m.",
+      "id": "8jcWrmbKo6Y"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "Limón",
+      "intencion": "sucursal_provincia_especifica",
+      "confianza": 99,
+      "resultado": "Sucursal en Limón",
+      "hora": "01:17:08 p. m.",
+      "id": "WJZjCTBZ5Vg"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "¿Cuánto cuesta enviar un paquete de 2 kilos?",
+      "intencion": "cotizar_tarifa",
+      "confianza": 98,
+      "resultado": "Tarifa calculada",
+      "hora": "01:17:08 p. m.",
+      "id": "Hd1cXGdTjT8"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "Rastrear CR098421734CR",
+      "intencion": "rastreo_envio",
+      "confianza": 99.2,
+      "resultado": "Envío encontrado",
+      "hora": "01:17:08 p. m.",
+      "id": "X-VXqvRBbMk"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "¿Qué es la Dos Pinos?",
+      "intencion": "fuera_de_contexto",
+      "confianza": 99,
+      "resultado": "Fuera de contexto institucional",
+      "hora": "01:17:08 p. m.",
+      "id": "xkRzafFQSCs"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "me gustaria saber de la provincia de sam jose",
+      "intencion": "sucursal_provincia_especifica",
+      "confianza": 99,
+      "resultado": "Sucursal en San José",
+      "hora": "01:19:05 p. m.",
+      "id": "W0l-ECvu8Kg"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "haz que me pueda decir de cada provincia de costa rica cual es la socursal mas cercana donde queda",
+      "intencion": "sucursales_todas_las_provincias",
+      "confianza": 99.5,
+      "resultado": "Desglose oficial de las 7 provincias",
+      "hora": "01:19:05 p. m.",
+      "id": "jbW_bv7Olr0"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "¿Dónde queda la sucursal de Alajuela?",
+      "intencion": "sucursal_provincia_especifica",
+      "confianza": 99,
+      "resultado": "Sucursal en Alajuela",
+      "hora": "01:19:05 p. m.",
+      "id": "if294ol3-Xc"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "Heredia",
+      "intencion": "sucursal_provincia_especifica",
+      "confianza": 99,
+      "resultado": "Sucursal en Heredia",
+      "hora": "01:19:05 p. m.",
+      "id": "01_3vIJlvsg"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "Cartago",
+      "intencion": "sucursal_provincia_especifica",
+      "confianza": 99,
+      "resultado": "Sucursal en Cartago",
+      "hora": "01:19:05 p. m.",
+      "id": "EkgwmQTXke4"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "Guanacaste",
+      "intencion": "sucursal_provincia_especifica",
+      "confianza": 99,
+      "resultado": "Sucursal en Guanacaste",
+      "hora": "01:19:05 p. m.",
+      "id": "9td1sWx9dYo"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "Puntarenas",
+      "intencion": "sucursal_provincia_especifica",
+      "confianza": 99,
+      "resultado": "Sucursal en Puntarenas",
+      "hora": "01:19:05 p. m.",
+      "id": "UtR68h6MpT0"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "Limón",
+      "intencion": "sucursal_provincia_especifica",
+      "confianza": 99,
+      "resultado": "Sucursal en Limón",
+      "hora": "01:19:05 p. m.",
+      "id": "IrpUo1UzcGw"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "¿Cuánto cuesta enviar un paquete de 2 kilos?",
+      "intencion": "cotizar_tarifa",
+      "confianza": 98,
+      "resultado": "Tarifa calculada",
+      "hora": "01:19:05 p. m.",
+      "id": "p5JoNF9gO4M"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "Rastrear CR098421734CR",
+      "intencion": "rastreo_envio",
+      "confianza": 99.2,
+      "resultado": "Envío encontrado",
+      "hora": "01:19:05 p. m.",
+      "id": "w0ZasPiGhks"
+    },
+    {
+      "usuario": "Ciudadano Web",
+      "consulta": "¿Qué es la Dos Pinos?",
+      "intencion": "fuera_de_contexto",
+      "confianza": 99,
+      "resultado": "Fuera de contexto institucional",
+      "hora": "01:19:05 p. m.",
+      "id": "f-6i5YCgQNQ"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
