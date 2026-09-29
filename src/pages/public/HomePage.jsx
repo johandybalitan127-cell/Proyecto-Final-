@@ -9,10 +9,10 @@ import {
 import { StepperTracking } from '../../components/common/StepperTracking';
 import { ExchangeRateBadge } from '../../components/common/ExchangeRateBadge';
 import { enviosService } from '../../services/enviosService';
-import { sucursalesService } from '../../services/sucursalesService';
 import { encryptId } from '../../utils/cryptoUtils';
 import { InternationalShippingSection } from '../../components/home/InternationalShippingSection';
 import { ExpressHomeDeliverySection } from '../../components/home/ExpressHomeDeliverySection';
+import { SucursalesMapLocator } from '../../components/public/SucursalesMapLocator';
 
 export const HomePage = () => {
   const navigate = useNavigate();
@@ -21,34 +21,6 @@ export const HomePage = () => {
   const [trackedEnvio, setTrackedEnvio] = useState(null);
   const [trackingLoading, setTrackingLoading] = useState(false);
   const [trackingError, setTrackingError] = useState('');
-
-  // Geolocation branch section state
-  const [selectedProvince, setSelectedProvince] = useState('San José');
-  const [branches, setBranches] = useState([]);
-  const [cantonSearch, setCantonSearch] = useState('');
-  const [activeBranch, setActiveBranch] = useState(null);
-
-  const provinces = ['San José', 'Alajuela', 'Heredia', 'Cartago', 'Guanacaste', 'Puntarenas', 'Limón'];
-
-  // Load initial demo shipment
-  useEffect(() => {
-    const loadInitialShipment = async () => {
-      const data = await enviosService.getByIdOrGuia('CR098421734CR');
-      if (data) setTrackedEnvio(data);
-    };
-    loadInitialShipment();
-  }, []);
-
-  // Load branches
-  useEffect(() => {
-    const loadBranches = async () => {
-      const list = await sucursalesService.getAll();
-      setBranches(list);
-      const initial = list.find(b => b.provincia === 'San José') || list[0];
-      setActiveBranch(initial);
-    };
-    loadBranches();
-  }, []);
 
   const handleTrackSubmit = (e) => {
     if (e && e.preventDefault) e.preventDefault();
@@ -60,24 +32,6 @@ export const HomePage = () => {
     const encrypted = encryptId(guideInput.trim().toUpperCase());
     navigate(`/cuenta/rastreo/${encrypted}`);
   };
-
-  const normalizeText = (text = '') =>
-    String(text || '')
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .toLowerCase()
-      .trim();
-
-  const filteredBranches = branches.filter((b) => {
-    const matchProv = normalizeText(b.provincia) === normalizeText(selectedProvince);
-    const normSearch = normalizeText(cantonSearch);
-    const matchSearch = normSearch ? (
-      normalizeText(b.nombre).includes(normSearch) || 
-      normalizeText(b.direccion).includes(normSearch) || 
-      normalizeText(b.provincia).includes(normSearch)
-    ) : true;
-    return matchProv && matchSearch;
-  });
 
   return (
     <div className="space-y-12 lg:space-y-20 pb-12">
@@ -564,9 +518,8 @@ export const HomePage = () => {
       {/* Sección Oficial de Envíos Internacionales & Exportación UPU */}
       <InternationalShippingSection />
 
-      {/* Sección "¿Dónde estamos?" (Geolocalización) */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
-        
+      {/* Sección "¿Dónde estamos?" (Geolocalización Oficial y Red de Sucursales) */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
         <div>
           <span className="text-xs font-bold text-azul-primario uppercase tracking-wider">
             Presencia Nacional Universal
@@ -576,174 +529,7 @@ export const HomePage = () => {
           </h2>
         </div>
 
-        {/* Search & Province Tabs Bar */}
-        <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 bg-white p-4 rounded-2xl border border-gray-200 shadow-2xs">
-          
-          {/* Province Tabs */}
-          <div className="flex items-center gap-1 overflow-x-auto pb-2 md:pb-0">
-            {provinces.map((prov) => (
-              <button
-                key={prov}
-                onClick={() => setSelectedProvince(prov)}
-                className={`px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
-                  selectedProvince === prov
-                    ? 'bg-azul-primario text-white shadow-sm'
-                    : 'text-gray-600 hover:bg-gray-100 hover:text-azul-primario'
-                }`}
-              >
-                {prov}
-              </button>
-            ))}
-          </div>
-
-          {/* Search by canton / postal code */}
-          <div className="flex items-center gap-2">
-            <div className="relative flex-1 md:w-64">
-              <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
-              <input
-                type="text"
-                value={cantonSearch}
-                onChange={(e) => setCantonSearch(e.target.value)}
-                placeholder="Cantón o código postal…"
-                className="w-full pl-9 pr-3 py-2 rounded-xl border border-gray-300 text-xs bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-azul-primario"
-              />
-            </div>
-            <button
-              onClick={() => {
-                if (navigator.geolocation) {
-                  navigator.geolocation.getCurrentPosition(() => {
-                    alert('Ubicación detectada: Gran Área Metropolitana (GAM). Mostrando Sucursal Zapote Central.');
-                  });
-                }
-              }}
-              className="btn-neutro text-xs py-2 px-3 whitespace-nowrap"
-            >
-              <Navigation className="w-3.5 h-3.5 text-verde-principal" />
-              <span>Cerca de mí</span>
-            </button>
-          </div>
-
-        </div>
-
-        {/* Map & Detail Card (2 Columns) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-          
-          {/* Left: Embedded Map Simulation (7 cols) */}
-          <div className="lg:col-span-7 bg-white rounded-3xl border border-gray-200 overflow-hidden shadow-2xs flex flex-col min-h-[360px] relative">
-            {/* Map Canvas Visual Simulation */}
-            <div className="flex-1 bg-gradient-to-br from-sky-50 via-slate-100 to-emerald-50 relative p-6 flex flex-col justify-between">
-              
-              {/* Top Map Marker Overlay */}
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-semibold px-3 py-1 bg-white/90 backdrop-blur-md rounded-full text-azul-oscuro border border-gray-200 shadow-2xs">
-                  🗺️ Red Georeferenciada de Sucursales CR
-                </span>
-                <span className="text-xs font-bold text-gray-500">
-                  {filteredBranches.length} oficinas en {selectedProvince}
-                </span>
-              </div>
-
-              {/* Central Map Pins */}
-              <div className="space-y-4 my-8 max-w-sm mx-auto w-full">
-                {filteredBranches.slice(0, 3).map((branch) => (
-                  <div
-                    key={branch.id}
-                    onClick={() => setActiveBranch(branch)}
-                    className={`p-3 rounded-2xl border transition-all cursor-pointer flex items-center justify-between gap-3 ${
-                      activeBranch?.id === branch.id
-                        ? 'bg-white shadow-md border-azul-primario ring-2 ring-sky-100'
-                        : 'bg-white/80 backdrop-blur-md border-gray-200 hover:bg-white'
-                    }`}
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-azul-primario text-white flex items-center justify-center flex-shrink-0">
-                        <MapPin className="w-4 h-4" />
-                      </div>
-                      <div>
-                        <p className="text-xs font-bold text-gris-oscuro line-clamp-1">{branch.nombre}</p>
-                        <p className="text-[10px] text-gray-500 line-clamp-1">{branch.direccion}</p>
-                      </div>
-                    </div>
-                    <span className="badge-verde text-[10px] flex-shrink-0">{branch.estado}</span>
-                  </div>
-                ))}
-              </div>
-
-              <div className="text-[11px] text-gray-400 text-center">
-                Coordenadas oficiales WGS84 sincronizadas con el Sistema de Información Geográfica Nacional.
-              </div>
-            </div>
-          </div>
-
-          {/* Right: Branch Detail Card (5 cols) */}
-          <div className="lg:col-span-5 bg-white rounded-3xl border border-gray-200 p-6 sm:p-7 shadow-2xs flex flex-col justify-between space-y-6">
-            
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="badge-azul text-xs">Ventanilla Principal</span>
-                <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
-                  Abierto Ahora · A 1.2 km
-                </span>
-              </div>
-
-              <div>
-                <h3 className="text-xl font-extrabold text-azul-oscuro">
-                  {activeBranch?.nombre || 'Sucursal Central Zapote (Ventanilla Principal)'}
-                </h3>
-                <p className="text-xs text-gray-600 mt-1 flex items-start gap-1.5">
-                  <MapPin className="w-4 h-4 text-azul-primario flex-shrink-0 mt-0.5" />
-                  <span>{activeBranch?.direccion || 'Costado este de Casa Presidencial, Zapote, San José'}</span>
-                </p>
-              </div>
-
-              {/* Schedule */}
-              <div className="p-3.5 rounded-xl bg-gray-50 border border-gray-200 text-xs space-y-1">
-                <div className="flex items-center gap-1.5 font-semibold text-gris-oscuro">
-                  <Clock className="w-3.5 h-3.5 text-azul-primario" />
-                  <span>Horario de Atención:</span>
-                </div>
-                <p className="text-gray-600 pl-5">
-                  {activeBranch?.horario || 'Lun–Vie 8:00 a.m.–5:00 p.m. / Sábados 8:00 a.m.–12:00 p.m.'}
-                </p>
-              </div>
-
-              {/* Special services badge */}
-              <div className="p-3 rounded-xl bg-sky-50 border border-sky-100 flex items-center justify-between">
-                <div className="flex items-center gap-2 text-xs font-bold text-azul-oscuro">
-                  <FileCheck className="w-4 h-4 text-azul-primario" />
-                  <span>Ventanilla de Pasaportes y Cédulas Activa</span>
-                </div>
-                <span className="text-[10px] font-semibold text-azul-primario underline">
-                  Convenio VES
-                </span>
-              </div>
-            </div>
-
-            {/* Actions Buttons */}
-            <div className="pt-4 border-t border-gray-100 flex flex-col sm:flex-row gap-3">
-              <a
-                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(activeBranch?.nombre || 'Correos Zapote')}`}
-                target="_blank"
-                rel="noreferrer"
-                className="btn-neutro text-xs py-2.5 flex-1 justify-center"
-              >
-                <Navigation className="w-4 h-4 text-azul-primario" />
-                <span>Cómo llegar</span>
-              </a>
-
-              <button
-                onClick={() => alert(`Ticket digital generado con éxito para ${activeBranch?.nombre || 'Zapote'}. Turno: B-042. Tiempo estimado: 6 min.`)}
-                className="btn-secundario text-xs py-2.5 flex-1 justify-center"
-              >
-                <Ticket className="w-4 h-4" />
-                <span>🎫 Ticket Digital</span>
-              </button>
-            </div>
-
-          </div>
-
-        </div>
-
+        <SucursalesMapLocator />
       </section>
 
       {/* Banner Institucional Pasaportes / Cédulas VES (Fondo Azul Oscuro) */}

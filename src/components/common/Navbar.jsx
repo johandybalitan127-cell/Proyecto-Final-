@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { Package, Menu, X, User, LogOut, ShieldCheck, ChevronDown } from 'lucide-react';
+import { Package, Menu, X, User, LogOut, ShieldCheck, ChevronDown, Accessibility } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import { LogoCorreos } from './LogoCorreos';
 
@@ -13,9 +13,10 @@ export const Navbar = () => {
   const navLinks = [
     { name: 'Inicio', path: '/' },
     { name: 'Servicios', path: '/servicios' },
-    { name: 'Internacional', path: '/internacional' },
+    { name: 'Cotizar', path: '/servicios' },
     { name: 'Rastreo', path: '/cuenta/rastreo' },
     { name: 'Oficinas', path: '/oficinas' },
+    { name: 'Pymes', path: '/servicios' },
     { name: 'Ayuda', path: '/ayuda' },
   ];
 
@@ -44,10 +45,10 @@ export const Navbar = () => {
           <nav className="hidden lg:flex items-center gap-1 xl:gap-2">
             {navLinks.map((link) => (
               <NavLink
-                key={link.path}
+                key={link.name + link.path}
                 to={link.path}
                 className={({ isActive }) =>
-                  `px-2.5 xl:px-3.5 py-2 rounded-lg text-xs xl:text-sm font-medium transition-colors whitespace-nowrap ${
+                  `px-2.5 xl:px-3 py-2 rounded-lg text-xs xl:text-sm font-medium transition-colors whitespace-nowrap ${
                     isActive
                       ? 'text-azul-primario bg-sky-50 font-semibold'
                       : 'text-gris-oscuro hover:text-azul-primario hover:bg-gray-50'
@@ -60,7 +61,17 @@ export const Navbar = () => {
           </nav>
 
           {/* Right Action Buttons */}
-          <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0 ml-auto">
+          <div className="flex items-center gap-1.5 sm:gap-2.5 flex-shrink-0 ml-auto">
+            {/* Accessibility Button */}
+            <button
+              type="button"
+              title="Herramientas de Accesibilidad e Inclusión"
+              aria-label="Herramientas de Accesibilidad"
+              className="p-1.5 sm:p-2 text-azul-oscuro hover:text-azul-primario hover:bg-sky-50 rounded-lg transition cursor-pointer"
+            >
+              <Accessibility className="w-5 h-5 text-azul-oscuro" />
+            </button>
+
             {/* Quick Virtual Branch Link */}
             <Link
               to="/cuenta/perfil"
