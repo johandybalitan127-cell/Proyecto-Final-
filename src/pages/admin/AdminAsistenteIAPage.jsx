@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  Bot, Sparkles, CheckCircle2, AlertCircle, Clock, Zap, Search, Activity, Cpu
+  Bot, Sparkles, CheckCircle2, AlertCircle, Clock, Zap, Search, Activity, Cpu, ArrowRight
 } from 'lucide-react';
+import { useOutletContext } from 'react-router-dom';
 import { AdminTopbar } from '../../components/admin/AdminTopbar';
 import { StatCard } from '../../components/admin/StatCard';
 import { iaLogsService } from '../../services/iaLogsService';
 
 export const AdminAsistenteIAPage = () => {
+  const { openCopilot } = useOutletContext() || {};
   const [logs, setLogs] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -26,7 +28,20 @@ export const AdminAsistenteIAPage = () => {
 
   return (
     <div className="space-y-6">
-      <AdminTopbar currentSection="Asistente IA (Logs & NLP)" />
+      <AdminTopbar 
+        currentSection="Asistente IA (Logs & NLP)" 
+        actionButton={
+          <button
+            type="button"
+            onClick={() => openCopilot && openCopilot('')}
+            className="px-3.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white border border-sky-400/50 text-xs font-semibold flex items-center gap-1.5 shadow-sm transition cursor-pointer"
+          >
+            <Bot className="w-3.5 h-3.5 text-sky-400" />
+            <span>Lanzar Copiloto Admin</span>
+            <Sparkles className="w-3 h-3 text-amber-400" />
+          </button>
+        }
+      />
 
       <div className="px-6 space-y-6">
         <div>
@@ -151,6 +166,33 @@ export const AdminAsistenteIAPage = () => {
           {/* Right Column: Intenciones & Estado del Modelo (4 cols ~ 30%) */}
           <div className="lg:col-span-4 space-y-6">
             
+            {/* Acceso Directo al Copiloto Operativo IA */}
+            <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-azul-oscuro p-5 rounded-2xl border border-slate-700/80 text-white space-y-3 shadow-md">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-lg bg-sky-500/20 border border-sky-400/30 flex items-center justify-center text-sky-400">
+                  <Bot className="w-4 h-4" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-white text-xs uppercase tracking-wider">
+                    Copiloto Operativo IA
+                  </h3>
+                  <p className="text-[10px] text-sky-300">Inteligencia Administrativa en Vivo</p>
+                </div>
+              </div>
+              <p className="text-[11px] text-slate-300 leading-relaxed">
+                Interactúa directamente con la IA para auditar envíos con incidencias, consultar el rendimiento de cualquier sede y analizar usuarios o PQRS.
+              </p>
+              <button
+                type="button"
+                onClick={() => openCopilot && openCopilot('')}
+                className="w-full py-2 px-3 rounded-xl bg-gradient-to-r from-sky-600 to-azul-primario hover:from-sky-500 hover:to-azul-oscuro text-white font-bold text-xs flex items-center justify-center gap-1.5 transition shadow-sm cursor-pointer"
+              >
+                <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+                <span>Abrir Chat de IA para Admin</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+
             {/* Intenciones Más Frecuentes */}
             <div className="bg-white p-5 rounded-2xl border border-gray-200/80 shadow-2xs space-y-3 text-xs">
               <h3 className="font-bold text-azul-oscuro uppercase tracking-wider text-[11px]">

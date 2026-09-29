@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Package, Truck, CheckCircle2, MessageSquare, Download, ArrowUpRight, 
-  Clock, MapPin, Eye, Edit, Trash2, Calendar
+  Clock, MapPin, Eye, Edit, Trash2, Calendar, Bot, Sparkles
 } from 'lucide-react';
 import { 
   LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, 
@@ -9,12 +9,15 @@ import {
 } from 'recharts';
 import { AdminTopbar } from '../../components/admin/AdminTopbar';
 import { StatCard } from '../../components/admin/StatCard';
+import { AdminDashboardAiWidget } from '../../components/admin/AdminDashboardAiWidget';
 import { enviosService } from '../../services/enviosService';
-import { Link } from 'react-router-dom';
+import { Link, useOutletContext } from 'react-router-dom';
 import { StatusBadge } from '../../components/common/StatusBadge';
 import { getBranchDashboardData } from '../../data/branchDashboardData';
 
 export const AdminDashboardPage = () => {
+  const outletContext = useOutletContext();
+  const openCopilot = outletContext?.openCopilot;
   const [envios, setEnvios] = useState([]);
   const [selectedBranch, setSelectedBranch] = useState('Sucursal Central San José');
   const [selectedPeriod, setSelectedPeriod] = useState('30d');
@@ -67,10 +70,21 @@ export const AdminDashboardPage = () => {
         selectedPeriod={selectedPeriod}
         onPeriodChange={setSelectedPeriod}
         actionButton={
-          <button onClick={exportCSV} className="btn-neutro text-xs py-1.5 px-3">
-            <Download className="w-3.5 h-3.5" />
-            <span>Exportar CSV</span>
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => openCopilot && openCopilot('')}
+              className="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white border border-sky-400/50 text-xs font-semibold flex items-center gap-1.5 shadow-sm transition cursor-pointer"
+              title="Abrir Copiloto IA de Administración"
+            >
+              <Bot className="w-3.5 h-3.5 text-sky-400" />
+              <span className="hidden sm:inline">Copiloto IA</span>
+            </button>
+            <button onClick={exportCSV} className="btn-neutro text-xs py-1.5 px-3">
+              <Download className="w-3.5 h-3.5" />
+              <span>Exportar CSV</span>
+            </button>
+          </div>
         }
       />
 
@@ -130,6 +144,15 @@ export const AdminDashboardPage = () => {
             iconBg="bg-purple-100 text-purple-700"
           />
         </div>
+
+        {/* Widget del Copiloto IA de Operaciones & Métricas */}
+        <AdminDashboardAiWidget
+          currentBranch={selectedBranch}
+          currentPeriod={selectedPeriod}
+          onOpenFullCopilot={(query) => {
+            if (openCopilot) openCopilot(query);
+          }}
+        />
 
         {/* Charts Row: Monthly / Temporal Trend & Distribution */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
