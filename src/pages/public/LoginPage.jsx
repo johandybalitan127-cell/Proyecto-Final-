@@ -93,6 +93,8 @@ export const LoginPage = () => {
               <Mail className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="email"
+                name="email"
+                autoComplete="username"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -108,6 +110,8 @@ export const LoginPage = () => {
               <Lock className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="password"
+                name="password"
+                autoComplete="current-password"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -126,35 +130,6 @@ export const LoginPage = () => {
             <ArrowRight className="w-3.5 h-3.5" />
           </button>
         </form>
-
-        {/* Demo Fast Access */}
-        <div className="pt-2 space-y-2">
-          <div className="relative flex items-center justify-center">
-            <div className="border-t border-gray-200 w-full"></div>
-            <span className="bg-white px-2 text-[10px] uppercase font-bold text-gray-400 tracking-wider">
-              Acceso Rápido Demo
-            </span>
-          </div>
-
-          <div className="grid grid-cols-2 gap-2 pt-1">
-            <button
-              type="button"
-              onClick={() => handleDemo('Usuario')}
-              className="py-2 px-2.5 rounded-xl border border-sky-200 bg-sky-50/80 hover:bg-sky-100 text-azul-oscuro text-[11px] font-semibold flex items-center justify-center gap-1.5 transition"
-            >
-              <UserCheck className="w-3.5 h-3.5 text-azul-primario" />
-              <span>Ciudadano</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => handleDemo('Administrador')}
-              className="py-2 px-2.5 rounded-xl border border-emerald-200 bg-emerald-50/80 hover:bg-emerald-100 text-emerald-950 text-[11px] font-semibold flex items-center justify-center gap-1.5 transition"
-            >
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-              <span>Administrador</span>
-            </button>
-          </div>
-        </div>
 
         <div className="text-center text-xs text-gray-500 pt-3 border-t border-gray-100">
           ¿No tienes una cuenta?{' '}
