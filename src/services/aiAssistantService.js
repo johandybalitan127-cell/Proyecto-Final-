@@ -223,8 +223,8 @@ BASE DE CONOCIMIENTO (datos reales del sistema):
       console.error('[aiAssistantService] Todas las APIs fallaron:', allFailed.message);
 
       return {
-        text: '⚠️ Los servicios de IA no están disponibles en este momento. Por favor intenta de nuevo en unos segundos o comunícate al **2202-2900**.',
-        dataBadge: 'SIP-CR · Sin conexión',
+        text: '⚠️ **Saturación en Servidores de IA (Error 503)**\n\nActualmente, las APIs de Gemini y DeepSeek están experimentando una **alta demanda mundial** y han rechazado la conexión.\n\nPor favor, intenta de nuevo en unos segundos. Ya que el motor local fue removido, el sistema depende 100% de la disponibilidad de estos servidores externos.',
+        dataBadge: 'APIs Globales Congestionadas',
         quickSuggestions: ['Reintentar consulta']
       };
     }

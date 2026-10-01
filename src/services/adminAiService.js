@@ -262,8 +262,8 @@ BASE DE DATOS OPERATIVA EN TIEMPO REAL:
       console.error('[adminAiService] Todas las APIs fallaron:', allFailed.message);
 
       return {
-        text: '⚠️ Los servicios de IA no están disponibles en este momento. Por favor intenta de nuevo en unos segundos.',
-        dataBadge: 'SIP-CR · Sin conexión',
+        text: '⚠️ **Saturación en Servidores de IA (Error 503)**\n\nActualmente, las APIs globales de Gemini y DeepSeek están experimentando una **alta demanda mundial** y han rechazado la conexión.\n\nPor favor, intenta tu consulta nuevamente en unos segundos. Como retiraste el motor de respaldo local, dependemos 100% de la disponibilidad de los servidores externos.',
+        dataBadge: 'APIs Globales Congestionadas',
         quickSuggestions: ['Reintentar consulta']
       };
     }
