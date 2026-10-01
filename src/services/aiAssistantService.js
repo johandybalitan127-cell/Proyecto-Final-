@@ -7,7 +7,7 @@ import { enviosService } from './enviosService.js';
 import { n8nService } from './n8nService.js';
 
 // Lista ordenada de modelos para reintento automático si uno está congestionado (503 / 429)
-const GEMINI_MODELS = ['gemini-1.5-flash', 'gemini-1.5-flash-8b', 'gemini-1.5-pro'];
+const GEMINI_MODELS = ['gemini-3.8-flash', 'gemini-3.7-flash'];
 
 /**
  * Llama a la API de DeepSeek a través del proxy local de Vite (/deepseek-api)
