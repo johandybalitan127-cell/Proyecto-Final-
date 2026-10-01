@@ -213,7 +213,7 @@ export const HomePage = () => {
               <div className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-slate-100 aspect-[4/3]">
                 {/* Hero Real Photograph */}
                 <img
-                  src="/images/hero-correos.jpg"
+                  src="https://alba-cr-repretel.cdn.mediatiquepress.com/wp-content/uploads/2025/08/Correos-de-Costa-Rica-puestos-de-empleo-repretel.png"
                   alt="Edificio Central y Flota Oficial de Correos de Costa Rica"
                   className="w-full h-full object-cover"
                 />
@@ -227,10 +227,10 @@ export const HomePage = () => {
                 </div>
 
                 {/* Subtle gradient overlay at bottom for readability */}
-                <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/50 via-black/20 to-transparent pointer-events-none"></div>
+                <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/50 via-black/20 to-transparent pointer-events-none"></div>
 
-                {/* Bottom Overlay Card inside image */}
-                <div className="absolute bottom-3 left-3 right-3 z-10 bg-white/95 backdrop-blur-md p-3 sm:p-3.5 rounded-2xl shadow-lg border border-gray-100/90 flex items-center justify-between">
+                {/* Bottom Overlay Card inside image - Moved up to avoid overlap */}
+                <div className="absolute bottom-16 left-3 right-3 z-10 bg-white/95 backdrop-blur-md p-3 sm:p-3.5 rounded-2xl shadow-lg border border-gray-100/90 flex items-center justify-between">
                   <div>
                     <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">
                       Ruta Nacional Express
