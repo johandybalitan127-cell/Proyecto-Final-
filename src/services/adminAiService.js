@@ -8,7 +8,7 @@ import { getBranchDashboardData } from '../data/branchDashboardData.js';
 import { n8nService } from './n8nService.js';
 
 // Lista ordenada de modelos Gemini para reintento automático
-const GEMINI_MODELS = ['gemini-3.6-flash', 'gemini-3.7-flash', 'gemini-3.5-flash'];
+const GEMINI_MODELS = ['gemini-1.5-flash', 'gemini-1.5-flash-8b', 'gemini-1.5-pro'];
 
 /**
  * Llama a la API de DeepSeek a través del proxy local de Vite (/deepseek-api)
