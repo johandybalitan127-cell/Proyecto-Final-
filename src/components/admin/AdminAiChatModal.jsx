@@ -17,18 +17,13 @@ export const AdminAiChatModal = ({
     {
       id: 1,
       sender: 'bot',
-      text: `👋 **¡Bienvenido al Copiloto Ejecutivo Postal IA (SIP-CR)!**\n\nEstoy conectado en tiempo real a la telemetría operativa de **${currentBranch}** (${periodLabel}). Puedo asistirte en la toma de decisiones, análisis de rendimiento, detección de incidencias o gestión de personal y reclamos.`,
+      text: `👋 **¡Bienvenido al Copiloto Ejecutivo Postal IA (SIP-CR)!**\n\nEstoy conectado en tiempo real a la telemetría operativa de **${currentBranch}** (${periodLabel}). Puedo asistirte en análisis de rendimiento, detección de incidencias, gestión de personal y reclamos PQRS.\n\nEscribe tu consulta o elige una opción rápida:`,
       time: 'Ahora',
-      metrics: [
-        { label: 'Sedes Conectadas', value: '110' },
-        { label: 'Tasa a Tiempo', value: '98.2%' },
-        { label: 'IA Resueltas', value: '94%' }
-      ],
       quickSuggestions: [
         'Resumen operativo general',
         '¿Cuáles envíos presentan incidencias?',
-        'Rendimiento en Alajuela vs San José',
-        'Estado de reclamos PQRS'
+        'Estado de reclamos PQRS',
+        'Total de usuarios registrados'
       ]
     }
   ]);

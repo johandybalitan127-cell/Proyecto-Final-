@@ -1,5 +1,8 @@
 // Servicio de integración con Webhooks y AI Agent de N8N
-const DEFAULT_N8N_WEBHOOK = 'http://localhost:5678/webhook/pqrs-ciudadana';
+// Usamos el proxy de Vite (/n8n-webhook) para evitar errores CORS en el navegador.
+// El proxy redirige: /n8n-webhook/* → http://localhost:5678/*
+const DEFAULT_N8N_WEBHOOK = '/n8n-webhook/webhook/pqrs-ciudadana';
+const DEFAULT_N8N_ADMIN_WEBHOOK = '/n8n-webhook/webhook/admin-ai-agent';
 
 export const n8nService = {
   /**
@@ -7,8 +10,8 @@ export const n8nService = {
    */
   getWebhookUrl: () => {
     const saved = localStorage.getItem('correos_n8n_webhook_url');
-    // Si tenía configurada la antigua URL en la nube de n8n, actualizar a la URL local activa
-    if (saved && saved.includes('johandyblitan.app.n8n.cloud')) {
+    // Limpiar cualquier URL absoluta guardada (nube o localhost directo) y usar el proxy
+    if (saved && (saved.includes('johandyblitan.app.n8n.cloud') || saved.includes('localhost:5678'))) {
       localStorage.setItem('correos_n8n_webhook_url', DEFAULT_N8N_WEBHOOK);
       return DEFAULT_N8N_WEBHOOK;
     }
@@ -27,6 +30,90 @@ export const n8nService = {
   },
 
   /**
+   * Obtiene la URL del Webhook del Admin AI Agent en N8N
+   */
+  getAdminWebhookUrl: () => {
+    return localStorage.getItem('correos_n8n_admin_webhook_url') || DEFAULT_N8N_ADMIN_WEBHOOK;
+  },
+
+  /**
+   * Guarda la URL del Webhook Admin configurada por el administrador
+   */
+  setAdminWebhookUrl: (url) => {
+    if (url && url.trim()) {
+      localStorage.setItem('correos_n8n_admin_webhook_url', url.trim());
+    } else {
+      localStorage.removeItem('correos_n8n_admin_webhook_url');
+    }
+  },
+
+  /**
+   * Envía un mensaje al Admin AI Agent en N8N (Webhook → Gemini/OpenAI AI Agent)
+   */
+  sendAdminChatMessage: async ({ message, user = null, currentBranch = '', currentPeriod = '30d', context = {} }) => {
+    const webhookUrl = n8nService.getAdminWebhookUrl();
+    const cleanMessage = String(message || '').trim();
+
+    const payload = {
+      chatInput: cleanMessage,
+      input: cleanMessage,
+      message: cleanMessage,
+      usuario: user?.nombre || 'Administrador',
+      correo: user?.correo || 'admin@correos.go.cr',
+      rol: user?.rol || 'Administrador',
+      sede: currentBranch,
+      periodo: currentPeriod,
+      timestamp: new Date().toISOString(),
+      context: {
+        totalEnvios: context.totalEnvios || 0,
+        incidencias: context.incidencias || 0,
+        totalUsuarios: context.totalUsuarios || 0,
+        totalConsultas: context.totalConsultas || 0,
+        ...context
+      }
+    };
+
+    try {
+      const controller = new AbortController();
+      // 4s timeout: si n8n no responde de inmediato, caer al motor rápido directo
+      const timeoutId = setTimeout(() => controller.abort(), 4000);
+
+      const response = await fetch(webhookUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(payload),
+        signal: controller.signal
+      });
+      clearTimeout(timeoutId);
+
+      const responseText = await response.text();
+      let rawData = {};
+      try { rawData = JSON.parse(responseText); } catch { rawData = { text: responseText }; }
+
+      if (!response.ok) {
+        return { success: false, error: `HTTP ${response.status}: ${rawData?.message || response.statusText}` };
+      }
+
+      const data = Array.isArray(rawData) ? (rawData[0]?.json || rawData[0] || {}) : rawData;
+
+      const replyText =
+        data.output || data.text || data.respuesta || data.response ||
+        data.reply || data.content || data.message ||
+        (typeof data === 'string' ? data : null) ||
+        (responseText && !responseText.startsWith('{') ? responseText.trim() : null);
+
+      if (!replyText || replyText === 'Workflow was started') {
+        return { success: false, error: 'El AI Agent de N8N no retornó una respuesta de texto.' };
+      }
+
+      return { success: true, replyText, raw: rawData };
+
+    } catch (err) {
+      return { success: false, error: err.message || 'Error de conexión con N8N Admin AI Agent' };
+    }
+  },
+
+  /**
    * Envía un mensaje o consulta ciudadana al AI Agent en N8N
    * @param {Object} params
    * @param {string} params.message Texto de la consulta
@@ -39,6 +126,11 @@ export const n8nService = {
     const cleanMessage = String(message || '').trim();
 
     const payload = {
+      // Campos que el AI Agent de n8n puede leer como entrada
+      message: cleanMessage,       // campo principal que lee el AI Agent
+      chatInput: cleanMessage,     // alias alternativo
+      input: cleanMessage,         // alias alternativo
+      // Datos del contexto ciudadano
       mensaje: cleanMessage,
       asunto: cleanMessage.length > 60 ? `${cleanMessage.substring(0, 60)}...` : cleanMessage,
       usuario: user?.nombre || 'Ciudadano Web',
@@ -46,15 +138,13 @@ export const n8nService = {
       telefono: user?.telefono || '+506 2202-2900',
       categoria: categoria,
       prioridad: prioridad,
-      chatInput: cleanMessage,
-      input: cleanMessage,
       timestamp: new Date().toISOString()
     };
 
     try {
       const controller = new AbortController();
-      // Permitir hasta 20s para que agentes LLM en n8n procesen la respuesta
-      const timeoutId = setTimeout(() => controller.abort(), 20000);
+      // 4s para responder rápido sin demoras
+      const timeoutId = setTimeout(() => controller.abort(), 4000);
 
       const response = await fetch(webhookUrl, {
         method: 'POST',
@@ -83,6 +173,9 @@ export const n8nService = {
         };
       }
 
+      // Debug: ver exactamente qué devuelve n8n (visible en la consola del navegador)
+      console.log('[n8nService][ciudadano] Respuesta cruda de N8N:', responseText.substring(0, 500));
+
       // Si N8N devuelve un array de items (ej: [{ output: '...' }])
       const data = Array.isArray(rawData) ? (rawData[0]?.json || rawData[0] || {}) : rawData;
 
@@ -102,9 +195,14 @@ export const n8nService = {
         (typeof data === 'string' ? data : null) ||
         (responseText && responseText.trim() && !responseText.startsWith('{') ? responseText.trim() : null);
 
+      if (!replyText || replyText === 'Workflow was started' || replyText === 'Error in workflow') {
+        console.warn('[n8nService][ciudadano] N8N respondió pero sin texto útil. Claves recibidas:', Object.keys(data));
+        return { success: false, error: 'N8N no retornó texto de respuesta. Revisa el nodo Respond to Webhook.' };
+      }
+
       return {
         success: true,
-        replyText: replyText && replyText !== 'Workflow was started' && replyText !== 'Error in workflow' ? replyText : null,
+        replyText,
         departamento: data.departamento || data.n8nDepartment,
         prioridad: data.prioridad,
         sla: data.sla,

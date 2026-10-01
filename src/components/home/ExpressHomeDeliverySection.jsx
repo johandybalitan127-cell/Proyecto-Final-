@@ -11,9 +11,9 @@ export const ExpressHomeDeliverySection = () => {
   const { addToast } = useToast();
   const { user, isAuthenticated } = useAuth();
 
-  const [guiaNumber, setGuiaNumber] = useState('CR098421734CR');
-  const [address, setAddress] = useState('Condominio La Floresta, Casa 42B, Curridabat');
-  const [contactPhone, setContactPhone] = useState('+506 8888-9999');
+  const [guiaNumber, setGuiaNumber] = useState('');
+  const [address, setAddress] = useState(user?.direccion || '');
+  const [contactPhone, setContactPhone] = useState(user?.telefono || '');
   const [selectedHorario, setSelectedHorario] = useState('mismo-dia');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activatedSuccess, setActivatedSuccess] = useState(false);

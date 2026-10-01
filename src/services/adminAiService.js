@@ -1,32 +1,183 @@
 import { enviosService } from './enviosService.js';
 import { sucursalesService } from './sucursalesService.js';
 import { usuariosService } from './usuariosService.js';
-import { serviciosService } from './serviciosService.js';
-import { tarifasService } from './tarifasService.js';
 import { consultasService } from './consultasService.js';
+import { citasService } from './citasService.js';
 import { iaLogsService } from './iaLogsService.js';
-import { SEDES_DASHBOARD_DATA, getBranchDashboardData } from '../data/branchDashboardData.js';
-import { SUCURSALES_DATA } from '../data/sucursalesData.js';
+import { getBranchDashboardData } from '../data/branchDashboardData.js';
+import { n8nService } from './n8nService.js';
+
+// Lista ordenada de modelos Gemini para reintento automático
+const GEMINI_MODELS = ['gemini-3.6-flash', 'gemini-3.7-flash', 'gemini-3.5-flash'];
+
+// ─── Detección rápida de saludos (respuesta instantánea, sin API) ───
+const GREETING_PATTERNS = /^(hola|hey|buenos?\s*d[ií]as?|buenas?\s*(tardes?|noches?)?|saludos?|hi|hello|qué\s*tal|que\s*tal|buen[oa]?s?)[\s!?.]*$/i;
 
 /**
- * Normaliza texto para el procesador de lenguaje natural de administración
+ * Genera respuesta local instantánea para saludos (~0ms)
  */
-const normalizeText = (text = '') => {
-  return String(text)
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .trim();
-};
+function buildInstantGreeting(user, currentBranch, currentPeriod, contextData, envios, usuarios, citas) {
+  return `👋 **¡Hola ${user?.nombre || 'Administrador'}!** Soy **SIP-CR Admin**, tu copiloto operativo en tiempo real.
+
+Estamos monitoreando la **${currentBranch}** (período: ${currentPeriod}).
+
+📌 **Resumen Rápido:**
+• **Total Envíos:** ${envios.length}
+• **En Reparto / Tránsito:** ${contextData.transito}
+• **Incidencias:** ${contextData.incidencias}
+• **Retenciones Aduanales:** ${contextData.aduanas}
+• **Citas Premium:** ${citas.length}
+• **Usuarios Registrados:** ${usuarios.length}
+
+¿En qué paquete, guía, trámite o métrica específica te puedo asistir hoy?`;
+}
 
 /**
- * Servicio de Inteligencia Artificial para el Dashboard y Panel de Administración (SIP-CR)
- * Procesa consultas analíticas, operativas y de auditoría institucional con datos en tiempo real.
+ * Llama a la API de DeepSeek a través del proxy local de Vite (/deepseek-api)
+ * Timeout agresivo de 3s para garantizar respuesta rápida
  */
+async function callDeepSeek(apiKey, systemPrompt, rawQuery, historyContents) {
+  const messages = [
+    { role: 'system', content: systemPrompt },
+    ...historyContents.map(h => ({
+      role: h.role === 'model' ? 'assistant' : 'user',
+      content: h.parts?.[0]?.text || ''
+    })),
+    { role: 'user', content: rawQuery }
+  ];
+
+  const controller = new AbortController();
+  // 3 segundos máximo — si DeepSeek no responde rápido, saltar
+  const timeoutId = setTimeout(() => controller.abort(), 3000);
+
+  const response = await fetch('/deepseek-api/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${apiKey}`
+    },
+    body: JSON.stringify({
+      model: 'deepseek-chat',
+      messages,
+      temperature: 0.2,
+      max_tokens: 400
+    }),
+    signal: controller.signal
+  });
+  clearTimeout(timeoutId);
+
+  if (!response.ok) {
+    const errBody = await response.json().catch(() => ({}));
+    throw new Error(`DeepSeek API error ${response.status}: ${errBody?.error?.message || response.statusText}`);
+  }
+
+  const data = await response.json();
+  if (data?.error) {
+    throw new Error(`DeepSeek error: ${data.error.message || 'Error en servidor DeepSeek'}`);
+  }
+
+  const text = data?.choices?.[0]?.message?.content;
+  if (!text) throw new Error('Respuesta vacía de DeepSeek.');
+  return text;
+}
+
+/**
+ * Llama a la API de Gemini con AbortController de 4s
+ * Solo prueba el primer modelo disponible para velocidad
+ */
+async function callGeminiFallback(apiKey, systemPrompt, rawQuery, historyContents) {
+  const contents = [
+    { role: 'user', parts: [{ text: systemPrompt }] },
+    { role: 'model', parts: [{ text: 'Entendido. Soy SIP-CR Admin, listo para analizar datos operativos de Correos de Costa Rica.' }] },
+    ...historyContents,
+    { role: 'user', parts: [{ text: rawQuery }] }
+  ];
+
+  let lastError = null;
+  for (const model of GEMINI_MODELS) {
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 4000);
+
+      const url = `/gemini-api/v1beta/models/${model}:generateContent?key=${apiKey}`;
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contents }),
+        signal: controller.signal
+      });
+      clearTimeout(timeoutId);
+
+      if (response.ok) {
+        const data = await response.json();
+        const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (text) return text;
+      }
+
+      // Si da 503 (high demand) o 429 (rate limit), probamos con el siguiente modelo
+      const errBody = await response.json().catch(() => ({}));
+      lastError = new Error(`Gemini (${model}) ${response.status}: ${errBody?.error?.message || response.statusText}`);
+      if (response.status === 503 || response.status === 429) {
+        console.warn(`[adminAiService] ${model} con alta demanda (${response.status}), probando siguiente modelo...`);
+        continue;
+      }
+      // Si es otro error (ej: 400 Bad Request), no tiene sentido probar otro
+      throw lastError;
+    } catch (err) {
+      lastError = err;
+      if (err.name === 'AbortError' || (err.message && (err.message.includes('503') || err.message.includes('429')))) {
+        continue;
+      }
+      throw err;
+    }
+  }
+
+  throw lastError || new Error('No se pudo obtener respuesta de ningún modelo de Gemini.');
+}
+
+/**
+ * Promise.any-style race: corre DeepSeek y N8N en paralelo, gana el primero
+ */
+async function raceAiEngines(deepseekKey, geminiKey, systemPrompt, rawQuery, historyContents, n8nParams) {
+  const racers = [];
+
+  // DeepSeek racer
+  if (deepseekKey) {
+    racers.push(
+      callDeepSeek(deepseekKey, systemPrompt, rawQuery, historyContents)
+        .then(text => ({ text, badge: 'DeepSeek V3 · SIP-CR Admin', engine: 'deepseek' }))
+    );
+  }
+
+  // N8N racer
+  racers.push(
+    n8nService.sendAdminChatMessage(n8nParams)
+      .then(result => {
+        if (result.success && result.replyText) {
+          return { text: result.replyText, badge: 'N8N AI Agent · SIP-CR', engine: 'n8n' };
+        }
+        throw new Error('N8N sin respuesta');
+      })
+  );
+
+  // Gemini racer (con un pequeño delay de 500ms para dar prioridad a DeepSeek/N8N)
+  if (geminiKey) {
+    racers.push(
+      new Promise(resolve => setTimeout(resolve, 500))
+        .then(() => callGeminiFallback(geminiKey, systemPrompt, rawQuery, historyContents))
+        .then(text => ({ text, badge: 'Gemini · SIP-CR Admin', engine: 'gemini' }))
+    );
+  }
+
+  if (racers.length === 0) {
+    throw new Error('No hay motores de IA configurados');
+  }
+
+  // Promise.any: el PRIMER motor que responda exitosamente gana
+  return Promise.any(racers);
+}
+
 export const adminAiService = {
-  /**
-   * Procesa la consulta del administrador en lenguaje natural
-   */
   processAdminMessage: async ({ 
     message = '', 
     currentBranch = 'Sucursal Central San José', 
@@ -38,390 +189,180 @@ export const adminAiService = {
     if (!rawQuery) {
       return {
         text: 'Hola Administrador. Indícame qué métrica, sede, guía de envío o aspecto operativo deseas analizar.',
-        quickSuggestions: [
-          'Resumen operativo general',
-          'Rendimiento por sedes',
-          'Envíos con incidencias',
-          'Gestión de usuarios y personal'
-        ]
+        quickSuggestions: ['Resumen operativo', 'Envíos con incidencias', 'Estado de usuarios']
       };
     }
 
-    const normalized = normalizeText(rawQuery);
-
-    // Obtener datos operativos dinámicos de la sede activa y período seleccionado
+    // Cargar datos completos del sistema administrativo
     const branchData = getBranchDashboardData(currentBranch, currentPeriod);
-
-    // Cargar datos en paralelo desde los servicios institucionales con fallback seguro
-    const [envios, usuarios, sucursales, consultas, servicios, tarifas] = await Promise.all([
+    const [envios, usuarios, consultas, citas] = await Promise.all([
       enviosService.getAll().catch(() => []),
       usuariosService.getAll().catch(() => []),
-      sucursalesService.getAll().catch(() => SUCURSALES_DATA),
       consultasService.getAll().catch(() => []),
-      serviciosService.getAll().catch(() => []),
-      tarifasService.getAll().catch(() => [])
+      citasService.getAll().catch(() => []),
     ]);
 
-    // Registro de auditoría administrativa
-    await iaLogsService.createLog({
-      usuario: `${user?.nombre || 'Administrador'} (SIP-CR Admin)`,
-      consulta: rawQuery,
-      intencion: 'consulta_dashboard_admin',
-      confianza: 99.8,
-      resultado: 'Respuesta generada con telemetría administrativa'
-    }).catch(() => {});
+    // Formato compacto de inventario para máxima velocidad de respuesta (<1s)
+    const enviosDetalleSeguro = envios.map(e => ({
+      guia: e.guia,
+      remitente: e.remitente,
+      estado: e.estado,
+      ruta: `${e.origen} -> ${e.destino}`,
+      servicio: e.servicio,
+      etapaActual: e.etapas?.find(et => et.actual)?.nombre || e.estado
+    }));
 
-    // =========================================================================
-    // 1. CONSULTA DE GUÍA ESPECÍFICA (#CR... O PATRÓN DE GUÍA)
-    // =========================================================================
-    const trackingRegex = /\b(?:CR|CP)?\d{6,13}(?:CR)?\b/i;
-    const trackingMatch = rawQuery.match(trackingRegex);
-    const hasExplicitTrackingIntent = trackingMatch || normalized.includes('guia') || normalized.includes('rastrear') || normalized.includes('paquete #');
-
-    if (hasExplicitTrackingIntent && trackingMatch) {
-      const queryGuia = trackingMatch[0].toUpperCase();
-      const matchedEnvio = envios.find(
-        (e) => String(e.guia || '').toUpperCase().includes(queryGuia) || String(e.id || '').toUpperCase() === queryGuia
-      );
-
-      if (matchedEnvio) {
-        return {
-          text: `📦 **Ficha Administrativa de Envío — Guía #${matchedEnvio.guia}**\n\n` +
-            `• 🟢 **Estado Operativo**: **${matchedEnvio.estado}**\n` +
-            `• 🚀 **Servicio**: ${matchedEnvio.servicio} | Peso: ${matchedEnvio.peso || '1.0 kg'}\n` +
-            `• 👤 **Destinatario**: ${matchedEnvio.destinatario?.nombre || matchedEnvio.destinatario} (${matchedEnvio.destinatario?.telefono || matchedEnvio.telefono || 'Sin teléfono'})\n` +
-            `• 📍 **Trayectoria**: ${matchedEnvio.origen} ➔ ${matchedEnvio.destino}\n` +
-            `• 🏢 **Sede / Centro Asignado**: ${matchedEnvio.sedeAsignada || matchedEnvio.origen || currentBranch}\n` +
-            `• 🚚 **Repartidor / Despacho**: ${matchedEnvio.repartidorAsignado || 'Ruta Metropolitana GAM'}\n` +
-            `• 📅 **Fecha de Admisión**: ${matchedEnvio.fecha || '2024-03-24'}\n\n` +
-            `*El envío cuenta con trazabilidad completa registrada en el Sistema Postal.*`,
-          actionLink: '/admin/envios',
-          actionText: 'Ver detalles en Gestión de Envíos',
-          dataBadge: 'Guía Localizada',
-          quickSuggestions: ['Envíos con incidencias', 'Resumen operativo general', 'Rendimiento de Alajuela', 'Revisar PQRS']
-        };
-      }
-    }
-
-    // =========================================================================
-    // 2. ENVÍOS CON INCIDENCIAS, RETENIDOS O DEMORADOS
-    // =========================================================================
-    const isIncidenciasIntent =
-      normalized.includes('incidencia') ||
-      normalized.includes('incidencias') ||
-      normalized.includes('demora') ||
-      normalized.includes('demoras') ||
-      normalized.includes('retraso') ||
-      normalized.includes('retrasos') ||
-      normalized.includes('aduana') ||
-      normalized.includes('aduanas') ||
-      normalized.includes('retenido') ||
-      normalized.includes('retenidos') ||
-      normalized.includes('problema') ||
-      normalized.includes('problemas') ||
-      normalized.includes('danado') ||
-      normalized.includes('danados');
-
-    if (isIncidenciasIntent) {
-      const incidencias = envios.filter((e) =>
-        ['Incidencias', 'Aduanas', 'Demorado', 'Retenido'].includes(e.estado) ||
-        normalizeText(e.estado).includes('incidencia') ||
-        normalizeText(e.estado).includes('aduana')
-      );
-
-      const totalIncidencias = incidencias.length;
-      const countAduanas = envios.filter(e => e.estado === 'Aduanas').length;
-      const countIncidencias = envios.filter(e => e.estado === 'Incidencias').length;
-
-      let detailList = '';
-      if (incidencias.length > 0) {
-        detailList = '\n\n🔍 **Envíos que requieren atención operativa prioritaria**:\n' +
-          incidencias.slice(0, 4).map((e) => 
-            `• **Guía #${e.guia}** (${e.estado})\n  Destino: ${e.destino} | Servicio: ${e.servicio}\n  Destinatario: ${e.destinatario?.nombre || e.destinatario}`
-          ).join('\n\n');
-      }
-
-      return {
-        text: `⚠️ **Reporte Ejecutivo de Incidencias y Envíos Retenidos**:\n\n` +
-          `• 📦 **Total de envíos con novedades activas**: **${totalIncidencias} paquetes**\n` +
-          `• 🛃 **Retenidos en Aforo Aduanal (Zapote)**: **${countAduanas} envíos** (pendientes de liquidación de impuestos DGA)\n` +
-          `• 🚨 **Incidencias en Ruta / Dirección Incompleta**: **${countIncidencias} envíos**\n` +
-          `• ⏱️ **Tasa de resolución promedio**: **94.2%** antes de 48 horas hábiles` +
-          detailList +
-          `\n\n¿Deseas filtrar la tabla de envíos o gestionar un ticket de soporte con el departamento de Aforo?`,
-        actionLink: '/admin/envios',
-        actionText: 'Filtrar envíos en riesgo en Gestión de Envíos',
-        dataBadge: 'Atención Requerida',
-        metrics: [
-          { label: 'Incidencias', value: `${totalIncidencias}` },
-          { label: 'En Aduanas', value: `${countAduanas}` },
-          { label: 'Resolución', value: '94.2%' }
-        ],
-        quickSuggestions: ['Resumen operativo general', 'Revisar PQRS pendientes', 'Rendimiento Sede Central', 'Auditoría de usuarios']
-      };
-    }
-
-    // =========================================================================
-    // 3. RENDIMIENTO POR SEDES (COMPARACIÓN Y DATOS POR PROVINCIA / SUCURSAL)
-    // =========================================================================
-    const isSedesComparisonIntent =
-      normalized.includes('sede') ||
-      normalized.includes('sedes') ||
-      normalized.includes('sucursal') ||
-      normalized.includes('sucursales') ||
-      normalized.includes('alajuela') ||
-      normalized.includes('san jose') ||
-      normalized.includes('zapote') ||
-      normalized.includes('heredia') ||
-      normalized.includes('cartago') ||
-      normalized.includes('liberia') ||
-      normalized.includes('guanacaste') ||
-      normalized.includes('puntarenas') ||
-      normalized.includes('limon') ||
-      normalized.includes('rendimiento') ||
-      normalized.includes('comparar');
-
-    if (isSedesComparisonIntent && !normalized.includes('usuario') && !normalized.includes('tarifa')) {
-      // Determinar si consultó por una sede específica
-      let targetBranchKey = null;
-
-      if (normalized.includes('alajuela')) targetBranchKey = 'Alajuela Centro Regional';
-      else if (normalized.includes('zapote')) targetBranchKey = 'Centro Operativo Postal (Zapote)';
-      else if (normalized.includes('heredia')) targetBranchKey = 'Sucursal Heredia Central';
-      else if (normalized.includes('cartago')) targetBranchKey = 'Sucursal Cartago Los Ángeles';
-      else if (normalized.includes('liberia') || normalized.includes('guanacaste')) targetBranchKey = 'Sucursal Liberia Centro';
-      else if (normalized.includes('puntarenas')) targetBranchKey = 'Sucursal Puntarenas Puerto';
-      else if (normalized.includes('limon')) targetBranchKey = 'Sucursal Limón Centro';
-      else if (normalized.includes('san pedro')) targetBranchKey = 'Sucursal San Pedro de Montes de Oca';
-      else if (normalized.includes('perez zeledon')) targetBranchKey = 'Sucursal Pérez Zeledón';
-      else if (normalized.includes('san jose') || normalized.includes('central')) targetBranchKey = 'Sucursal Central San José';
-
-      if (!targetBranchKey) {
-        for (const key of Object.keys(SEDES_DASHBOARD_DATA)) {
-          const normKey = normalizeText(key);
-          const normShort = normalizeText(SEDES_DASHBOARD_DATA[key].nombreCorto || '');
-          if (normalized.includes(normKey) || (normShort && normalized.includes(normShort))) {
-            targetBranchKey = key;
-            break;
-          }
-        }
-      }
-
-      const branchToAnalyze = targetBranchKey || currentBranch;
-      const bData = getBranchDashboardData(branchToAnalyze, currentPeriod);
-
-      return {
-        text: `🏢 **Análisis de Rendimiento Operativo — ${bData.nombre}**:\n\n` +
-          `• 📍 **Provincia**: ${bData.provincia} | Período: **${bData.periodLabel || 'Últimos 30 días'}**\n` +
-          `• 📦 **Envíos Registrados**: **${bData.stats.registrados.valor}** (${bData.stats.registrados.delta})\n` +
-          `• 🚚 **Envíos en Tránsito Activo**: **${bData.stats.transito.valor}** (${bData.stats.transito.delta})\n` +
-          `• ✅ **Entregas Exitosas Concluidas**: **${bData.stats.entregados.valor}** (${bData.stats.entregados.delta})\n` +
-          `• 🤖 **Consultas IA / Resolución**: **${bData.stats.consultas.valor}** (${bData.stats.consultas.delta})\n\n` +
-          `📊 **Desglose de Servicios Dominantes**:\n` +
-          bData.servicios.map(s => `  - **${s.servicio}**: ${s.porcentaje}% del volumen total`).join('\n') +
-          `\n\n💡 **Diagnóstico IA**: *${bData.subtitulo}. ${bData.picoMesTexto}.*`,
-        actionLink: '/admin/sucursales',
-        actionText: 'Ver Directorio de Sucursales',
-        dataBadge: bData.nombreCorto,
-        metrics: [
-          { label: 'Registrados', value: bData.stats.registrados.valor },
-          { label: 'Entregados', value: bData.stats.entregados.valor },
-          { label: 'A Tiempo', value: bData.stats.entregados.delta }
-        ],
-        quickSuggestions: [
-          'Rendimiento en Alajuela',
-          'Rendimiento en Zapote',
-          'Envíos con incidencias',
-          'Resumen operativo general'
-        ]
-      };
-    }
-
-    // =========================================================================
-    // 4. GESTIÓN DE USUARIOS, PERSONAL Y ROLES
-    // =========================================================================
-    const isUsuariosIntent =
-      normalized.includes('usuario') ||
-      normalized.includes('usuarios') ||
-      normalized.includes('administrador') ||
-      normalized.includes('administradores') ||
-      normalized.includes('operador') ||
-      normalized.includes('operadores') ||
-      normalized.includes('personal') ||
-      normalized.includes('cliente') ||
-      normalized.includes('clientes') ||
-      normalized.includes('cuenta') ||
-      normalized.includes('cuentas') ||
-      normalized.includes('roles');
-
-    if (isUsuariosIntent) {
-      const totalUsuarios = usuarios.length;
-      const admins = usuarios.filter(u => u.rol === 'Administrador');
-      const operadores = usuarios.filter(u => u.rol === 'Operador');
-      const clientes = usuarios.filter(u => u.rol === 'Cliente' || !u.rol);
-      const activos = usuarios.filter(u => u.estado === 'Activo').length;
-      const suspendidos = usuarios.filter(u => u.estado === 'Suspendido').length;
-
-      return {
-        text: `👥 **Censo y Auditoría de Usuarios del Sistema (SIP-CR)**:\n\n` +
-          `• 📋 **Padrón Total de Cuentas**: **${totalUsuarios} usuarios registrados**\n` +
-          `• 🛡️ **Administradores del Sistema**: **${admins.length} administradores** (${admins.map(a => a.nombre).join(', ')})\n` +
-          `• ⚙️ **Operadores Postales / Ventanilla**: **${operadores.length} operadores** habilitados para gestión de manifiestos y taquillas\n` +
-          `• 📦 **Clientes y Pymes Corporativas**: **${clientes.length} cuentas de autoservicio**\n` +
-          `• 🟢 **Estado de Cuentas**: **${activos} Activos** | 🔴 **${suspendidos} Suspendidos** por seguridad\n\n` +
-          `*Todos los accesos de usuario cuentan con cifrado SSL 256-bit y registro de auditoría de actividad.*`,
-        actionLink: '/admin/usuarios',
-        actionText: 'Ir a Módulo de Usuarios y Roles',
-        dataBadge: 'Seguridad y Accesos',
-        metrics: [
-          { label: 'Usuarios', value: `${totalUsuarios}` },
-          { label: 'Admins', value: `${admins.length}` },
-          { label: 'Operadores', value: `${operadores.length}` }
-        ],
-        quickSuggestions: ['Resumen operativo general', 'Envíos con incidencias', 'Revisar PQRS pendientes', 'Rendimiento por sedes']
-      };
-    }
-
-    // =========================================================================
-    // 5. CONSULTAS CIUDADANAS, RECLAMOS Y TICKETS PQRS
-    // =========================================================================
-    const isPqrsIntent =
-      normalized.includes('pqrs') ||
-      normalized.includes('reclamo') ||
-      normalized.includes('reclamos') ||
-      normalized.includes('queja') ||
-      normalized.includes('quejas') ||
-      normalized.includes('peticion') ||
-      normalized.includes('peticiones') ||
-      normalized.includes('ticket') ||
-      normalized.includes('tickets') ||
-      normalized.includes('consulta ciudadana') ||
-      normalized.includes('consultas ciudadanas') ||
-      normalized.includes('sla');
-
-    if (isPqrsIntent) {
-      const totalConsultas = consultas.length;
-      const pendientes = consultas.filter(c => c.estado === 'Pendiente' || !c.estado).length;
-      const enProceso = consultas.filter(c => c.estado === 'En Proceso').length;
-      const resueltos = consultas.filter(c => c.estado === 'Resuelto').length;
-      const prioridadAlta = consultas.filter(c => c.prioridad === 'Alta').length;
-
-      return {
-        text: `📋 **Estado Operativo de Atención Ciudadana y Reclamos (PQRS)**:\n\n` +
-          `• 📬 **Total de Peticiones Radicadas**: **${totalConsultas} tickets** en el período\n` +
-          `• ⏳ **Pendientes de Asignación / Resolución**: **${pendientes} casos**\n` +
-          `• 🔄 **En Trámite Resolutorio Activo**: **${enProceso} casos**\n` +
-          `• ✅ **Casos Resueltos a Satisfacción**: **${resueltos} casos**\n` +
-          `• 🚨 **Casos de Prioridad Alta (SLA < 24h)**: **${prioridadAlta} casos urgentes**\n\n` +
-          `💡 **Integración N8N Webhook**: Las peticiones recibidas por el formulario web o webhook se clasifican automáticamente con prioridad, resumen ejecutivo y SLA regulado por el Agente Clasificador IA.`,
-        actionLink: '/admin/consultas',
-        actionText: 'Gestionar Casos en Módulo de Consultas',
-        dataBadge: 'PQRS Regulado',
-        metrics: [
-          { label: 'Total Tickets', value: `${totalConsultas}` },
-          { label: 'Pendientes', value: `${pendientes}` },
-          { label: 'Prioridad Alta', value: `${prioridadAlta}` }
-        ],
-        quickSuggestions: ['Envíos con incidencias', 'Resumen operativo general', 'Rendimiento por sedes', 'Gestión de personal']
-      };
-    }
-
-    // =========================================================================
-    // 6. SERVICIOS Y TARIFAS VIGENTES
-    // =========================================================================
-    const isTarifasIntent =
-      normalized.includes('tarifa') ||
-      normalized.includes('tarifas') ||
-      normalized.includes('precio') ||
-      normalized.includes('precios') ||
-      normalized.includes('costo') ||
-      normalized.includes('costos') ||
-      normalized.includes('servicio') ||
-      normalized.includes('servicios') ||
-      normalized.includes('ems') ||
-      normalized.includes('pymexpress') ||
-      normalized.includes('box miami');
-
-    if (isTarifasIntent) {
-      return {
-        text: `💰 **Catálogo Oficial de Servicios y Estructura Tarifaria (SIP-CR)**:\n\n` +
-          `• 🚀 **EMS Courier Nacional**: Tarifa estándar de **₡2,650** hasta 1 kg (₡1,150 por kilo adicional). Entrega garantizada 24-48h con geolocalización.\n` +
-          `• 📦 **Pymexpress**: Tarifa preferencial para emprendedores registrados desde **₡1,950** por envío. Recolección programada en negocio.\n` +
-          `• ✈️ **Box Correos Miami**: Flete internacional aéreo de **$4.50 por libra** más costos de nacionalización y aforo aduanal.\n` +
-          `• 🌎 **EMS Internacional**: Envíos urgentes con cobertura a más de 190 países miembros de la UPU.\n` +
-          `• 🛂 **Ventanilla Electrónica de Servicios (VES)**: Pasaportes biométricos y cédulas de residencia DIMEX.\n\n` +
-          `*La institución cuenta con ${servicios.length || 8} líneas de servicio activas y ${tarifas.length || 12} escalas de precios reguladas.*`,
-        actionLink: '/admin/servicios-tarifas',
-        actionText: 'Modificar Precios y Servicios',
-        dataBadge: 'Tarifario Oficial',
-        quickSuggestions: ['Resumen operativo general', 'Envíos con incidencias', 'Rendimiento de Alajuela', 'Auditoría de usuarios']
-      };
-    }
-
-    // =========================================================================
-    // 7. RECOMENDACIONES OPERATIVAS Y OPTIMIZACIÓN IA
-    // =========================================================================
-    const isRecomendacionesIntent =
-      normalized.includes('recomendacion') ||
-      normalized.includes('recomendaciones') ||
-      normalized.includes('consejo') ||
-      normalized.includes('consejos') ||
-      normalized.includes('optimizar') ||
-      normalized.includes('optimizacion') ||
-      normalized.includes('sugerencia') ||
-      normalized.includes('sugerencias') ||
-      normalized.includes('analisis');
-
-    if (isRecomendacionesIntent) {
-      return {
-        text: `🧠 **Recomendaciones Estratégicas y Operativas de la IA (SIP-CR)**:\n\n` +
-          `1. 📈 **Refuerzo en Rutas de Pymexpress GAM**: La sede Central San José y Alajuela concentran más del 65% de despachos de comercio electrónico. Se sugiere habilitar un cartero volante en horas pico (10:00 a 14:00).\n` +
-          `2. 🛃 **Agilización en Aforo Aduanal Zapote**: Existen ${envios.filter(e => e.estado === 'Aduanas').length || 3} paquetes pendientes de tributos. Enviar recordatorios automáticos por SMS/WhatsApp reduce el tiempo de custodia en un 38%.\n` +
-          `3. 🏢 **Ampliación de Citas VES en Alajuela**: La sucursal Alajuela Centro y City Mall registran alta demanda de pasaportes. Habilitar una ventanilla VES adicional los sábados descongestionará la lista de espera.\n` +
-          `4. ⚡ **Mantenimiento de SLA en Reclamos**: Priorizar los tickets clasificados como 'Prioridad Alta' para mantener el cumplimiento institucional regulado por encima del 98%.`,
-        actionLink: '/admin/reportes',
-        actionText: 'Ver Reportes y Proyecciones',
-        dataBadge: 'Optimización IA',
-        quickSuggestions: ['Resumen operativo general', 'Envíos con incidencias', 'Rendimiento por sedes', 'Estado de usuarios']
-      };
-    }
-
-    // =========================================================================
-    // 8. RESUMEN OPERATIVO EJECUTIVO GENERAL (POR DEFECTO Y MÁS COMPLETO)
-    // =========================================================================
-    const totalEnvios = envios.length || 16;
-    const entregados = envios.filter(e => e.estado === 'Entregado').length;
-    const enTransito = envios.filter(e => e.estado === 'En tránsito' || e.estado === 'En Tránsito').length;
-    const aduanas = envios.filter(e => e.estado === 'Aduanas').length;
-    const incidencias = envios.filter(e => e.estado === 'Incidencias').length;
-    const tasaCumplimiento = '98.2%';
-
-    return {
-      text: `📊 **Resumen Ejecutivo y Operativo del Dashboard — SIP-CR**:\n\n` +
-        `• 🏢 **Sede Activa en Análisis**: **${branchData.nombre}** (${branchData.provincia})\n` +
-        `• 📅 **Período Seleccionado**: **${branchData.periodLabel || 'Últimos 30 días'}**\n` +
-        `• 📦 **Volumen Global Registrado**: **${branchData.stats.registrados.valor} envíos** (${branchData.stats.registrados.delta})\n` +
-        `• 🚚 **Envíos en Tránsito**: **${branchData.stats.transito.valor}** en 112 rutas activas\n` +
-        `• ✅ **Entregas Concluidas a Tiempo**: **${branchData.stats.entregados.valor}** (Tasa de éxito del **${tasaCumplimiento}**)\n` +
-        `• 🤖 **Consultas Automatizadas por IA**: **${branchData.stats.consultas.valor}** (Efectividad del 94%)\n` +
-        `• ⚠️ **Novedades en Monitoreo**: **${aduanas} en Aduanas** | **${incidencias} con Incidencia**\n` +
-        `• 👥 **Comunidad Administrativa**: **${usuarios.length} cuentas de usuario** (${usuarios.filter(u => u.rol === 'Administrador').length} Administradores)\n\n` +
-        `💡 *Puedes pedirme detalles sobre cualquier sede, filtrar envíos retrasados o consultar el estatus de usuarios y PQRS.*`,
-      actionLink: '/admin/envios',
-      actionText: 'Explorar Todos los Envíos',
-      dataBadge: 'Telemetría SIP-CR en Vivo',
-      metrics: [
-        { label: 'Volumen Sede', value: branchData.stats.registrados.valor },
-        { label: 'A Tiempo', value: tasaCumplimiento },
-        { label: 'En Tránsito', value: branchData.stats.transito.valor },
-        { label: 'Sedes Conectadas', value: '110' }
-      ],
-      quickSuggestions: [
-        '¿Cuáles envíos presentan incidencias?',
-        'Rendimiento en Alajuela vs San José',
-        'Estado de reclamos PQRS',
-        'Recomendaciones de optimización IA'
-      ]
+    const contextData = {
+      totalEnvios: envios.length,
+      incidencias: envios.filter(e => e.estado === 'En aduana' || e.estado === 'Retenido' || e.estado === 'Incidencias').length,
+      aduanas: envios.filter(e => e.estado === 'En aduana' || e.estado === 'Aduanas').length,
+      transito: envios.filter(e => e.estado === 'En tránsito').length,
+      entregados: envios.filter(e => e.estado === 'Entregado').length,
+      totalUsuarios: usuarios.length,
+      totalConsultas: consultas.length,
+      totalCitasPremium: citas.length,
+      sede: currentBranch,
+      periodo: currentPeriod,
+      metricas: {
+        registrados: branchData.stats.registrados.valor,
+        transito: branchData.stats.transito.valor,
+        entregados: branchData.stats.entregados.valor,
+      },
+      enviosDetalle: enviosDetalleSeguro,
     };
+
+    // =========================================================
+    // 🚀 RESPUESTA INSTANTÁNEA PARA SALUDOS (0ms, sin API)
+    // =========================================================
+    if (GREETING_PATTERNS.test(rawQuery)) {
+      console.log('[adminAiService] Saludo detectado → respuesta instantánea');
+      const greetingText = buildInstantGreeting(user, currentBranch, currentPeriod, contextData, envios, usuarios, citas);
+      
+      iaLogsService.createLog({
+        usuario: `${user?.nombre || 'Administrador'} (SIP-CR Admin)`,
+        consulta: rawQuery,
+        intencion: 'saludo_instantaneo',
+        confianza: 100,
+        resultado: 'Respuesta instantánea de saludo'
+      }).catch(() => {});
+
+      return {
+        text: greetingText,
+        dataBadge: 'SIP-CR Admin · Instantáneo',
+        quickSuggestions: ['Resumen operativo', 'Envíos con incidencias', 'Citas Premium']
+      };
+    }
+
+    // =========================================================
+    // 🏎️ CARRERA PARALELA: DeepSeek vs N8N vs Gemini (gana el primero)
+    // =========================================================
+    const deepseekKey = import.meta.env.VITE_DEEPSEEK_API_KEY;
+    const geminiKey = import.meta.env.VITE_GEMINI_API_KEY;
+
+    const systemPrompt = `Eres SIP-CR Admin, el Copiloto de Inteligencia Artificial Oficial del panel de administración de Correos de Costa Rica.
+Tienes ACCESO TOTAL Y AUTORIZADO a la información operativa del sistema postal para ayudar al administrador a resolver dudas sobre paquetes, rutas, estados, sucursales y citas.
+
+REGLAS DE SEGURIDAD Y PRIVACIDAD OBLIGATORIAS:
+1. TIENES ACCESO COMPLETO Y DEBES dar toda la información de paquetes: número de guía, comercio o remitente comercial (ej. Óptica Visión, TeknoCR Store, Amazon, Farmacia Fischel, etc.), estado actual, origen, destino, servicio, fecha de admisión, repartidor asignado, ruta y etapas de entrega. Si te preguntan por paquetes de una tienda o comercio específico (ej: "¿Tienes envíos de Óptica Visión?"), BUSCA en el inventario y da los detalles operativos (guía, estado, ruta).
+2. NUNCA REVELES DATOS PERSONALES PRIVADOS (PII): Queda terminantemente PROHIBIDO revelar nombres de personas físicas destinatarias particulares, números de cédula, correos electrónicos personales, teléfonos o contraseñas. Los comercios o remitentes empresariales (ej: Óptica Visión) SÍ pueden mencionarse porque son empresas asociadas que contratan el servicio postal.
+3. LIMITADO AL PROYECTO: Tu dominio es todo lo que ocurre dentro de Correos de Costa Rica (paquetes, comercios remitentes, sucursales, carteros, citas premium, métricas, tarifas, reclamos PQRS). Si te preguntan por un comercio en relación a sus paquetes postales, atiéndelo con total normalidad.
+4. NUNCA inventes información. Si un paquete o comercio no tiene envíos registrados en el sistema, indícalo claramente.
+5. Formato ejecutivo: Usa listas, negritas y emojis representativos (📦, 📍, 🚚, ✅, ⚠️). Sé CONCISO: máximo 150 palabras.
+
+BASE DE DATOS OPERATIVA EN TIEMPO REAL:
+- Sede Activa: ${currentBranch} | Período: ${currentPeriod}
+- Métricas Generales: Registrados=${contextData.metricas.registrados} | En tránsito=${contextData.metricas.transito} | Entregados=${contextData.metricas.entregados}
+- Envíos Totales: ${envios.length} | Incidencias: ${contextData.incidencias} | Aduanas: ${contextData.aduanas}
+- Citas Premium (Fila Cero): ${citas.length} citas registradas
+- Inventario de Envíos: ${JSON.stringify(enviosDetalleSeguro)}`;
+
+    const historyContents = history.slice(-4).map(msg => ({
+      role: msg.sender === 'bot' ? 'model' : 'user',
+      parts: [{ text: msg.text }]
+    }));
+
+    console.time('[adminAiService] Total AI race');
+
+    try {
+      const winner = await raceAiEngines(deepseekKey, geminiKey, systemPrompt, rawQuery, historyContents, {
+        message: rawQuery,
+        user,
+        currentBranch,
+        currentPeriod,
+        context: contextData
+      });
+
+      console.timeEnd('[adminAiService] Total AI race');
+      console.log(`[adminAiService] Ganador de la carrera: ${winner.engine}`);
+
+      iaLogsService.createLog({
+        usuario: `${user?.nombre || 'Administrador'} (SIP-CR Admin)`,
+        consulta: rawQuery,
+        intencion: `consulta_${winner.engine}_admin`,
+        confianza: 100,
+        resultado: `Respuesta procesada por ${winner.badge}`
+      }).catch(() => {});
+
+      return {
+        text: winner.text,
+        dataBadge: winner.badge,
+        quickSuggestions: ['Envíos con incidencias', 'Resumen operativo', 'Citas Premium']
+      };
+    } catch (allFailed) {
+      console.timeEnd('[adminAiService] Total AI race');
+      console.warn('[adminAiService] Todas las APIs fallaron, usando motor local:', allFailed.message);
+    }
+
+    // =========================================================
+    // 4. MOTOR LOCAL DE RESPUESTA OPERATIVA (Garantiza respuesta 100%)
+    // =========================================================
+    const q = rawQuery.toLowerCase();
+    let localReply = '';
+
+      if (q.includes('hola') || q.includes('buenos') || q.includes('buenas') || q.includes('saludos')) {
+        localReply = buildInstantGreeting(user, currentBranch, currentPeriod, contextData, envios, usuarios, citas);
+      } else if (q.includes('paquete') || q.includes('envio') || q.includes('guia') || q.includes('rastre') || /[a-z]{2}\d+[a-z]{2}/i.test(rawQuery) || envios.some(e => e.remitente && q.includes(e.remitente.toLowerCase()))) {
+        // Búsqueda inteligente de paquete por número de guía o por nombre del comercio remitente (ej: Óptica Visión)
+        const matchingGuia = envios.find(e => {
+          const matchCode = rawQuery.toUpperCase().includes(e.guia.toUpperCase());
+          const matchSender = e.remitente && q.includes(e.remitente.toLowerCase());
+          return matchCode || matchSender;
+        });
+
+        if (matchingGuia) {
+          const etapasText = (matchingGuia.etapas || []).map(et => `  ${et.completado ? '✅' : et.actual ? '🚚' : '⏳'} **${et.nombre}** (${et.ubicacion}) - ${et.hora}`).join('\n');
+          localReply = `📦 **Ficha Operativa de Envío #${matchingGuia.guia}:**\n\n• **Comercio Remitente:** **${matchingGuia.remitente || 'No especificado'}**\n• **Estado Actual:** **${matchingGuia.estado}**\n• **Servicio:** ${matchingGuia.servicio}\n• **Ruta:** ${matchingGuia.origen} ➔ ${matchingGuia.destino}\n• **Fecha Admisión:** ${matchingGuia.fecha || 'N/A'}\n• **Cartero / Repartidor:** ${matchingGuia.repartidorId || 'En asignación de ruta'}\n\n📍 **Historial de Etapas:**\n${etapasText || '• En proceso de distribución'}\n\n🔒 _Nota de Privacidad: La identidad personal del destinatario particular se encuentra protegida conforme a la política de datos._`;
+        } else {
+          localReply = `📦 **Búsqueda Operativa de Envíos:**\n\nActualmente hay **${envios.length} paquetes** registrados en el sistema postal:\n• **${contextData.transito}** en tránsito / reparto activo\n• **${contextData.entregados}** entregados con éxito\n• **${contextData.incidencias}** con incidencias o aduanas\n\nSi deseas consultar una guía en específico, indícame el código (ej. una de las registradas en el sistema) o el nombre del comercio y te facilitaré su ruta, estado y cartero asignado.`;
+        }
+      } else if (q.includes('incidencia') || q.includes('problema') || q.includes('demora') || q.includes('retraso')) {
+        const incidenciasList = envios.filter(e => e.estado === 'En aduana' || e.estado === 'Retenido' || e.estado === 'Incidencia');
+        localReply = `⚠️ **Envíos con Incidencias o Retenciones Aduanales:**\n\nSe detectaron **${contextData.incidencias} incidencias** y **${contextData.aduanas} envíos en aduana**.\n\n${incidenciasList.length > 0 ? incidenciasList.slice(0, 5).map(e => `• **#${e.guia}**: ${e.estado} — Destino: ${e.destino} (${e.servicio})`).join('\n') : '• No se registran envíos críticos en este momento.'}\n\nPuedes ingresar al módulo de **Envíos** para resolver estas incidencias prioritarias.`;
+      } else if (q.includes('resumen') || q.includes('operativ') || q.includes('metrica') || q.includes('estado')) {
+        localReply = `📊 **Ficha Operativa Ejecutiva (${currentBranch}):**\n\n• **Paquetes Registrados:** ${branchData.stats.registrados.valor}\n• **En Ruta / Tránsito:** ${branchData.stats.transito.valor}\n• **Entregas Exitosas:** ${branchData.stats.entregados.valor}\n• **Consultas Ciudadanas (PQRS):** ${consultas.length} tickets\n• **Usuarios del Sistema:** ${usuarios.length} cuentas\n\n✅ La tasa de entrega actual se sitúa en un estándar óptimo.`;
+      } else if (q.includes('usuario') || q.includes('cliente') || q.includes('admin')) {
+        const adminsCount = usuarios.filter(u => u.rol === 'Administrador').length;
+        localReply = `👥 **Estado de Cuentas y Usuarios:**\n\n• **Total de Usuarios:** ${usuarios.length}\n• **Administradores / Personal:** ${adminsCount}\n• **Clientes Ciudadanos:** ${usuarios.length - adminsCount}\n\nPuedes gestionar permisos y accesos desde la pestaña **Usuarios**.`;
+      } else if (q.includes('pqrs') || q.includes('consulta') || q.includes('ticket') || q.includes('reclamo')) {
+        localReply = `📋 **Gestión de Reclamos y Consultas (PQRS):**\n\n• **Total Tickets Registrados:** ${consultas.length}\n• **Estado:** Base conectada y sincronizada.\n\nRevisa la sección **PQRS** en el menú superior para dar seguimiento individual a cada requerimiento.`;
+      } else if (q.includes('cita') || q.includes('premium') || q.includes('fila cero')) {
+        localReply = `⚡ **Módulo Citas Premium (Fila Cero):**\n\nLas citas premium permiten a los usuarios agendar atención preferencial por ₡5.000.\nPuedes auditar las reservas activas y el flujo de clientes VIP en tiempo real desde la sección **Citas Premium**.`;
+      } else {
+        localReply = `📌 **SIP-CR Admin (Datos en Vivo - ${currentBranch}):**\n\nPara tu consulta *"_${rawQuery}_"*, la información operativa consolidada es:\n\n• **Total de Envíos:** ${envios.length} registrados\n• **En Tránsito:** ${contextData.transito}\n• **Incidencias:** ${contextData.incidencias}\n• **Retenidos en Aduana:** ${contextData.aduanas}\n• **Tickets PQRS:** ${consultas.length}\n\nSelecciona uno de los atajos sugeridos abajo para consultar detalles en profundidad.`;
+      }
+
+      iaLogsService.createLog({
+        usuario: `${user?.nombre || 'Administrador'} (SIP-CR Admin)`,
+        consulta: rawQuery,
+        intencion: 'consulta_local_fallback_admin',
+        confianza: 90,
+        resultado: 'Respuesta contextual operativa procesada en vivo'
+      }).catch(() => {});
+
+      return {
+        text: localReply,
+        dataBadge: 'SIP-CR Motor Operativo (En Vivo)',
+        quickSuggestions: ['Resumen operativo', 'Envíos con incidencias', 'Citas Premium', 'Consultas PQRS']
+      };
   }
 };

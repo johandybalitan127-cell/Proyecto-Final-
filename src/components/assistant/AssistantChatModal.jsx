@@ -12,15 +12,15 @@ export const AssistantChatModal = ({ onClose, isFloating = false }) => {
     {
       id: 1,
       sender: 'bot',
-      text: '¡Hola! Soy tu Asistente Postal Oficial de Correos de Costa Rica. Estoy conectado a la red nacional para ayudarte con rastreo en vivo, consultas de sucursales, cotizaciones y trámites.',
+      text: '¡Hola! Soy **SIP-CR**, tu Asistente Postal de Correos de Costa Rica. Estoy conectado al sistema N8N para ayudarte con rastreo de envíos, consultas de sucursales, cotizaciones y trámites.',
       time: 'Ahora'
     },
     {
       id: 2,
       sender: 'bot',
-      text: 'Puedes escribirme de forma natural. Por ejemplo: "¿Cuáles son los horarios de las sucursales?", "¿Dónde está mi paquete CR098421734CR?" o "¿Cuánto cuesta enviar 2 kg?".',
+      text: 'Puedes escribirme en lenguaje natural. Por ejemplo: "¿Cuáles son los horarios de las sucursales?", "¿Cuánto cuesta enviar un paquete de 2 kg?" o consultar el estado de tu envío con tu número de guía.',
       time: 'Ahora',
-      quickSuggestions: ['Horarios de sucursales', 'Rastrear CR098421734CR', 'Horario de Zapote', 'Cotizar 2 kg EMS']
+      quickSuggestions: ['Horarios de sucursales', '¿Cuánto cuesta un envío?', 'Información de pasaporte VES', 'Agendar cita premium']
     }
   ]);
   const [inputValue, setInputValue] = useState('');
@@ -91,7 +91,7 @@ export const AssistantChatModal = ({ onClose, isFloating = false }) => {
         sender: 'bot',
         text: 'Conversación reiniciada. ¿En qué trámite postal te puedo asistir ahora?',
         time: 'Ahora',
-        quickSuggestions: ['Rastrear CR098421734CR', 'Horarios de sucursales', 'Cotizar tarifas']
+        quickSuggestions: ['Rastrear un envío', 'Horarios de sucursales', 'Cotizar tarifas']
       }
     ]);
   };
@@ -384,7 +384,7 @@ export const AssistantChatModal = ({ onClose, isFloating = false }) => {
           <div className="space-y-2 text-xs">
             <button
               type="button"
-              onClick={() => handleSend('Rastrear CR098421734CR')}
+              onClick={() => handleSend('¿Cómo rastreo un paquete?')}
               className="w-full text-left p-2.5 rounded-xl bg-gray-50 hover:bg-emerald-50/70 border border-gray-200 hover:border-emerald-300 flex items-start gap-2.5 transition cursor-pointer"
             >
               <GoogleIcon name="verified" size={18} className="text-emerald-600 shrink-0 mt-0.5" filled />

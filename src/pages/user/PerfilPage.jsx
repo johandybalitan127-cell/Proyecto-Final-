@@ -3,6 +3,7 @@ import { User, Mail, Phone, MapPin, Building, ShieldCheck, Check, Save } from 'l
 import { useAuth } from '../../hooks/useAuth';
 import { useToast } from '../../context/ToastContext';
 import { Link } from 'react-router-dom';
+import { GoogleIcon } from '../../components/common/GoogleIcon';
 
 export const PerfilPage = () => {
   const { user } = useAuth();
@@ -49,6 +50,73 @@ export const PerfilPage = () => {
           </Link>
         </div>
       </div>
+
+      {/* === CITA PREMIUM BANNER === */}
+      <Link
+        to="/cuenta/citas-premium"
+        className="group block relative overflow-hidden rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5"
+      >
+        {/* Fondo con gradiente animado */}
+        <div className="bg-gradient-to-r from-blue-700 via-indigo-700 to-violet-700 p-6 sm:p-7">
+          {/* Círculos decorativos */}
+          <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-32 translate-x-32 pointer-events-none" />
+          <div className="absolute bottom-0 left-0 w-40 h-40 bg-white/5 rounded-full translate-y-20 -translate-x-10 pointer-events-none" />
+
+          <div className="relative flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5">
+            {/* Left: icono + texto */}
+            <div className="flex items-center gap-4">
+              <div className="relative shrink-0">
+                <div className="w-14 h-14 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center backdrop-blur-sm">
+                  <GoogleIcon name="bolt" size={30} className="text-amber-400" filled />
+                </div>
+                {/* Pulso animado */}
+                <span className="absolute -top-1 -right-1 w-4 h-4 bg-amber-400 rounded-full flex items-center justify-center">
+                  <span className="animate-ping absolute w-4 h-4 rounded-full bg-amber-400 opacity-75" />
+                  <span className="w-2 h-2 bg-amber-300 rounded-full relative" />
+                </span>
+              </div>
+
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-amber-300 bg-amber-400/20 border border-amber-400/30 px-2.5 py-0.5 rounded-full">
+                    Servicio Exclusivo
+                  </span>
+                </div>
+                <h2 className="text-xl sm:text-2xl font-extrabold text-white leading-tight">
+                  Cita Premium · Fila Cero
+                </h2>
+                <p className="text-blue-200 text-xs sm:text-sm mt-1 max-w-md">
+                  Salta la fila y recibe atención prioritaria en cualquier sucursal de Correos de Costa Rica.
+                </p>
+
+                {/* Beneficios rápidos */}
+                <div className="flex flex-wrap gap-2 mt-3">
+                  {['Sin esperas', 'Horario reservado', 'Asesor dedicado'].map((b) => (
+                    <span key={b} className="inline-flex items-center gap-1 text-[10px] font-semibold text-blue-100 bg-white/10 px-2.5 py-1 rounded-full border border-white/20">
+                      <GoogleIcon name="check_circle" size={11} className="text-emerald-400" filled />
+                      {b}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Right: precio + CTA */}
+            <div className="flex flex-col items-start sm:items-end gap-3 shrink-0">
+              <div className="text-right">
+                <span className="text-blue-300 text-xs block">Por solo</span>
+                <span className="text-3xl font-extrabold text-white">₡5,000</span>
+                <span className="text-blue-300 text-xs block">por cita</span>
+              </div>
+              <div className="flex items-center gap-2 bg-white text-blue-700 font-bold text-sm px-5 py-2.5 rounded-xl shadow-lg group-hover:bg-amber-400 group-hover:text-white transition-colors duration-300">
+                <GoogleIcon name="event_available" size={16} filled />
+                <span>Agendar Cita</span>
+                <GoogleIcon name="arrow_forward" size={15} className="group-hover:translate-x-0.5 transition-transform" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </Link>
 
       {/* Form Container */}
       <div className="bg-white p-6 sm:p-8 rounded-3xl border border-gray-200 shadow-sm space-y-6">

@@ -8,12 +8,31 @@ import { encryptId } from '../../utils/cryptoUtils';
 
 export const PaquetesGuardadosPage = () => {
   const { addToast } = useToast();
-  const [savedGuides, setSavedGuides] = useState(['CR098421734CR', 'CR109283745CR', 'CR874512963CR']);
+  const [savedGuides, setSavedGuides] = useState(() => {
+    try {
+      const stored = localStorage.getItem('correos_saved_guides');
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
+  });
   const [envios, setEnvios] = useState([]);
   const [newGuideInput, setNewGuideInput] = useState('');
 
   useEffect(() => {
+    try {
+      localStorage.setItem('correos_saved_guides', JSON.stringify(savedGuides));
+    } catch {
+      // ignore
+    }
+  }, [savedGuides]);
+
+  useEffect(() => {
     const load = async () => {
+      if (savedGuides.length === 0) {
+        setEnvios([]);
+        return;
+      }
       const all = await enviosService.getAll();
       setEnvios(all.filter((e) => savedGuides.includes(e.guia)));
     };
@@ -72,34 +91,46 @@ export const PaquetesGuardadosPage = () => {
         </form>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {envios.map((envio) => (
-          <div key={envio.id} className="bg-white p-5 rounded-3xl border border-gray-200 shadow-2xs space-y-4 flex flex-col justify-between">
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="font-mono font-bold text-azul-oscuro text-base">#{envio.guia}</span>
-                <StatusBadge status={envio.estado} size="xs" />
-              </div>
-              <p className="text-xs text-gray-600 font-semibold">{envio.servicio}</p>
-              <p className="text-[11px] text-gray-500">{envio.origen} → {envio.destino}</p>
-            </div>
-
-            <div className="pt-3 border-t border-gray-100 flex items-center justify-between">
-              <Link to={`/cuenta/rastreo/${encryptId(envio.guia)}`} className="text-xs font-bold text-azul-primario hover:underline inline-flex items-center gap-1">
-                <span>Rastrear ahora</span>
-                <ExternalLink className="w-3 h-3" />
-              </Link>
-              <button
-                onClick={() => handleRemove(envio.guia)}
-                className="text-gray-400 hover:text-red-500 transition p-1"
-                title="Quitar de guardados"
-              >
-                <Trash2 className="w-4 h-4" />
-              </button>
-            </div>
+      {envios.length === 0 ? (
+        <div className="bg-white p-10 rounded-3xl border border-dashed border-gray-300 text-center space-y-3">
+          <div className="w-12 h-12 mx-auto rounded-2xl bg-azul-primario/10 text-azul-primario flex items-center justify-center">
+            <Package className="w-6 h-6" />
           </div>
-        ))}
-      </div>
+          <h3 className="text-sm font-bold text-azul-oscuro">No tienes paquetes anclados</h3>
+          <p className="text-xs text-gray-500 max-w-sm mx-auto">
+            Ingresa un número de guía en la barra superior para monitorear el estado de tus envíos prioritarios en tiempo real.
+          </p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {envios.map((envio) => (
+            <div key={envio.id} className="bg-white p-5 rounded-3xl border border-gray-200 shadow-2xs space-y-4 flex flex-col justify-between">
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="font-mono font-bold text-azul-oscuro text-base">#{envio.guia}</span>
+                  <StatusBadge status={envio.estado} size="xs" />
+                </div>
+                <p className="text-xs text-gray-600 font-semibold">{envio.servicio}</p>
+                <p className="text-[11px] text-gray-500">{envio.origen} → {envio.destino}</p>
+              </div>
+
+              <div className="pt-3 border-t border-gray-100 flex items-center justify-between">
+                <Link to={`/cuenta/rastreo/${encryptId(envio.guia)}`} className="text-xs font-bold text-azul-primario hover:underline inline-flex items-center gap-1">
+                  <span>Rastrear ahora</span>
+                  <ExternalLink className="w-3 h-3" />
+                </Link>
+                <button
+                  onClick={() => handleRemove(envio.guia)}
+                  className="text-gray-400 hover:text-red-500 transition p-1"
+                  title="Quitar de guardados"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
 
     </div>
   );

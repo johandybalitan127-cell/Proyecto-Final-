@@ -16,7 +16,7 @@ import { SucursalesMapLocator } from '../../components/public/SucursalesMapLocat
 
 export const HomePage = () => {
   const navigate = useNavigate();
-  const [guideInput, setGuideInput] = useState('CR098421734CR');
+  const [guideInput, setGuideInput] = useState('');
   const [carrier, setCarrier] = useState('EMS Courier Nacional');
   const [trackedEnvio, setTrackedEnvio] = useState(null);
   const [trackingLoading, setTrackingLoading] = useState(false);
