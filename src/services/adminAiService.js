@@ -109,9 +109,9 @@ async function callGemini(apiKey, systemPrompt, rawQuery, historyContents) {
 }
 
 /**
- * Carrera paralela: Gemini (#1) vs DeepSeek (respaldo)
+ * Carrera paralela: Gemini (#1), N8N (paralelo) vs DeepSeek (respaldo)
  */
-async function raceAiEngines(deepseekKey, geminiKey, systemPrompt, rawQuery, historyContents) {
+async function raceAiEngines(deepseekKey, geminiKey, systemPrompt, rawQuery, historyContents, n8nParams) {
   const racers = [];
 
   // Gemini — PRIORIDAD #1
@@ -119,6 +119,19 @@ async function raceAiEngines(deepseekKey, geminiKey, systemPrompt, rawQuery, his
     racers.push(
       callGemini(geminiKey, systemPrompt, rawQuery, historyContents)
         .then(text => ({ text, badge: 'Gemini Flash · SIP-CR Admin', engine: 'gemini' }))
+    );
+  }
+
+  // N8N racer (paralelo)
+  if (n8nParams) {
+    racers.push(
+      n8nService.sendAdminChatMessage(n8nParams)
+        .then(result => {
+          if (result.success && result.replyText) {
+            return { text: result.replyText, badge: 'N8N AI Agent · SIP-CR', engine: 'n8n' };
+          }
+          throw new Error('N8N sin respuesta');
+        })
     );
   }
 
@@ -220,7 +233,13 @@ BASE DE DATOS OPERATIVA EN TIEMPO REAL:
     console.time('[adminAiService] AI race');
 
     try {
-      const winner = await raceAiEngines(deepseekKey, geminiKey, systemPrompt, rawQuery, historyContents);
+      const winner = await raceAiEngines(deepseekKey, geminiKey, systemPrompt, rawQuery, historyContents, {
+        message: rawQuery,
+        user,
+        currentBranch,
+        currentPeriod,
+        context: contextData
+      });
 
       console.timeEnd('[adminAiService] AI race');
       console.log(`[adminAiService] Ganador: ${winner.engine}`);
