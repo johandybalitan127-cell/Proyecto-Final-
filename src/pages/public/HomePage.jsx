@@ -210,7 +210,7 @@ export const HomePage = () => {
 
             {/* Right Visual Image & Floating Card (5 cols) matching Anexo 1 & user photo */}
             <div className="lg:col-span-5 relative mt-4 lg:mt-0">
-              <div className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-slate-100 aspect-[16/10]">
+              <div className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-slate-100 aspect-[16/10] mb-5">
                 {/* Hero Real Photograph */}
                 <img
                   src="https://alba-cr-repretel.cdn.mediatiquepress.com/wp-content/uploads/2025/08/Correos-de-Costa-Rica-puestos-de-empleo-repretel.png"
@@ -219,45 +219,41 @@ export const HomePage = () => {
                 />
 
                 {/* Top-Left Badge inside photo */}
-                <div className="absolute top-3.5 left-3.5 z-10">
+                <div className="absolute top-4 left-4 z-10">
                   <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-white/95 text-gray-800 shadow-md border border-gray-200/80 backdrop-blur-xs">
                     <span className="w-2 h-2 rounded-full bg-verde-principal"></span>
                     Operador Oficial de Costa Rica
                   </span>
                 </div>
-
-                {/* Subtle gradient overlay at bottom for readability */}
-                <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/50 via-black/20 to-transparent pointer-events-none"></div>
-
-                {/* Bottom Overlay Card inside image - Compact & Left-Aligned */}
-                <div className="absolute bottom-10 left-4 sm:left-6 z-10 bg-white/95 backdrop-blur-md p-3.5 rounded-2xl shadow-lg border border-gray-100/90 w-max max-w-[260px]">
-                  <div className="flex flex-col gap-2">
-                    <div>
-                      <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">
-                        Ruta Nacional Express
-                      </p>
-                      <p className="text-sm font-bold text-azul-oscuro">
-                        Gran Área Metropolitana
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-1.5 border-t border-gray-100 pt-2.5">
-                      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                      <span className="text-xs font-bold text-emerald-600">
-                        Operación Normal
-                      </span>
-                    </div>
-                  </div>
-                </div>
               </div>
 
-              {/* Bottom-Left Overlapping Badge */}
-              <div className="absolute -bottom-5 left-4 sm:left-6 z-20 bg-azul-oscuro text-white px-4 py-2.5 rounded-2xl shadow-xl border border-sky-400/20 flex items-center gap-2.5 w-max">
-                <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center text-emerald-400 flex-shrink-0">
-                  <Navigation className="w-4 h-4 text-emerald-300" />
+              {/* Status Cards Positioned BELOW the image for a clean, unobstructed view */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {/* Card 1: Ruta Express */}
+                <div className="bg-white p-4 rounded-2xl shadow-lg border border-gray-100 flex flex-col justify-center">
+                  <div className="flex items-center justify-between mb-1">
+                    <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">
+                      Ruta Express
+                    </p>
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                      <span className="text-[10px] font-bold text-emerald-600">Normal</span>
+                    </div>
+                  </div>
+                  <p className="text-sm font-bold text-azul-oscuro">
+                    Gran Área Metropolitana
+                  </p>
                 </div>
-                <div>
-                  <p className="text-xs font-bold leading-tight">Cobertura Postal Total</p>
-                  <p className="text-[10px] text-sky-200 leading-tight">De frontera a frontera</p>
+
+                {/* Card 2: Cobertura */}
+                <div className="bg-azul-oscuro text-white p-4 rounded-2xl shadow-lg border border-sky-400/20 flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-emerald-400 flex-shrink-0">
+                    <Navigation className="w-5 h-5 text-emerald-300" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold leading-tight">Cobertura Postal</p>
+                    <p className="text-xs text-sky-200 leading-tight mt-0.5">De frontera a frontera</p>
+                  </div>
                 </div>
               </div>
             </div>
