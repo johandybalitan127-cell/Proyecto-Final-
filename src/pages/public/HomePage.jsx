@@ -229,32 +229,29 @@ export const HomePage = () => {
                 {/* Subtle gradient overlay at bottom for readability */}
                 <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/50 via-black/20 to-transparent pointer-events-none"></div>
 
-                {/* Bottom Overlay Card inside image - Moved down to not cover the van */}
-                <div className="absolute bottom-3 left-3 right-3 z-10 bg-white/95 backdrop-blur-md p-3 sm:p-3.5 rounded-2xl shadow-lg border border-gray-100/90 flex items-center justify-between">
-                  <div>
-                    <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">
-                      Ruta Nacional Express
-                    </p>
-                    <p className="text-xs sm:text-sm font-bold text-azul-oscuro">
-                      Gran Área Metropolitana
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <div className="flex items-center justify-end gap-1.5">
+                {/* Bottom Overlay Card inside image - Compact & Left-Aligned */}
+                <div className="absolute bottom-10 left-4 sm:left-6 z-10 bg-white/95 backdrop-blur-md p-3.5 rounded-2xl shadow-lg border border-gray-100/90 w-max max-w-[260px]">
+                  <div className="flex flex-col gap-2">
+                    <div>
+                      <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">
+                        Ruta Nacional Express
+                      </p>
+                      <p className="text-sm font-bold text-azul-oscuro">
+                        Gran Área Metropolitana
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-1.5 border-t border-gray-100 pt-2.5">
                       <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                       <span className="text-xs font-bold text-emerald-600">
                         Operación Normal
                       </span>
                     </div>
-                    <p className="text-[10px] text-gray-400">
-                      Tránsito fluido
-                    </p>
                   </div>
                 </div>
               </div>
 
-              {/* Bottom-Center Overlapping Badge - Centered to avoid covering text */}
-              <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 z-20 bg-azul-oscuro text-white px-3.5 py-2.5 rounded-2xl shadow-xl border border-sky-400/20 flex items-center gap-2.5 whitespace-nowrap">
+              {/* Bottom-Left Overlapping Badge */}
+              <div className="absolute -bottom-5 left-4 sm:left-6 z-20 bg-azul-oscuro text-white px-4 py-2.5 rounded-2xl shadow-xl border border-sky-400/20 flex items-center gap-2.5 w-max">
                 <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center text-emerald-400 flex-shrink-0">
                   <Navigation className="w-4 h-4 text-emerald-300" />
                 </div>
