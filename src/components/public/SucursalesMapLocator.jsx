@@ -255,7 +255,10 @@ export const SucursalesMapLocator = ({ onSelectBranchForAppointment = null }) =>
             <button
               key={prov}
               type="button"
-              onClick={() => setSelectedProvince(prov)}
+              onClick={() => {
+                setSelectedProvince(prov);
+                setActiveBranch(null); // Clear selected branch to allow map bounds to zoom out
+              }}
               className={`px-4 py-1.5 rounded-full text-xs transition cursor-pointer whitespace-nowrap ${
                 isSelected
                   ? 'bg-[#eef7fc] text-[#0066A1] border border-[#0066A1] font-bold shadow-xs'
