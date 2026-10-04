@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ShieldCheck, CheckCircle2, Lock, User, LogIn, Calendar, Clock, MapPin } from 'lucide-react';
-import { SucursalesMapLocator } from '../../components/public/SucursalesMapLocator';
+import GoogleMapsLocator from '../../components/public/GoogleMapsLocator';
 import { Modal } from '../../components/common/Modal';
 import { useAuth } from '../../hooks/useAuth';
 import { useToast } from '../../context/ToastContext';
@@ -57,7 +57,7 @@ export const OficinasPage = () => {
     <div className="min-h-screen bg-white">
       
       {/* Localizador Geográfico Oficial Interactivo (Exacto a la captura) */}
-      <SucursalesMapLocator onSelectBranchForAppointment={handleOpenAppointment} />
+      <GoogleMapsLocator onSelectBranchForAppointment={handleOpenAppointment} />
 
       {/* Modal para agendar Citas VES (Pasaporte / Cédula / DIMEX) */}
       <Modal
