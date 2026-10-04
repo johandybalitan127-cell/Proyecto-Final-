@@ -11,7 +11,7 @@ const normalizeStr = (str = '') =>
     .trim();
 
 export const SucursalesMapLocator = ({ onSelectBranchForAppointment = null }) => {
-  const [selectedProvince, setSelectedProvince] = useState('Alajuela');
+  const [selectedProvince, setSelectedProvince] = useState('Todas');
   const [searchQuery, setSearchQuery] = useState('');
   const [activeBranch, setActiveBranch] = useState(null);
   const [isFullScreen, setIsFullScreen] = useState(false);
@@ -68,6 +68,7 @@ export const SucursalesMapLocator = ({ onSelectBranchForAppointment = null }) =>
       L.control.zoom({ position: 'topright' }).addTo(map);
 
       mapInstanceRef.current = map;
+      // Use LayerGroup (built-in) instead of MarkerClusterGroup since the plugin is not installed
       markersLayerRef.current = L.layerGroup().addTo(map);
     }
 
@@ -97,7 +98,7 @@ export const SucursalesMapLocator = ({ onSelectBranchForAppointment = null }) =>
 
       // Marcador clásico rojo con centro blanco (como en la imagen del usuario)
       const redPinHtml = `
-        <div style="position: relative; width: 28px; height: 36px; cursor: pointer; transform: translate(-14px, -36px); filter: drop-shadow(0 2px 5px rgba(0,0,0,0.35)); transition: transform 0.2s;">
+        <div style="position: relative; width: 28px; height: 36px; cursor: pointer; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.35)); transition: transform 0.2s;">
           <svg viewBox="0 0 24 32" width="28" height="36" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M12 0C5.37258 0 0 5.37258 0 12C0 21 12 32 12 32C12 32 24 21 24 12C24 5.37258 18.6274 0 12 0Z" fill="#DC2626" stroke="#991B1B" stroke-width="1"/>
             <circle cx="12" cy="11" r="4.5" fill="#FFFFFF"/>
@@ -107,7 +108,7 @@ export const SucursalesMapLocator = ({ onSelectBranchForAppointment = null }) =>
 
       // Marcador objetivo azul/blanco para la sucursal seleccionada (exacto a la captura)
       const activePinHtml = `
-        <div style="position: relative; width: 32px; height: 32px; cursor: pointer; transform: translate(-16px, -16px); filter: drop-shadow(0 3px 8px rgba(0,102,161,0.5));">
+        <div style="position: relative; width: 32px; height: 32px; cursor: pointer; filter: drop-shadow(0 3px 8px rgba(0,102,161,0.5));">
           <div style="position: absolute; inset: -3px; border-radius: 9999px; background: rgba(0, 102, 161, 0.25);"></div>
           <div style="position: absolute; inset: 0; border-radius: 9999px; background: #0066A1; border: 3px solid #FFFFFF; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(0,0,0,0.3);">
             <div style="width: 8px; height: 8px; border-radius: 9999px; background: #FFFFFF;"></div>

@@ -8,6 +8,11 @@ export const AccessibilityProvider = ({ children }) => {
     return localStorage.getItem('correos_high_contrast') === 'true';
   });
 
+  // 1.5 Dark Mode
+  const [darkMode, setDarkMode] = useState(() => {
+    return localStorage.getItem('correos_dark_mode') === 'true';
+  });
+
   // 2. Colorblind Mode (Daltonismo): 'none' | 'deuteranopia' | 'protanopia' | 'tritanopia' | 'achromatopsia'
   const [colorblindMode, setColorblindMode] = useState(() => {
     return localStorage.getItem('correos_colorblind_mode') || 'none';
@@ -124,6 +129,14 @@ export const AccessibilityProvider = ({ children }) => {
     }
     localStorage.setItem('correos_high_contrast', highContrast);
 
+    // Dark Mode class
+    if (darkMode) {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
+    localStorage.setItem('correos_dark_mode', darkMode);
+
     // 2. Colorblind Mode classes
     root.classList.remove(
       'colorblind-deuteranopia',
@@ -152,7 +165,7 @@ export const AccessibilityProvider = ({ children }) => {
     // 5. Voice Reading state
     localStorage.setItem('correos_voice_reading', voiceReadingActive);
     localStorage.setItem('correos_screen_reader_help', screenReaderHelp);
-  }, [highContrast, colorblindMode, textScale, enhancedFocus, voiceReadingActive, screenReaderHelp]);
+  }, [highContrast, darkMode, colorblindMode, textScale, enhancedFocus, voiceReadingActive, screenReaderHelp]);
 
   // Global Keyboard Shortcuts (WCAG 2.1 Standard Keyboard Access)
   useEffect(() => {
@@ -245,6 +258,14 @@ export const AccessibilityProvider = ({ children }) => {
     });
   };
 
+  const toggleDarkMode = () => {
+    setDarkMode(prev => {
+      const next = !prev;
+      announce(next ? 'Modo Oscuro activado' : 'Modo Oscuro desactivado', true);
+      return next;
+    });
+  };
+
   const cycleColorblindMode = () => {
     setColorblindMode(prev => {
       const modes = ['none', 'deuteranopia', 'protanopia', 'tritanopia', 'achromatopsia'];
@@ -296,6 +317,7 @@ export const AccessibilityProvider = ({ children }) => {
 
   const resetAccessibility = () => {
     setHighContrast(false);
+    setDarkMode(false);
     setColorblindMode('none');
     setTextScale('normal');
     setVoiceReadingActive(false);
@@ -310,6 +332,8 @@ export const AccessibilityProvider = ({ children }) => {
       value={{
         highContrast,
         toggleHighContrast,
+        darkMode,
+        toggleDarkMode,
         colorblindMode,
         setColorblindMode,
         cycleColorblindMode,
@@ -352,6 +376,7 @@ export const useAccessibility = () => {
   const context = useContext(AccessibilityContext);
   return context || {
     highContrast: false,
+    darkMode: false,
     colorblindMode: 'none',
     textScale: 'normal',
     voiceReadingActive: false,
@@ -360,6 +385,7 @@ export const useAccessibility = () => {
     isModalOpen: false,
     isSpeaking: false,
     toggleHighContrast: () => {},
+    toggleDarkMode: () => {},
     setColorblindMode: () => {},
     cycleColorblindMode: () => {},
     setTextScale: () => {},

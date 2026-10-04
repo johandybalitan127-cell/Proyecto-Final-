@@ -26,6 +26,9 @@ export const LoginPage = () => {
 
     try {
       const res = await login(email, password);
+      if (!res.success) {
+        throw new Error(res.error);
+      }
       addToast(`Bienvenido(a), ${res.user.nombre}`, 'success');
       if (targetPath) {
         navigate(targetPath);

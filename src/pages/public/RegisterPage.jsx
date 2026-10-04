@@ -29,8 +29,8 @@ export const RegisterPage = () => {
       addToast('Cuenta registrada exitosamente. Webhook N8N ha despachado el correo de bienvenida.', 'success');
       await login(created.correo);
       navigate('/cuenta/perfil');
-    } catch {
-      addToast('Error al registrar usuario', 'error');
+    } catch (error) {
+      addToast(error.message || 'Error al registrar usuario', 'error');
     } finally {
       setLoading(false);
     }

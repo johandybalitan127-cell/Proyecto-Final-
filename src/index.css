@@ -261,3 +261,201 @@
   font-feature-settings: 'liga';
 }
 
+/* --- Dark Mode (Modo Oscuro Oficial Correos de Costa Rica) Global Overrides --- */
+html.dark body {
+  @apply bg-[#06172B] text-gray-100 !important;
+}
+html.dark .bg-white,
+html.dark .bg-gray-50,
+html.dark .bg-gray-100,
+html.dark .bg-gray-200,
+html.dark .bg-gray-300,
+html.dark .bg-slate-100,
+html.dark .bg-slate-200,
+html.dark .bg-gris-claro,
+html.dark .bg-sky-50,
+html.dark .bg-emerald-50,
+html.dark .bg-amber-50,
+html.dark .bg-rose-50 {
+  @apply bg-[#08203A] border-[#0A2A4A] text-gray-100 !important;
+}
+/* Robust Fix for Panels and Badges (Inverting light backgrounds to Navy and assigning bright text) */
+
+/* Gray / Slate / White boxes */
+html.dark [class~="bg-white"], html.dark [class*="bg-white/"],
+html.dark [class*="bg-gray-50/"], html.dark [class~="bg-gray-50"], html.dark [class*="bg-gray-100/"], html.dark [class~="bg-gray-100"],
+html.dark [class*="bg-slate-50/"], html.dark [class~="bg-slate-50"], html.dark [class*="bg-slate-100/"], html.dark [class~="bg-slate-100"] {
+  background-color: #08203A !important;
+  border-color: #1E3A5F !important; /* Lighter navy border for visibility */
+  color: #F3F4F6 !important;
+}
+
+/* Emerald boxes */
+html.dark [class*="bg-emerald-50/"], html.dark [class~="bg-emerald-50"], html.dark [class*="bg-emerald-100/"], html.dark [class~="bg-emerald-100"] {
+  background-color: #08203A !important;
+  border-color: #78BE20 !important;
+}
+
+/* Sky / Blue boxes */
+html.dark [class*="bg-sky-50/"], html.dark [class~="bg-sky-50"], html.dark [class*="bg-sky-100/"], html.dark [class~="bg-sky-100"],
+html.dark [class*="bg-blue-50/"], html.dark [class~="bg-blue-50"], html.dark [class*="bg-blue-100/"], html.dark [class~="bg-blue-100"] {
+  background-color: #08203A !important;
+  border-color: #0066A1 !important;
+}
+
+/* Amber boxes */
+html.dark [class*="bg-amber-50/"], html.dark [class~="bg-amber-50"], html.dark [class*="bg-amber-100/"], html.dark [class~="bg-amber-100"] {
+  background-color: #08203A !important;
+  border-color: #0066A1 !important;
+}
+
+/* Rose / Red boxes */
+html.dark [class*="bg-rose-50/"], html.dark [class~="bg-rose-50"], html.dark [class*="bg-rose-100/"], html.dark [class~="bg-rose-100"] {
+  background-color: #08203A !important;
+  border-color: #78BE20 !important;
+}
+
+/* Purple boxes */
+html.dark [class*="bg-purple-50/"], html.dark [class~="bg-purple-50"], html.dark [class*="bg-purple-100/"], html.dark [class~="bg-purple-100"] {
+  background-color: #08203A !important;
+  border-color: #0066A1 !important;
+}
+
+/* Safe text coloring ONLY inside the inverted light boxes (preserves solid buttons) */
+html.dark [class*="bg-amber-50"] [class*="text-amber-"], html.dark [class*="bg-amber-50"][class*="text-amber-"],
+html.dark [class*="bg-amber-100"] [class*="text-amber-"], html.dark [class*="bg-amber-100"][class*="text-amber-"] {
+  color: #F3F4F6 !important; /* White */
+}
+html.dark [class*="bg-emerald-50"] [class*="text-emerald-"], html.dark [class*="bg-emerald-50"][class*="text-emerald-"],
+html.dark [class*="bg-emerald-100"] [class*="text-emerald-"], html.dark [class*="bg-emerald-100"][class*="text-emerald-"] {
+  color: #78BE20 !important; /* Official Green */
+}
+html.dark [class*="bg-sky-50"] [class*="text-sky-"], html.dark [class*="bg-sky-50"][class*="text-sky-"],
+html.dark [class*="bg-sky-100"] [class*="text-sky-"], html.dark [class*="bg-sky-100"][class*="text-sky-"],
+html.dark [class*="bg-blue-50"] [class*="text-blue-"], html.dark [class*="bg-blue-50"][class*="text-blue-"],
+html.dark [class*="bg-blue-100"] [class*="text-blue-"], html.dark [class*="bg-blue-100"][class*="text-blue-"] {
+  color: #5CB8FF !important; /* Light Blue */
+}
+html.dark [class*="bg-purple-50"] [class*="text-purple-"], html.dark [class*="bg-purple-50"][class*="text-purple-"],
+html.dark [class*="bg-purple-100"] [class*="text-purple-"], html.dark [class*="bg-purple-100"][class*="text-purple-"] {
+  color: #5CB8FF !important; /* Light Blue */
+}
+html.dark [class*="bg-rose-50"] [class*="text-rose-"], html.dark [class*="bg-rose-50"][class*="text-rose-"],
+html.dark [class*="bg-rose-100"] [class*="text-rose-"], html.dark [class*="bg-rose-100"][class*="text-rose-"] {
+  color: #78BE20 !important; /* Official Green */
+}
+
+/* Safe text overrides ONLY for generic dark texts that aren't inside colorful buttons */
+html.dark .text-gris-oscuro, html.dark .text-azul-oscuro,
+html.dark [class*="text-slate-9"], html.dark [class*="text-slate-8"], html.dark [class*="text-slate-7"], html.dark [class*="text-slate-6"],
+html.dark [class*="text-gray-9"], html.dark [class*="text-gray-8"], html.dark [class*="text-gray-7"], html.dark [class*="text-gray-6"] {
+  color: #F3F4F6 !important;
+}
+html.dark [class*="text-gray-5"], html.dark [class*="text-slate-5"] {
+  color: #B9C8D6 !important;
+}
+html.dark .border-gray-200, 
+html.dark .border-gray-300,
+html.dark .border-gray-100 {
+  @apply border-[#1E3A5F] !important;
+}
+html.dark .shadow-sm, 
+html.dark .shadow-md, 
+html.dark .shadow-lg, 
+html.dark .shadow-xl {
+  @apply shadow-none border border-[#1E3A5F] !important;
+}
+html.dark .badge-verde, html.dark .badge-azul, html.dark .badge-amarillo, html.dark .badge-rojo, html.dark .badge-gris {
+  @apply border-[#1E3A5F] bg-[#08203A] !important;
+}
+html.dark .btn-neutro {
+  @apply bg-[#0B2746] border-[#1E3A5F] text-[#78BE20] hover:bg-[#1E3A5F] !important;
+}
+html.dark .btn-primario {
+  @apply bg-azul-primario text-white hover:bg-azul-oscuro border-azul-primario !important;
+}
+html.dark .btn-secundario {
+  @apply bg-verde-principal text-white hover:bg-verde-oscuro border-verde-principal !important;
+}
+html.dark input, html.dark select, html.dark textarea {
+  @apply bg-[#0B2746] border-[#1E3A5F] text-white focus:bg-[#08203A] focus:border-verde-principal !important;
+}
+
+/* Brand Colors -> Dark Variants */
+html.dark [class~="text-azul-primario"] {
+  color: #5CB8FF !important; /* Azul claro oficial para legibilidad */
+}
+html.dark [class~="bg-azul-oscuro"] {
+  background-color: #06172B !important;
+}
+
+/* Soft backgrounds for badges/cards */
+html.dark .bg-emerald-100 { @apply bg-verde-principal/20 text-verde-principal !important; }
+html.dark .bg-sky-100 { @apply bg-azul-primario/20 text-[#5CB8FF] !important; }
+html.dark .bg-amber-100 { @apply bg-amber-500/20 text-amber-400 !important; }
+html.dark .bg-rose-100 { @apply bg-rose-500/20 text-rose-400 !important; }
+
+/* Invert Leaflet Maps for Dark Mode */
+html.dark .leaflet-layer,
+html.dark .leaflet-control-zoom-in,
+html.dark .leaflet-control-zoom-out,
+html.dark .leaflet-control-attribution {
+  filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+}
+
+/* Fix Light Gradients obscuring text in Dark Mode without destroying colored buttons */
+html.dark [class*="from-white"],
+html.dark [class*="from-gray-"],
+html.dark [class*="from-slate-"],
+html.dark [class*="to-gray-"],
+html.dark [class*="to-sky-50"],
+html.dark [class*="to-slate-"] {
+  background-image: none !important;
+}
+
+/* Fix Leaflet Popups inside inverted maps */
+html.dark .leaflet-popup-content-wrapper,
+html.dark .leaflet-popup-tip,
+html.dark .leaflet-popup * {
+  background-color: #08203A !important;
+  color: white !important;
+}
+
+/* Old broken overrides removed */
+
+/* Fix map selected items using specific HEX backgrounds */
+html.dark [class*="bg-[#eef7fc]"],
+html.dark [class*="bg-[#f0f8fd]"] {
+  background-color: #0B2746 !important;
+  border-color: #78BE20 !important;
+  color: white !important;
+}
+html.dark [class*="text-[#0066A1]"] {
+  color: #78BE20 !important;
+}
+
+/* Ensure active primary blue backgrounds always win over !important gray overrides */
+html.dark [class~="bg-azul-primario"] {
+  background-color: #0066A1 !important;
+  color: white !important;
+  border-color: #0066A1 !important;
+}
+
+/* Fix hover states for common Tailwind classes that turn white and invisible in dark mode */
+html.dark .hover\:bg-gray-50:hover,
+html.dark .hover\:bg-gray-100:hover,
+html.dark .hover\:bg-slate-50:hover {
+  background-color: #1E3A5F !important;
+}
+
+html.dark .hover\:text-azul-primario:hover,
+html.dark .hover\:text-azul-oscuro:hover {
+  color: #78BE20 !important;
+}
+
+/* Force all focus rings and outlines to be Official Green in Dark Mode */
+html.dark *:focus {
+  outline-color: #78BE20 !important;
+  --tw-ring-color: #78BE20 !important;
+}
+

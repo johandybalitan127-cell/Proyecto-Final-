@@ -1,7 +1,7 @@
 import React from 'react';
 import { 
   X, Type, Contrast, Volume2, VolumeX, Eye, RotateCcw, 
-  Check, Play, Square, Keyboard, Sparkles, ShieldCheck, Info
+  Check, Play, Square, Keyboard, Sparkles, ShieldCheck, Info, Moon
 } from 'lucide-react';
 import { useAccessibility } from '../../context/AccessibilityContext';
 
@@ -11,6 +11,8 @@ export const AccessibilityModal = () => {
     setIsModalOpen,
     highContrast,
     toggleHighContrast,
+    darkMode,
+    toggleDarkMode,
     colorblindMode,
     setColorblindMode,
     textScale,
@@ -203,10 +205,10 @@ export const AccessibilityModal = () => {
             <div className="p-4 rounded-xl bg-gray-50 border border-gray-200 flex flex-col justify-between space-y-2">
               <div className="flex items-center gap-2">
                 <Contrast className="w-4 h-4 text-azul-primario" />
-                <span className="text-xs font-bold text-gris-oscuro">Modo Alto Contraste</span>
+                <span className="text-xs font-bold text-gris-oscuro">Alto Contraste Estricto</span>
               </div>
               <p className="text-[11px] text-gray-500">
-                Fondo negro absoluto (#000) y tipografía blanca de máxima luminancia.
+                Fondo negro puro y tipografía blanca de máxima luminancia.
               </p>
               <button
                 onClick={toggleHighContrast}
@@ -217,7 +219,29 @@ export const AccessibilityModal = () => {
                 }`}
                 aria-pressed={highContrast}
               >
-                <span>{highContrast ? '✓ Alto Contraste ACTIVO' : 'Activar Alto Contraste (Alt+C)'}</span>
+                <span>{highContrast ? '✓ Alto Contraste ACTIVO' : 'Activar Alto Contraste'}</span>
+              </button>
+            </div>
+
+            {/* Modo Oscuro */}
+            <div className="p-4 rounded-xl bg-gray-50 border border-gray-200 flex flex-col justify-between space-y-2">
+              <div className="flex items-center gap-2">
+                <Moon className="w-4 h-4 text-azul-primario" />
+                <span className="text-xs font-bold text-gris-oscuro">Modo Oscuro (Dark Mode)</span>
+              </div>
+              <p className="text-[11px] text-gray-500">
+                Colores atenuados y amigables para lectura nocturna o reducción de brillo.
+              </p>
+              <button
+                onClick={toggleDarkMode}
+                className={`w-full py-2 px-3 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 ${
+                  darkMode 
+                    ? 'bg-slate-800 text-sky-300 border-2 border-sky-400 shadow-sm'
+                    : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-100'
+                }`}
+                aria-pressed={darkMode}
+              >
+                <span>{darkMode ? '✓ Modo Oscuro ACTIVO' : 'Activar Modo Oscuro'}</span>
               </button>
             </div>
 

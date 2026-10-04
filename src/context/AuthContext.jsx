@@ -80,6 +80,38 @@ export const AuthProvider = ({ children }) => {
   const isAuthenticated = !!user;
   const isAdmin = user?.rol === 'admin' || user?.rol === 'Administrador';
 
+  // --- Lógica de Cierre de Sesión por Inactividad ---
+  useEffect(() => {
+    let timeoutId;
+    
+    const handleInactivity = () => {
+      logout();
+      alert('Tu sesión ha sido cerrada por seguridad debido a 2 minutos de inactividad.');
+      window.location.href = '/login'; // Opcional, pero asegura redirigir
+    };
+
+    const resetTimer = () => {
+      clearTimeout(timeoutId);
+      // 2 minutos = 120000 milisegundos
+      timeoutId = setTimeout(handleInactivity, 120000);
+    };
+
+    if (isAuthenticated) {
+      // Iniciar el temporizador
+      resetTimer();
+
+      // Listeners de actividad
+      const events = ['mousemove', 'keydown', 'mousedown', 'touchstart', 'scroll'];
+      events.forEach(event => window.addEventListener(event, resetTimer));
+
+      // Limpiar listeners y timer
+      return () => {
+        clearTimeout(timeoutId);
+        events.forEach(event => window.removeEventListener(event, resetTimer));
+      };
+    }
+  }, [isAuthenticated]);
+
   return (
     <AuthContext.Provider value={{ user, isAuthenticated, isAdmin, login, loginAsDemo, logout }}>
       {children}
