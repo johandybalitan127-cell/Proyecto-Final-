@@ -1925,6 +1925,7 @@ export const SUCURSALES_DATA = [
       "Ventanilla Rápida",
       "Recepción Paquetería Internacional"
     ]
+  }
 ];
 
 export const PROVINCIAS_LIST = [
@@ -1937,3 +1938,4 @@ export const PROVINCIAS_LIST = [
   'Puntarenas',
   'Limón'
 ];
+
