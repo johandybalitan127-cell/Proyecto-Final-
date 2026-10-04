@@ -1925,5 +1925,15 @@ export const SUCURSALES_DATA = [
       "Ventanilla Rápida",
       "Recepción Paquetería Internacional"
     ]
-  }
+];
+
+export const PROVINCIAS_LIST = [
+  'Todas',
+  'San José',
+  'Alajuela',
+  'Cartago',
+  'Heredia',
+  'Guanacaste',
+  'Puntarenas',
+  'Limón'
 ];
